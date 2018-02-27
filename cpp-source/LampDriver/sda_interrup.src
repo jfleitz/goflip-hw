@@ -1,0 +1,392 @@
+; Z8 Encore! ANSI C Compiler Release 3.64
+; -nofastcall -const=ROM -listinc -model=S -optlink -regvar
+; -noreduceopt -debug -norevaa -peephole -localcse -optsize
+; -alias 
+	DEFINE nterrup_TEXT,SPACE=ROM
+	FILE	".\sda_interrup.c"
+.debug "C"
+	SEGMENT NEAR_BSS
+_edge_scl:
+	DS	1
+.define "edge_scl"
+.alias "_edge_scl"
+.class 147
+.value _edge_scl
+.type 12
+.endef
+	SEGMENT nterrup_TEXT
+;    1	/*!\file gpio.h
+;    2	 * \brief Definition file for the Z8 Encore! GPIO Ports.
+;    3	 *
+;    4	 *  This file contains header information required by GPIO Port
+;    5	 *  driver implementations for Z8 Encore! microcontrollers.
+;    6	 *
+;    7	 *  This source file uses Doxygen-style comments to generate documentation
+;    8	 *  automatically.
+;    9	 *
+;   10	 *  Copyright (C) 1999-2004 by  ZiLOG, Inc.
+;   11	 *  All Rights Reserved.
+;   12	 */
+;   13	
+;   14	#pragma once // Include this file only once
+;   15	#ifndef _GPIO_H_
+;   16	#define _GPIO_H_
+;   17	
+;   18	#include <defines.h>
+;   19	
+;   20	
+;   21	#ifdef _DEBUG
+;   22	#define GPIOPARAMETER_CHECKING									//!< Parameter validation control macro.
+;   23	#endif
+;   24	
+;   25	
+;   26	/*! The GPIO ports available for particular target. Port A, B and C are available for all targets */
+;   27	#if (defined(EZ8_PORT4) && !defined(_Z8F04)) || defined(EZ8_PORT8)||defined(EZ8_PORT5)
+;   28	#define PORTD
+;   29	#endif
+;   30	
+;   31	#if defined(EZ8_PORT8)||defined(EZ8_PORT5)
+;   32	#define PORTE
+;   33	#endif
+;   34	#if defined(EZ8_PORT8)
+;   35	#define PORTF
+;   36	#define PORTG
+;   37	#define PORTH
+;   38	#endif
+;   39	
+;   40	#define GPIOERR_SUCCESS		(CHAR)0			//!< Error code for success returned by GPIO APIs.
+;   41	#define GPIOERR_INVALIDPINS	(CHAR)1			//!< Error code for invalid GPIO pin for the target.
+;   42	#define GPIOERR_FAILURE		(CHAR)(-1)		//!< Error code for failure returned by GPIO APIs.
+;   43	
+;   44	
+;   45	/*! all the ports bits are set to input mode */
+;   46	#define PORTA_ADDRVAL_DEF   0x01
+;   47	#define PORTA_CTLVAL_DEF    0xFF
+;   48	#define PORTA_OUTVAL_DEF    0x00
+;   49	
+;   50	#define PORTB_ADDRVAL_DEF   0x01
+;   51	#define PORTB_CTLVAL_DEF    0xFF
+;   52	#define PORTB_OUTVAL_DEF    0x00
+;   53	
+;   54	#define PORTC_ADDRVAL_DEF   0x01
+;   55	#define PORTC_CTLVAL_DEF    0xFF
+;   56	#define PORTC_OUTVAL_DEF    0x00
+;   57	
+;   58	#ifdef PORTD
+;   59	#define PORTD_ADDRVAL_DEF   0x01
+;   60	#define PORTD_CTLVAL_DEF    0xFF
+;   61	#define PORTD_OUTVAL_DEF    0x00
+;   62	#endif
+;   63	
+;   64	#ifdef PORTE
+;   65	#define PORTE_ADDRVAL_DEF   0x01
+;   66	#define PORTE_CTLVAL_DEF    0xFF
+;   67	#define PORTE_OUTVAL_DEF    0x00
+;   68	#endif
+;   69	
+;   70	#ifdef PORTF
+;   71	#define PORTF_ADDRVAL_DEF   0x01
+;   72	#define PORTF_CTLVAL_DEF    0xFF
+;   73	#define PORTF_OUTVAL_DEF    0x00
+;   74	#endif
+;   75	
+;   76	#ifdef PORTG
+;   77	#define PORTG_ADDRVAL_DEF   0x01
+;   78	#define PORTG_CTLVAL_DEF    0xFF
+;   79	#define PORTG_OUTVAL_DEF    0x00
+;   80	#endif
+;   81	
+;   82	#ifdef PORTH
+;   83	#define PORTH_ADDRVAL_DEF   0x01
+;   84	#define PORTH_CTLVAL_DEF    0xFF
+;   85	#define PORTH_OUTVAL_DEF    0x00
+;   86	#endif
+;   87	
+;   88	
+;   89	/*! Control Register access codes used in Address registers */
+;   90	#define PORTADDR_NOFUNC			0x00
+;   91	#define PORTADDR_DATADIR		0x01
+;   92	#define PORTADDR_ALTFUNC		0x02
+;   93	#if defined(_Z8FMC16) || defined(__ZSLBUILD)
+;   94	#define PORTADDR_ALTFUNC0		0x02
+;   95	#endif
+;   96	#define PORTADDR_OPENDRAIN		0x03
+;   97	#define PORTADDR_HIGHDRIVE		0x04
+;   98	#define PORTADDR_STPMDREC		0x05
+;   99	#if defined (_Z8F1680)||defined(_Z8F04) || defined(_Z8F04A) || defined(_Z8F04A_8PIN) || defined(_Z8F04_8PIN) || defined(_Z8F08) || defined(_Z8F0823_8PIN) || defined(_Z8F08A) || defined(_Z8FMC16) || defined(__ZSLBUILD)
+;  100	#define PORTADDR_PULLUP		0x06
+;  101	#endif
+;  102	#if defined (_Z8F1680)||defined(_Z8F04) || defined(_Z8F04A) || defined(_Z8F04A_8PIN) || defined(_Z8F04_8PIN) || defined(_Z8F0823_8PIN) || defined(_Z8F08A) || defined(__ZSLBUILD)
+;  103	#define PORTADDR_ALTFUNCSET1	0x07
+;  104	#define PORTADDR_ALTFUNCSET2	0x08
+;  105	#endif
+;  106	#if defined(_Z8FMC16) || defined(__ZSLBUILD)
+;  107	#define PORTADDR_ALTFUNC1		0x07
+;  108	#define PORTADDR_IRQES			0x08
+;  109	#define PORTADDR_IRQPS			0x09
+;  110	#endif
+;  111	
+;  112	
+;  113	/*! Definitions for Current Drive Levels used in LED Drive Mode */
+;  114	#if defined(_Z8F04A) ||defined (_Z8F1680)|| defined(__ZSLBUILD)
+;  115	#define DRIVELEVEL_3MA			0
+;  116	#define DRIVELEVEL_7MA			1
+;  117	#define DRIVELEVEL_13MA			2
+;  118	#define DRIVELEVEL_20MA			3
+;  119	#endif
+;  120	
+;  121	/*! Definitions for trigger edges */
+;  122	#define EDGE_FALLING			0
+;  123	#define EDGE_RISING				1
+;  124	
+;  125	/*! GPIO pin patterns */
+;  126	#define PORTPIN_ZERO		(BYTE)0x01			//!< The bit mask for Port bit 0.
+;  127	#define PORTPIN_ONE			(BYTE)0x02			//!< The bit mask for Port bit 1.
+;  128	#define PORTPIN_TWO			(BYTE)0x04			//!< The bit mask for Port bit 2.
+;  129	#define PORTPIN_THREE		(BYTE)0x08			//!< The bit mask for Port bit 3.
+;  130	#define PORTPIN_FOUR		(BYTE)0x10			//!< The bit mask for Port bit 4.
+;  131	#define PORTPIN_FIVE 		(BYTE)0x20			//!< The bit mask for Port bit 5.
+;  132	#define PORTPIN_SIX			(BYTE)0x40			//!< The bit mask for Port bit 6.
+;  133	#define PORTPIN_SEVEN		(BYTE)0x80			//!< The bit mask for Port bit 7.
+;  134	#define PORTPIN_FOURPINS_L	(BYTE)0x0F			//!< The bit mask for lower four Port bits.
+;  135	#define PORTPIN_FOURPINS_U	(BYTE)0xF0			//!< The bit mask for upper four Port bits.
+;  136	#define PORTPIN_PATTERN_AA	(BYTE)0xAA			//!< The bit mask for alternate bits (odd numbered pins).
+;  137	#define PORTPIN_PATTERN_55	(BYTE)0x55			//!< The bit mask for alternate bits (even numbered pins).
+;  138	#define PORTPIN_ALL			(BYTE)0xFF			//!< The bit mask for all Port bits.
+;  139	
+;  140	/*! Port mask index used for validating the port pins */
+;  141	#define MSKINDEX_PORTB		(BYTE)0
+;  142	#define MSKINDEX_PORTC		(BYTE)1
+;  143	#define MSKINDEX_PORTD		(BYTE)2
+;  144	#define MSKINDEX_PORTE		(BYTE)3
+;  145	#define MSKINDEX_PORTF		(BYTE)4
+;  146	#define MSKINDEX_PORTG		(BYTE)5
+;  147	#define MSKINDEX_PORTH		(BYTE)6
+;  148	
+;  149	/*!
+;  150	 * \brief The settings required to configure the GPIO Port.
+;  151	 */
+;  152	typedef struct
+;  153	{
+;  154		BYTE addr ;					//!< The address register.
+;  155		BYTE ctl ;					//!< The control register.
+;  156		BYTE out ;					//!< The output register (write-only).
+;  157		BYTE in ;					//!< The input register (read-only).
+;  158	
+;  159	} PORT ;
+.begrec "NONAME0",4
+.define "addr"
+.value 0
+.class 8
+.type 12
+.endef
+.define "ctl"
+.value 1
+.class 8
+.type 12
+.endef
+.define "out"
+.value 2
+.class 8
+.type 12
+.endef
+.define "in"
+.value 3
+.class 8
+.type 12
+.endef
+.endrec "NONAME0"
+	SEGMENT NEAR_BSS
+_edge1:
+	DS	1
+.define "edge1"
+.alias "_edge1"
+.class 147
+.value _edge1
+.type 12
+.endef
+	SEGMENT ROM_DATA
+
+
+;**************************** _SDA_interrupt ***************************
+;Name                         Addr/Register   Size   Type
+;_rising_edge_counter                IMPORT      1   variable
+;_bit_counter                        IMPORT      1   variable
+;_i2c_flag                           IMPORT      1   variable
+;_bus_status                         IMPORT      1   variable
+;_edge1                              STATIC      1   variable
+;_edge_scl                           STATIC      1   variable
+;_SET_VECTOR                         IMPORT  -----   function
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+	.FRAME _n_SDA_interrupt,?_n_SDA_interrupt,RDATA
+;    1	/*
+;    2	********************************************************
+;    3	* File : sda_interrupt.c
+;    4	* Description : Codes for I2C slave functionality.  
+;    5	* 
+;    6	* Copyright 2004 ZiLOG Inc. ALL RIGHTS RESERVED.
+;    7	*
+;    8	* The source code in this file was written by an
+;    9	* authorized ZiLOG employee or a licensed consultant.
+;   10	* The source code has been verified to the fullest
+;   11	* extent possible.
+;   12	*
+;   13	* Permission to use this code is granted on a royalty-free
+;   14	* basis. However users are cautioned to authenticate the
+;   15	* code contained herein.
+;   16	*
+;   17	* ZiLOG DOES NOT GUARANTEE THE VERACITY OF THE SOFTWARE.
+;   18	*************************************************************
+;   19	*/
+;   20	
+;   21	#include <ez8.h>
+;   22	#include "scl_interrupt.h"
+;   23	
+;   24	
+;   25	extern unsigned char i2c_flag;
+;   26	extern unsigned char bus_status;
+;   27	extern unsigned char bit_counter;
+;   28	extern unsigned char rising_edge_counter;  // Keeps counts of no 
+;   29											//of SCL rising edges 
+;   30	unsigned char volatile edge_scl;	// To check SCL edge.
+;   31	unsigned char  volatile edge1;		//To check SDA line
+	SEGMENT nterrup_TEXT
+;   32	/************************************************************************************************
+;   33	This is an interrupt service routine. The program jumps to this routine during both the 
+;   34	rising and falling edges of SDA(on I2C bus). The SDA interrupts are disabled after 
+;   35	detecting the start condition .The SDA is enabled only at the 10th SCL and after detecting 
+;   36	the stop condition
+;   37	************************************************************************************************/
+;   38	
+;   39	/*JAF Notes:
+;   40	C0 = SDA = Rasp Pi Pin 3
+;   41	C1 = SCL = Rasp Pi Pin 5
+;   42	
+;   43	START condition (S)	SCL = 1, SDA falling edge
+;   44	STOP condition (P)	SCL = 1, SDA rising edg
+;   45	*/
+;   46	
+;   47	#pragma interrupt
+;   48	 void SDA_interrupt(void)
+;   49	 {	
+_SDA_interrupt:
+.define "_SDA_interrupt"
+.value _SDA_interrupt
+.class 2
+.type 65
+.endef
+.begfunc "SDA_interrupt",49,"_SDA_interrupt"
+	PUSHX	4093
+	LDX	4093,__intrp
+	ADDX	__intrp,#16
+;   50		SET_VECTOR(C0 ,SDA_interrupt);	
+;   51	 	edge_scl = PCIN & SCL_READ;
+.line 51
+	LDX	R0,4058
+	AND	R0,#2
+	LD	_edge_scl,R0
+;   52		if (edge_scl != 0x02)  	// If SCL is LOW
+.line 52
+	CP	_edge_scl,#2
+	JR	Z,_1_L_5
+;   53		{	
+;   54			IRQ2 &= 0XFE; // DISABLE ANY INT REQUESTS OF SDA
+.line 54
+	ANDX	4038,#254
+;   55			IRQ2ENH &= SDA_INTR_DISABLE;    // Disable SDA interrupt
+.line 55
+	ANDX	4039,#254
+;   56	  		IRQ2ENL &= SDA_INTR_DISABLE;    // Disable SDA interrupt
+.line 56
+	ANDX	4040,#254
+;   57			return;	
+.line 57
+	JR	_1_L_6
+;   58		
+;   59		}
+;   60		else if (edge_scl == 0x02)				// If SCL is HIGH
+_1_L_5:
+.line 60
+	CP	_edge_scl,#2
+	JR	NE,_1_L_6
+;   61		{
+;   62			edge1 = PCIN & SDA_READ;	//Read SDA when SCL is HIGH
+.line 62
+	LDX	R0,4058
+	AND	R0,#1
+	LD	_edge1,R0
+;   63			if(edge1 == 0x01)			//If SDA is HIGH, I2C STOP Condition
+.line 63
+	CP	_edge1,#1
+	JR	NE,_1_L_2
+;   64			  { 
+;   65			     bus_status = I2C_BUS_FREE;
+.line 65
+	CLR	_bus_status
+;   66			     i2c_flag = I2C_ADDRESS_RECEIVE;
+.line 66
+	CLR	_i2c_flag
+;   67				 IRQ2 &= 0XFE; // DISABLE ANY INT REQUESTS OF SDA
+.line 67
+	ANDX	4038,#254
+;   68			     IRQ2ENH |= SDA_INTR_ENABLE;    // Enable SDA interrupt
+.line 68
+	ORX	4039,#1
+;   69	  			 IRQ2ENL |= SDA_INTR_ENABLE;    // Enable SDA interrupt
+.line 69
+	ORX	4040,#1
+;   70				 return;
+.line 70
+	JR	_1_L_6
+;   71		 	  }
+;   72			 else if(edge1 == 0x00)		// If SDA is LOW ,when SCL is HIGH
+_1_L_2:
+.line 72
+	CP	_edge1,#0
+	JR	NE,_1_L_6
+;   73			  {							// This is a Start OR Repeat Start Condition.
+;   74			        bus_status = I2C_BUS_BUSY;
+.line 74
+	LD	_bus_status,#1
+;   75		  			i2c_flag = I2C_ADDRESS_RECEIVE;
+.line 75
+	CLR	_i2c_flag
+;   76					IRQ2ENH &= SDA_INTR_DISABLE;    // Disable SDA interrupt
+.line 76
+	ANDX	4039,#254
+;   77	  				IRQ2ENL &= SDA_INTR_DISABLE;    // Disable SDA interrupt
+.line 77
+	ANDX	4040,#254
+;   78				    bit_counter =0x00;				// Reset the bit counter to 0 
+.line 78
+	CLR	_bit_counter
+;   79					rising_edge_counter =0x00;		//The bit counter to start from 0 during the Start
+.line 79
+	CLR	_rising_edge_counter
+;   80													// OR Repeat Starat condition and from 1 after 
+;   81													// receiving the first (address) byte
+;   82			  }
+;   83		   
+;   84	    }
+;   85	
+;   86	 }
+_1_L_6:
+.line 86
+	SUBX	__intrp,#16
+	POPX	4093
+	IRET	
+.endfunc "SDA_interrupt",86,"_SDA_interrupt"
+	VECTOR	C0=_SDA_interrupt
+	XREF _rising_edge_counter:RDATA
+	XREF _bit_counter:RDATA
+	XREF _bus_status:RDATA
+	XREF _i2c_flag:RDATA
+	XREF __intrp:RDATA
+	XDEF _SDA_interrupt
+	XDEF _edge1
+	XDEF _edge_scl
+	END

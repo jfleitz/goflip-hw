@@ -1,0 +1,3352 @@
+    1 C	/********************************************************************************************************
+    2 C	 * File: sysclk.c
+    3 C	 * Description:
+    4 C	 * 		This file implements the oscillator initialization. The inilization also
+    5 C	 * 		switches the oscialltor source if the seleted source does not match the runtime
+    6 C	 * 		clock source.
+    7 C	 *
+    8 C	 * Last modified: 21 Apr 2006
+    9 C	 ********************************************************************************************************
+   10 C	 * Copyright (C) 2008 by Zilog, Inc.  All Rights Reserved.
+   11 C	 ********************************************************************************************************/
+   12 C	
+   13 C	/********************************************************************************************************
+   14 C	 *  header file includes
+   15 C	 ********************************************************************************************************/
+   16  	#include <eZ8.h>
+
+Enter File:	C:\PROGRA~2\ZiLOG\ZDSII_~1.0\include\zilog\eZ8.h
+    1 C	/*************************************************
+    2 C	 *  Copyright (C) 1999-2006 by  Zilog, Inc.
+    3 C	 *  All Rights Reserved
+    4 C	 *************************************************/
+    5 C	
+    6  	#pragma once // Include this file only once
+    7  	#ifndef EZ8_H
+    8  	#define EZ8_H
+    9  	
+   10  	#if defined(_Z8ENCORE_F642X) || defined(_Z8ENCORE_64K_SERIES) || defined(_Z8ENCORE_XP_64XX_SERIES)
+MacExp: #if 0 || 0 || 0
+   11 X	#define _Z8F642
+   12  	#endif
+   13  	
+   14  	#if defined(_Z8ENCORE_F640X) || defined(_Z8ENCORE_640_FAMILY)
+MacExp: #if 0 || 0
+   15 X	#define _Z8F640
+   16  	#endif
+   17  	
+   18  	#if defined(_Z8ENCORE_F08X) || defined(_Z8ENCORE_8K_SERIES) || defined(_Z8ENCORE_XP_F0822_SERIES)
+MacExp: #if 1 || 0 || 1
+   19  	#define _Z8F08
+   20  	#endif
+   21  	
+   22  	#if defined(_Z8ENCORE_F04XA) || defined(_Z8ENCORE_XP_4K_SERIES)
+MacExp: #if 0 || 0
+   23 X	#define _Z8F04A
+   24  	#endif
+   25  	
+   26  	#if defined(_Z8ENCORE_4K_SERIES)
+MacExp: #if 0
+   27 X	#define _Z8F04
+   28  	#endif
+   29  	
+   30  	#if defined(_Z8ENCORE_4K_8PIN_SERIES)
+MacExp: #if 0
+   31 X	#define _Z8F04_8PIN
+   32 X	#define _Z8F04
+   33  	#endif
+   34  	
+   35  	#if defined(_Z8ENCORE_XP_4K_8PIN_SERIES)
+MacExp: #if 0
+   36 X	#define _Z8F04A_8PIN
+   37 X	#define _Z8F04A
+   38  	#endif
+   39  	
+   40  	#if defined(_Z8ENCORE_XP_F08XA_SERIES) || defined(_Z8ENCORE_XP_F082A_SERIES) || defined(_Z8ENCORE_ZMOTION_SERIES)
+MacExp: #if 0 || 0 || 0
+   41 X	#define _Z8F04A
+   42  	#endif
+   43  	
+   44  	#if defined(_Z8ENCORE_XP_F0830_SERIES) || defined(_Z8ENCORE_XP_F083A_SERIES) || defined(_Z8ENCORE_F0830_SERIES) || defined(_Z8ENCORE_F083A_SERIES)
+MacExp: #if 0 || 0 || 0 || 0
+   45 X	#define _Z8F04A
+   46 X	#define _Z8F0830A
+   47  	#endif
+   48  	
+   49  	#if defined(_Z8ENCORE_XP_F0830_SERIES) || defined(_Z8ENCORE_F0830_SERIES)
+MacExp: #if 0 || 0
+   50 X	#define _Z8F0830S
+   51  	#endif
+   52  	
+   53  	#if defined(_Z8ENCORE_XP_F08XA_8PIN_SERIES) || defined(_Z8ENCORE_XP_F082A_8PIN_SERIES) || defined(_Z8ENCORE_ZMOTION_8PIN_SERIES)
+MacExp: #if 0 || 0 || 0
+   54 X	#define _Z8F04A
+   55 X	#define _Z8F04A_8PIN
+   56  	#endif
+   57  	
+   58  	#if defined(_Z8ENCORE_F0823_SERIES) || defined(_Z8ENCORE_XP_F0823_SERIES)
+MacExp: #if 0 || 0
+   59 X	#define _Z8F04
+   60  	#endif
+   61  	
+   62  	#if defined(_Z8ENCORE_F0823_8PIN_SERIES) || defined(_Z8ENCORE_XP_F0823_8PIN_SERIES)
+MacExp: #if 0 || 0
+   63 X	#define _Z8F04
+   64 X	#define _Z8F04_8PIN
+   65  	#endif
+   66  	
+   67  	#if defined(_Z8ENCORE_Z8FMC16100_SERIES)
+MacExp: #if 0
+   68 X	#define _Z8FMC16
+   69  	#endif
+   70  	
+   71  	#if defined(_Z8ENCORE_XP_F1680_SERIES)
+MacExp: #if 0
+   72 X	#define _Z8F1680
+   73  	#endif
+   74  	
+   75  	#if defined(_Z8ENCORE_XP_F1680_SERIES_24K) || defined(_Z8ENCORE_XP_F1680_SERIES_16K)
+MacExp: #if 0 || 0
+   76 X	#define _Z8F1680
+   77  	#endif
+   78  	
+   79  	#if defined(_Z8ENCORE_XP_F1680_SERIES_8K) || defined(_Z8ENCORE_XP_F1680_SERIES_4K)
+MacExp: #if 0 || 0
+   80 X	#define _Z8F1680
+   81  	#endif
+   82  	
+   83  	#if defined(_Z8ENCORE_F648)
+MacExp: #if 0
+   84 X	#define _Z8F648		// Don't use _Z8F6482 for the family symbol, because that is the symbol for an individual part
+   85  	#endif
+   86  	
+   87  	#if defined(_Z8F1680) || defined(_Z8F648)
+MacExp: #if 0 || 0
+   88 X	#define _Z8F1680_OR_Z8F648
+   89  	#endif
+   90  	
+   91  	#if defined(_Z8F642) || defined(_Z8F640) || defined(_Z8F08) || defined(_Z8F04)
+MacExp: #if 0 || 0 || 1 || 0
+   92  	#define ENCORE_VECTORS
+   93  	#endif
+   94  	
+   95  	#if defined(_Z8F04A)
+MacExp: #if 0
+   96 X	#define ENCORE_XP_VECTORS
+   97  	#endif
+   98  	
+   99  	#if defined(_Z8FMC16)
+MacExp: #if 0
+  100 X	#define ENCORE_MC_VECTORS
+  101  	#endif
+  102  	
+  103  	#if defined(_Z8F1680)
+MacExp: #if 0
+  104 X	#define ENCORE_XP16K_VECTORS
+  105  	#endif
+  106  	
+  107  	#if defined(_Z8F648)
+MacExp: #if 0
+  108 X	#define ENCORE_F6482_VECTORS
+  109  	#endif
+  110  	
+  111  	#define EZ8_IRQ3
+  112  	#define EZ8_TIMER2
+  113  	#define EZ8_UART0
+  114  	
+  115  	#if defined(_Z8F640) || defined(_Z8F642)
+MacExp: #if 0 || 0
+  116 X	#define EZ8_SPI
+  117 X	#define EZ8_ADC
+  118 X	#define EZ8_TIMER3
+  119 X	#define EZ8_PORT4
+  120 X	#define EZ8_I2C
+  121  	#endif
+  122  	
+  123  	#if defined(_Z8F640) || defined(_Z8F642) || defined(__ZSLBUILD)
+MacExp: #if 0 || 0 || 0
+  124 X	#define EZ8_UART1
+  125 X	#define EZ8_DMA
+  126  	#endif
+  127  	
+  128  	#if defined(_Z8F08)
+MacExp: #if 1
+  129  	#define EZ8_I2C
+  130  	#endif
+  131  	
+  132  	#if defined(_Z8F04A)
+MacExp: #if 0
+  133 X	#define EZ8_NVDS
+  134  	#endif
+  135  	
+  136  	#if defined(_Z8F04A) || defined(_Z8F04) || defined(__ZSLBUILD)
+MacExp: #if 0 || 0 || 0
+  137 X	#define EZ8_PORT4
+  138  	#endif
+  139  	
+  140  	#if defined(_Z8F04A_8PIN) || defined(_Z8F04_8PIN)
+MacExp: #if 0 || 0
+  141 X	#define EZ8_PORT1
+  142 X	#undef EZ8_IRQ3
+  143  	#endif
+  144  	
+  145  	#if defined(_Z8F0830A)
+MacExp: #if 0
+  146 X	#undef EZ8_UART0
+  147  	#endif
+  148  	
+  149  	#if defined(_Z8FMC16)
+MacExp: #if 0
+  150 X	#define EZ8_ADC_NEW
+  151 X	#define EZ8_PWM
+  152 X	#undef EZ8_TIMER2
+  153 X	#undef EZ8_IRQ3
+  154  	#endif
+  155  	
+  156  	#if defined(_Z8F1680_OR_Z8F648)
+MacExp: #if 0
+  157 X	#define EZ8_TIMER3
+  158 X	#define EZ8_I2C
+  159 X	#define EZ8_PORT4
+  160 X	#define EZ8_NVDS
+  161  	#endif
+  162  	
+  163  	#if defined(_Z8F2480XH) || defined(_Z8F2480XJ) || defined(_Z8F2480XM) || defined(_Z8F2480XN)
+MacExp: #if 0 || 0 || 0 || 0
+  164 X	#undef EZ8_NVDS
+  165  	#endif
+  166  	
+  167  	#if defined(_Z8F2481XH) || defined(_Z8F2481XJ) || defined(_Z8F2481XM) || defined(_Z8F2481XN)
+MacExp: #if 0 || 0 || 0 || 0
+  168 X	#undef EZ8_NVDS
+  169  	#endif
+  170  	
+  171  	#if defined(_Z8ENCORE_XP_F6482_SERIES_64K)
+MacExp: #if 0
+  172 X	#undef EZ8_NVDS
+  173  	#endif
+  174  	
+  175  	#if defined(_Z8F2480XH) || defined(_Z8F1680XH) || defined(_Z8F0880XH) || defined(_Z8F0480XH)
+MacExp: #if 0 || 0 || 0 || 0
+  176 X	#define EZ8_ADC_NEW
+  177  	#endif
+  178  	
+  179  	#if defined(_Z8F2480XJ) || defined(_Z8F1680XJ) || defined(_Z8F0880XJ) || defined(_Z8F0480XJ)
+MacExp: #if 0 || 0 || 0 || 0
+  180 X	#define EZ8_ESPI
+  181 X	#define EZ8_ADC_NEW
+  182  	#endif
+  183  	
+  184  	#if defined(_Z8F2480XM) || defined(_Z8F1680XM) || defined(_Z8F0880XM) || defined(_Z8F0480XM)
+MacExp: #if 0 || 0 || 0 || 0
+  185 X	#define EZ8_ESPI
+  186 X	#define EZ8_UART1
+  187 X	#define EZ8_CMP1
+  188 X	#define EZ8_ADC_NEW
+  189 X	#define EZ8_PORT5 
+  190  	#endif
+  191  	
+  192  	#if defined(_Z8F2480XN) || defined(_Z8F1680XN) || defined(_Z8F0880XN) || defined(_Z8F0480XN)
+MacExp: #if 0 || 0 || 0 || 0
+  193 X	#define EZ8_ESPI
+  194 X	#define EZ8_UART1
+  195 X	#define EZ8_CMP1
+  196 X	#define EZ8_ADC_NEW
+  197 X	#define EZ8_PORT5
+  198 X	#define EZ8_MCT
+  199  	#endif
+  200  	
+  201  	#if defined(_Z8F2481XJ) || defined(_Z8F1681XJ) || defined(_Z8F0881XJ) || defined(_Z8F0481XJ)
+MacExp: #if 0 || 0 || 0 || 0
+  202 X	#define EZ8_ESPI
+  203  	#endif
+  204  	
+  205  	#if defined(_Z8F2481XM) || defined(_Z8F1681XM) || defined(_Z8F0881XM) || defined(_Z8F0481XM)
+MacExp: #if 0 || 0 || 0 || 0
+  206 X	#define EZ8_ESPI
+  207 X	#define EZ8_UART1
+  208 X	#define EZ8_CMP1
+  209 X	#define EZ8_PORT5 
+  210  	#endif
+  211  	
+  212  	#if defined(_Z8F2481XN) || defined(_Z8F1681XN) || defined(_Z8F0881XN) || defined(_Z8F0481XN)
+MacExp: #if 0 || 0 || 0 || 0
+  213 X	#define EZ8_ESPI
+  214 X	#define EZ8_UART1
+  215 X	#define EZ8_CMP1
+  216 X	#define EZ8_PORT5 
+  217 X	#define EZ8_MCT
+  218  	#endif
+  219  	
+  220  	#if defined(_Z8FMC16100) || defined(_Z8FMC08100) || defined(_Z8FMC04100)
+MacExp: #if 0 || 0 || 0
+  221 X	#define EZ8_I2C
+  222 X	#define EZ8_SPI
+  223  	#endif
+  224  	
+  225  	#if  defined(_Z8F6423) || defined(_Z8F6422) || defined(_Z8F4823) || defined(_Z8F4822)
+MacExp: #if  0 || 0 || 0 || 0
+  226 X	#define EZ8_TIMER4
+  227  	#endif
+  228  	
+  229  	#if  defined(_Z8F3222) || defined(_Z8F2422) || defined(_Z8F1622)    
+MacExp: #if  0 || 0 || 0    
+  230 X	#define EZ8_TIMER4
+  231  	#endif
+  232  	
+  233  	#if  defined(_Z8F6423) || defined(_Z8F6422) || defined(_Z8F4823) || defined(_Z8F4822) || defined(__ZSLBUILD)
+MacExp: #if  0 || 0 || 0 || 0 || 0
+  234 X	#define EZ8_PORT8
+  235  	#endif
+  236  	
+  237  	#if  defined(_Z8F3222) || defined(_Z8F2422) || defined(_Z8F1622)
+MacExp: #if  0 || 0 || 0
+  238 X	#define EZ8_PORT8
+  239  	#endif
+  240  	
+  241  	#if  defined(_Z8F6403) || defined(_Z8F6402) || defined(_Z8F4803) || defined(_Z8F4802)
+MacExp: #if  0 || 0 || 0 || 0
+  242 X	#define EZ8_TIMER4
+  243  	#endif
+  244  	
+  245  	#if  defined(_Z8F3202) || defined(_Z8F2402) || defined(_Z8F1602)    
+MacExp: #if  0 || 0 || 0    
+  246 X	#define EZ8_TIMER4
+  247  	#endif
+  248  	
+  249  	#if  defined(_Z8F6403) || defined(_Z8F6402) || defined(_Z8F4803) || defined(_Z8F4802)
+MacExp: #if  0 || 0 || 0 || 0
+  250 X	#define EZ8_PORT8
+  251  	#endif
+  252  	
+  253  	#if  defined(_Z8F3202) || defined(_Z8F2402) || defined(_Z8F1602)
+MacExp: #if  0 || 0 || 0
+  254 X	#define EZ8_PORT8
+  255  	#endif
+  256  	
+  257  	
+  258  	#if defined(_Z8F0822) || defined(_Z8F0812) || defined(_Z8F0422) || defined(_Z8F0412)
+MacExp: #if 1 || 0 || 0 || 0
+  259  	#define EZ8_SPI 
+  260  	#endif
+  261  	
+  262  	#if defined(_Z8F0822) || defined(_Z8F0821) || defined(_Z8F0422) || defined(_Z8F0421)
+MacExp: #if 1 || 0 || 0 || 0
+  263  	#define EZ8_ADC 
+  264  	#endif
+  265  	
+  266  	#if defined(_Z8F042A) || defined(_Z8F022A) || defined(_Z8F012A) || defined(_Z8F082A) || defined(_ZMOTION)
+MacExp: #if 0 || 0 || 0 || 0 || 0
+  267 X	#define EZ8_ADC
+  268  	#endif
+  269  	
+  270  	#if defined(_Z8F042AXB) || defined(_Z8F022AXB) || defined(_Z8F012AXB) || defined(_Z8F082AXB)
+MacExp: #if 0 || 0 || 0 || 0
+  271 X	#define EZ8_ADC
+  272  	#endif
+  273  	
+  274  	#if defined(_Z8F0423XH) || defined(_Z8F0223XH) || defined(_Z8F0123XH)
+MacExp: #if 0 || 0 || 0
+  275 X	#define EZ8_ADC
+  276  	#endif
+  277  	
+  278  	#if defined(_Z8F0423XJ) || defined(_Z8F0223XJ) || defined(_Z8F0123XJ) 
+MacExp: #if 0 || 0 || 0 
+  279 X	#define EZ8_ADC
+  280  	#endif
+  281  	
+  282  	#if defined(_Z8F0423) || defined(_Z8F0223) || defined(_Z8F0123)
+MacExp: #if 0 || 0 || 0
+  283 X	#define EZ8_ADC
+  284  	#endif
+  285  	
+  286  	#if defined(_Z8F0423XB) || defined(_Z8F0223XB) || defined(_Z8F0123XB)
+MacExp: #if 0 || 0 || 0
+  287 X	#define EZ8_ADC
+  288  	#endif
+  289  	
+  290  	#if defined(_Z8F0823) || defined(_Z8F0823XB)
+MacExp: #if 0 || 0
+  291 X	#define EZ8_ADC
+  292  	#endif
+  293  	
+  294  	#if defined(_Z8F1232) || defined(_Z8F0832) || defined(_Z8F0830) || defined(_Z8F0430) || defined(_Z8F0432)
+MacExp: #if 0 || 0 || 0 || 0 || 0
+  295 X	#define EZ8_ADC_NEW
+  296  	#endif
+  297  	
+  298  	#if defined(_Z8F0232) || defined(_Z8F0230) || defined(_Z8F0132) || defined(_Z8F0130)
+MacExp: #if 0 || 0 || 0 || 0
+  299 X	#define EZ8_ADC_NEW
+  300  	#endif
+  301  	
+  302  	#if defined(_Z8F1232) || defined(_Z8F1233) || defined(_Z8F0832) || defined(_Z8F0833) || defined(_Z8F0432)
+MacExp: #if 0 || 0 || 0 || 0 || 0
+  303 X	#undef EZ8_NVDS
+  304  	#endif
+  305  	
+  306  	#if defined(_Z8F0433) || defined(_Z8F0232) || defined(_Z8F0233) || defined(_Z8F0132) || defined(_Z8F0133)
+MacExp: #if 0 || 0 || 0 || 0 || 0
+  307 X	#undef EZ8_NVDS
+  308  	#endif
+  309  	
+  310  	#if defined(_Z8F083A) || defined(_Z8F043A)
+MacExp: #if 0 || 0
+  311 X	#define EZ8_ADC_NEW
+  312  	#endif
+  313  	
+  314  	#if defined(_Z8F081A) || defined(_Z8F082A) || defined(_Z8F081AXB) || defined(_Z8F082AXB) || defined(_ZMOTION)
+MacExp: #if 0 || 0 || 0 || 0 || 0
+  315 X	#undef EZ8_NVDS
+  316  	#endif
+  317  	
+  318  	#if defined(_Z8F648)
+MacExp: #if 0
+  319 X	#define EZ8_DUAL_ESPI
+  320 X	#define EZ8_DUAL_ESPI_ESPI1
+  321 X	#define EZ8_UART1
+  322 X	#define EZ8_DUAL_CMP
+  323 X	#define EZ8_DUAL_CMP_CMP1
+  324 X	#define EZ8_ADC_NEWER
+  325 X	#define EZ8_DAC
+  326 X	#define EZ8_MCT
+  327 X	#define EZ8_RTC
+  328 X	#define EZ8_USB
+  329 X	#define EZ8_CLKCTL
+  330 X	#define EZ8_OP_AMPS_AB
+  331 X	#define EZ8_OP_AMPS_AB_AMP_B
+  332 X	#define EZ8_EVENT_SYS
+  333 X	#define EZ8_DMA_NEW
+  334 X	#define EZ8_LCD
+  335 X	#define EZ8_AES
+  336 X	#define EZ8_IRQ4
+  337 X	#define EZ8_PORT5
+  338  	#endif
+  339  	
+  340  	#if (!defined(_Z8F6482XR)) && (!defined(_Z8F6482XT)) && (!defined(_Z8F6082XR)) && (!defined(_Z8F6082XT)) \
+  341  	 && (!defined(_Z8F3282XR)) && (!defined(_Z8F3282XT)) && (!defined(_Z8F1682XR)) && (!defined(_Z8F1682XT))
+MacExp: #if (!0) && (!0) && (!0) && (!0)  && (!0) && (!0) && (!0) && (!0)
+  342 C	// Part is an FXX81 MCU: no LCD
+  343  	#undef EZ8_LCD
+  344  	#else
+  345 X	// Part is an FXX82 MCU: has Ports H & J
+  346 X	#define EZ8_PORT9
+  347  	#endif
+  348  	
+  349  	#if defined(_Z8F6482XR) || defined(_Z8F6082XR) || defined(_Z8F3282XR) || defined(_Z8F1682XR) \
+  350  	 || defined(_Z8F6481XK) || defined(_Z8F6081XK) || defined(_Z8F3281XK) || defined(_Z8F1681XK)
+MacExp: #if 0 || 0 || 0 || 0  || 0 || 0 || 0 || 0
+  351 X	// These F6482 variants have several omitted peripherals in common
+  352 X	#undef EZ8_UART1
+  353 X	#undef EZ8_MCT
+  354 X	#undef EZ8_DUAL_CMP_CMP1
+  355 X	#undef EZ8_OP_AMPS_AB_AMP_B
+  356  	#endif
+  357  	
+  358  	#if defined(_Z8F6482XR) || defined(_Z8F6082XR) || defined(_Z8F3282XR) || defined(_Z8F1682XR)
+MacExp: #if 0 || 0 || 0 || 0
+  359 X	// These F6482 variants have no USB support
+  360 X	#undef EZ8_USB
+  361  	#endif
+  362  	
+  363  	#if defined(_Z8F6481XN) || defined(_Z8F6081XN) || defined(_Z8F3281XN) || defined(_Z8F1681XN) \
+  364  	 || defined(_Z8F6481XK) || defined(_Z8F6081XK) || defined(_Z8F3281XK) || defined(_Z8F1681XK)
+MacExp: #if 0 || 0 || 0 || 0  || 0 || 0 || 0 || 0
+  365 X	// These F6482 variants have no 2nd ESPI controller
+  366 X	#undef EZ8_DUAL_ESPI_ESPI1
+  367  	#endif
+  368  	
+  369  	#if defined(_Z8F6481XR) || defined(_Z8F6081XR) || defined(_Z8F3281XR) || defined(_Z8F1681XR)
+MacExp: #if 0 || 0 || 0 || 0
+  370 X	// Have Ports F & G
+  371 X	#define EZ8_PORT7
+  372  	#endif
+  373  	
+  374  	#if defined(_Z8F6482XR) || defined(_Z8F6082XR) || defined(_Z8F3282XR) || defined(_Z8F1682XR)
+MacExp: #if 0 || 0 || 0 || 0
+  375 X	// Have NO Port E, although they do have Ports F through J!
+  376 X	#define EZ8_NO_PORT5
+  377  	#endif
+  378  	
+  379 C	/*      Interrupt vectors */
+  380  	#if defined(ENCORE_VECTORS)
+MacExp: #if 1
+  381  	#define  RESET     0
+  382  	#define  WDT       1
+  383  	#define  TRAP      2
+  384  	
+  385  	#if defined(EZ8_TIMER3)
+MacExp: #if 0
+  386 X	#define  TIMER2    3
+  387  	#endif
+  388  	
+  389  	#define  TIMER1    4
+  390  	#define  TIMER0    5
+  391  	
+  392  	#if defined(EZ8_UART0)
+MacExp: #if 1
+  393  	#define  UART0_RX  6
+  394  	#define  UART0_TX  7
+  395  	#endif
+  396  	
+  397  	#if defined(EZ8_I2C)
+MacExp: #if 1
+  398  	#define  I2C       8
+  399  	#endif
+  400  	
+  401  	#if defined(EZ8_SPI)
+MacExp: #if 1
+  402  	#define  SPI       9
+  403  	#endif
+  404  	
+  405  	#if  defined(EZ8_ADC)
+MacExp: #if  1
+  406  	#define  ADC       10
+  407  	#endif
+  408  	
+  409  	#define  P7AD      11
+  410  	#define  P6AD      12
+  411  	#define  P5AD      13
+  412  	#define  P4AD      14
+  413  	#define  P3AD      15
+  414  	#define  P2AD      16
+  415  	#define  P1AD      17
+  416  	#define  P0AD      18
+  417  	
+  418  	#if defined(EZ8_TIMER4)
+MacExp: #if 0
+  419 X	#define  TIMER3    19
+  420  	#endif
+  421  	
+  422  	#if defined(EZ8_UART1)
+MacExp: #if 0
+  423 X	#define  UART1_RX  20
+  424 X	#define  UART1_TX  21
+  425  	#endif
+  426  	
+  427  	#if defined(EZ8_DMA)
+MacExp: #if 0
+  428 X	#define  DMA       22
+  429  	#endif
+  430  	
+  431  	
+  432  	#if !defined(EZ8_PORT1)
+MacExp: #if !0
+  433  	#define  C3        23
+  434  	#define  C2        24
+  435  	#define  C1        25
+  436  	#define  C0        26
+  437  	#endif
+  438  	
+  439  	#endif
+  440  	
+  441  	
+  442  	#if defined(ENCORE_XP_VECTORS)
+MacExp: #if 0
+  443 X	#define  RESET     0
+  444 X	#define  WDT       1
+  445 X	#define  TRAP      2
+  446 X	
+  447 X	#if defined(EZ8_TIMER3)
+MacExp: #if 0
+  448 X	#define  TIMER2    3
+  449 X	#endif
+  450 X	
+  451 X	#define  TIMER1    4
+  452 X	#define  TIMER0    5
+  453 X	
+  454 X	#if defined(EZ8_UART0)
+MacExp: #if 1
+  455 X	#define  UART0_RX  6
+  456 X	#define  UART0_TX  7
+  457 X	#endif
+  458 X	
+  459 X	#if defined(EZ8_I2C)
+MacExp: #if 1
+  460 X	#define  I2C       8
+  461 X	#endif
+  462 X	
+  463 X	#if defined(EZ8_SPI)
+MacExp: #if 1
+  464 X	#define  SPI       9
+  465 X	#endif
+  466 X	
+  467 X	#if  defined(EZ8_ADC) || defined(EZ8_ADC_NEW)
+MacExp: #if  1 || 0
+  468 X	#define  ADC       10
+  469 X	#endif
+  470 X	
+  471 X	#define  P7AD      11
+  472 X	#define  P6AD      12
+  473 X	#define  P5AD      13
+  474 X	#define  P4AD      14
+  475 X	#define  P3AD      15
+  476 X	#define  P2AD      16
+  477 X	#define  P1AD      17
+  478 X	#define  P0AD      18
+  479 X	
+  480 X	#if defined(EZ8_TIMER4)
+MacExp: #if 0
+  481 X	#define  TIMER3    19
+  482 X	#endif
+  483 X	
+  484 X	#if defined(EZ8_UART1)
+MacExp: #if 0
+  485 X	#define  UART1_RX  20
+  486 X	#define  UART1_TX  21
+  487 X	#endif
+  488 X	
+  489 X	#if defined(EZ8_DMA)
+MacExp: #if 0
+  490 X	#define  DMA       22
+  491 X	#endif
+  492 X	
+  493 X	#if !defined(EZ8_PORT1)
+MacExp: #if !0
+  494 X	#define  C3        23
+  495 X	#define  C2        24
+  496 X	#define  C1        25
+  497 X	#define  C0        26
+  498 X	#endif
+  499 X	
+  500 X	#define  POTRAP    28
+  501 X	#define  WOTRAP    29
+  502  	#endif
+  503  	
+  504  	
+  505  	#if defined(ENCORE_XP16K_VECTORS)
+MacExp: #if 0
+  506 X	#define  RESET     0
+  507 X	#define  WDT       1
+  508 X	#define  TRAP      2
+  509 X	
+  510 X	#if defined(EZ8_TIMER3)
+MacExp: #if 0
+  511 X	#define  TIMER2    3
+  512 X	#endif
+  513 X	
+  514 X	#define  TIMER1    4
+  515 X	#define  TIMER0    5
+  516 X	
+  517 X	#if defined(EZ8_UART0)
+MacExp: #if 1
+  518 X	#define  UART0_RX  6
+  519 X	#define  UART0_TX  7
+  520 X	#endif
+  521 X	
+  522 X	#if defined(EZ8_I2C)
+MacExp: #if 1
+  523 X	#define  I2C       8
+  524 X	#endif
+  525 X	
+  526 X	#if defined(EZ8_ESPI)
+MacExp: #if 0
+  527 X	#define  SPI       9
+  528 X	#endif
+  529 X	
+  530 X	#if  defined(EZ8_ADC_NEW)
+MacExp: #if  0
+  531 X	#define  ADC       10
+  532 X	#endif
+  533 X	
+  534 X	#define  P7AD      11
+  535 X	#define  P6AD      12
+  536 X	#define  P5AD      13
+  537 X	#define  P4AD      14
+  538 X	#define  P3AD      15
+  539 X	#define  P2AD      16
+  540 X	#define  P1AD      17
+  541 X	#define  P0AD      18
+  542 X	
+  543 X	#if defined(EZ8_MCT)
+MacExp: #if 0
+  544 X	#define  MCT       20
+  545 X	#endif
+  546 X	
+  547 X	#if defined(EZ8_UART1)
+MacExp: #if 0
+  548 X	#define  UART1_RX  21
+  549 X	#define  UART1_TX  22
+  550 X	#endif
+  551 X	
+  552 X	#define  C3        23
+  553 X	#define  C2        24
+  554 X	#define  C1        25
+  555 X	#define  C0        26
+  556 X	#define  POTRAP    28
+  557 X	#define  WOTRAP    29
+  558  	#endif
+  559  	
+  560  	
+  561  	#if defined(ENCORE_MC_VECTORS)
+MacExp: #if 0
+  562 X	#define  RESET     0
+  563 X	#define  WDT       1
+  564 X	#define  TRAP      2
+  565 X	#define  PWMTIMER  3
+  566 X	#define  PWMFAULT  4
+  567 X	
+  568 X	#if defined(EZ8_ADC_NEW)
+MacExp: #if 0
+  569 X	#define  ADC       5
+  570 X	#endif
+  571 X	
+  572 X	#define  CMP       6
+  573 X	#define  TIMER0    7
+  574 X	
+  575 X	#if defined(EZ8_UART0)
+MacExp: #if 1
+  576 X	#define  UART0_RX  8
+  577 X	#define  UART0_TX  9
+  578 X	#endif
+  579 X	
+  580 X	#if defined(EZ8_SPI)
+MacExp: #if 1
+  581 X	#define  SPI       10
+  582 X	#endif
+  583 X	
+  584 X	#if defined(EZ8_I2C)
+MacExp: #if 1
+  585 X	#define  I2C       11
+  586 X	#endif
+  587 X	
+  588 X	#define  C0        13
+  589 X	#define  PB        14
+  590 X	#define  P7A       15
+  591 X	#define  P3A       15
+  592 X	#define  P6A       16
+  593 X	#define  P2A       16
+  594 X	#define  P5A       17
+  595 X	#define  P1A       17
+  596 X	#define  P4A       18
+  597 X	#define  P0A       18
+  598 X	#define  POTRAP    28
+  599 X	#define  WOTRAP    29
+  600  	#endif 
+  601  	
+  602  	#if defined(ENCORE_F6482_VECTORS)
+MacExp: #if 0
+  603 X	#define  RESET     0
+  604 X	#define  WDT       1
+  605 X	#define  TRAP      2
+  606 X	
+  607 X	#if defined(EZ8_TIMER3)
+MacExp: #if 0
+  608 X	#define  TIMER2    3
+  609 X	#endif
+  610 X	
+  611 X	#define  TIMER1    4
+  612 X	#define  TIMER0    5
+  613 X	
+  614 X	#if defined(EZ8_UART0)
+MacExp: #if 1
+  615 X	#define  UART0_RX  6
+  616 X	#define  UART0_TX  7
+  617 X	#endif
+  618 X	
+  619 X	#if defined(EZ8_USB)
+MacExp: #if 0
+  620 X	#define USB		   8
+  621 X	#define USB_HOST   9
+  622 X	#endif
+  623 X	
+  624 X	#if defined(EZ8_I2C)
+MacExp: #if 1
+  625 X	#define  I2C       10
+  626 X	#endif
+  627 X	
+  628 X	#if defined(EZ8_DUAL_ESPI)  && defined(EZ8_DUAL_ESPI_ESPI1)
+MacExp: #if 0  && 0
+  629 X	#define  SPI1      11
+  630 X	#endif
+  631 X	
+  632 X	#if  defined(EZ8_DAC)
+MacExp: #if  0
+  633 X	#define  DAC       12
+  634 X	#endif
+  635 X	
+  636 X	#if defined(EZ8_DMA_NEW)
+MacExp: #if 0
+  637 X	#define  DMA1      13
+  638 X	#define  DMA0      14
+  639 X	#endif
+  640 X	
+  641 X	#if defined(EZ8_ADC_NEWER)
+MacExp: #if 0
+  642 X	#define  ADC       15
+  643 X	#endif
+  644 X	
+  645 X	#if defined(EZ8_DUAL_ESPI)
+MacExp: #if 0
+  646 X	#define  SPI0      16
+  647 X	#endif
+  648 X	
+  649 X	#if defined(EZ8_LCD)
+MacExp: #if 0
+  650 X	#define  LCD       17
+  651 X	#endif
+  652 X	
+  653 X	#if defined(EZ8_RTC)
+MacExp: #if 0
+  654 X	#define  RTC       18
+  655 X	#endif
+  656 X	
+  657 X	#define  P7AD      19
+  658 X	#define  P6AD      20
+  659 X	#define  P5AD      21
+  660 X	#define  P4AD      22
+  661 X	#define  P3AD      23
+  662 X	#define  P2AD      24
+  663 X	#define  P1AD      25
+  664 X	#define  P0AD      26
+  665 X	
+  666 X	#if defined(EZ8_AES)
+MacExp: #if 0
+  667 X	#define  AES       27
+  668 X	#endif
+  669 X	
+  670 X	#if defined(EZ8_MCT)
+MacExp: #if 0
+  671 X	#define  MCT       28
+  672 X	#endif
+  673 X	
+  674 X	#if defined(EZ8_UART1)
+MacExp: #if 0
+  675 X	#define  UART1_RX  29
+  676 X	#define  UART1_TX  30
+  677 X	#endif
+  678 X	
+  679 X	#define  C3        31
+  680 X	#define  C2        32
+  681 X	#define  C1        33
+  682 X	#define  C0        34
+  683 X	#define  SCLKTRAP  35
+  684 X	#define  WOTRAP    36
+  685  	#endif /* ENCORE_F6482_VECTORS */
+  686  	
+  687  	
+  688 C	/* For ZSL */
+  689 C	
+  690  	#ifdef EZ8_UART0
+  691  	#define UART0_RX_IVECT			UART0_RX
+  692  	#define UART0_TX_IVECT			UART0_TX
+  693  	#endif
+  694  	
+  695  	#ifdef EZ8_UART1						
+  696 X	#define UART1_RX_IVECT			UART1_RX
+  697 X	#define UART1_TX_IVECT			UART1_TX
+  698  	#endif
+  699  	
+  700  	#define PA7_IVECT			PAD7_IVECT
+  701  	#define PA6_IVECT			PAD6_IVECT
+  702  	#define PA5_IVECT			PAD5_IVECT
+  703  	#define PA4_IVECT			PAD4_IVECT
+  704  	#define PA3_IVECT			PAD3_IVECT
+  705  	#define PA2_IVECT			PAD2_IVECT
+  706  	#define PA1_IVECT			PAD1_IVECT
+  707  	#define PA0_IVECT			PAD0_IVECT
+  708  								
+  709  	#define PD7_IVECT			PAD7_IVECT
+  710  	#define PD6_IVECT			PAD6_IVECT
+  711  	#define PD5_IVECT			PAD5_IVECT
+  712  	#define PD4_IVECT			PAD4_IVECT
+  713  	#define PD3_IVECT			PAD3_IVECT
+  714  	#define PD2_IVECT			PAD2_IVECT
+  715  	#define PD1_IVECT			PAD1_IVECT
+  716  	#define PD0_IVECT			PAD0_IVECT
+  717  	
+  718  	#define PAD7_IVECT			P7AD
+  719  	#define PAD6_IVECT			P6AD
+  720  	#define PAD5_IVECT			P5AD
+  721  	#define PAD4_IVECT			P4AD
+  722  	#define PAD3_IVECT			P3AD
+  723  	#define PAD2_IVECT			P2AD
+  724  	#define PAD1_IVECT			P1AD
+  725  	#define PAD0_IVECT			P0AD
+  726  	
+  727  	#ifndef EZ8_PORT1
+  728  	#define PC3_IVECT			C3
+  729  	#define PC2_IVECT			C2
+  730  	#define PC1_IVECT			C1
+  731  	#define PC0_IVECT			C0
+  732  	#endif
+  733  	
+  734 C	/*      Special Function Registers */
+  735  	#define T0      (*(unsigned int volatile far*)0xF00)               // Reset = 0x0000 Timer 0
+  736  	#define T0H     (*(unsigned char volatile far*)0xF00)              // Reset = 0x00 Timer 0 High
+  737  	#define T0L     (*(unsigned char volatile far*)0xF01)              // Reset = 0x01 Timer 0 Low
+  738  	#define T0CP    (*(unsigned int volatile far*)0xF02)               // Reset = 0xFFFF Timer 0 Compare
+  739  	#define T0CPH   (*(unsigned char volatile far*)0xF02)              // Reset = 0xFF Timer 0 Compare High
+  740  	#define T0R     (*(unsigned int volatile far*)0xF02)               // Reset = 0xFFFF Timer 0 Compare
+  741  	#define T0RH    (*(unsigned char volatile far*)0xF02)              // Reset = 0xFF Timer 0 Compare High
+  742  	#define T0CPL   (*(unsigned char volatile far*)0xF03)              // Reset = 0xFF Timer 0 Compare Low
+  743  	#define T0RL    (*(unsigned char volatile far*)0xF03)              // Reset = 0xFF Timer 0 Compare Low
+  744  	#if defined(_Z8F1680_OR_Z8F648)
+MacExp: #if 0
+  745 X	#define T0PWM0  (*(unsigned int volatile far*)0xF04)               // Reset = 0x0000 Timer 0 PWM0
+  746 X	#define T0PWM0H (*(unsigned char volatile far*)0xF04)              // Reset = 0x00 Timer 0 PWM0 High
+  747 X	#define T0PWM0L (*(unsigned char volatile far*)0xF05)              // Reset = 0x00 Timer 0 PMW0 Low
+  748  	#else
+  749  	#define T0PWM   (*(unsigned int volatile far*)0xF04)               // Reset = 0x0000 Timer 0 PWM
+  750  	#define T0PWMH  (*(unsigned char volatile far*)0xF04)              // Reset = 0x00 Timer 0 PWM High
+  751  	#define T0PWML  (*(unsigned char volatile far*)0xF05)              // Reset = 0x00 Timer 0 PMW Low
+  752  	#endif
+  753  	
+  754  	#if defined(_Z8F642) || defined(_Z8F04A) || defined(_Z8F08) || defined(_Z8F04) || defined(_Z8FMC16) || defined(_Z8F1680_OR_Z8F648)
+MacExp: #if 0 || 0 || 1 || 0 || 0 || 0
+  755  	#define T0CTL0  (*(unsigned char volatile far*)0xF06)              // Reset = 0x00 Timer 0 Control 0
+  756  	#define T0CTL1  (*(unsigned char volatile far*)0xF07)              // Reset = 0x00 Timer 0 Control 1
+  757  	#endif
+  758  	#define T0CTL   (*(unsigned char volatile far*)0xF07)              // Reset = 0x00 Timer 0 Control
+  759  	
+  760  	#if defined(_Z8FMC16)
+MacExp: #if 0
+  761 X	#define ADCTCAP   (*(unsigned int volatile far*)0xF08)             // Reset = 0xXX Timer 0 Capture Register
+  762 X	#define ADCTCAP_H (*(unsigned char volatile far*)0xF08)            // Reset = 0xXX Timer 0 Capture Register High Byte
+  763 X	#define ADCTCAP_L (*(unsigned char volatile far*)0xF09)            // Reset = 0x00 Timer 0 Capture Register Low Byte
+  764  	#endif
+  765  	
+  766  	#if defined(_Z8F1680_OR_Z8F648)
+MacExp: #if 0
+  767 X	#define T0PWM1  (*(unsigned int volatile far*)0xF20)               // Reset = 0x0000 Timer 0 PWM1
+  768 X	#define T0PWM1H (*(unsigned char volatile far*)0xF20)              // Reset = 0x00 Timer 0 PWM1 High
+  769 X	#define T0PWM1L (*(unsigned char volatile far*)0xF21)              // Reset = 0x00 Timer 0 PMW1 Low
+  770 X	#define T0CTL2  (*(unsigned char volatile far*)0xF22)              // Reset = 0x00 Timer 0 Control 2
+  771 X	#define T0STA   (*(unsigned char volatile far*)0xF23)              // Reset = 0x00 Timer 0 Status
+  772 X	#define T0NFC  (*(unsigned char volatile far*)0xF2C)               // Reset = 0x00 Timer 0 Noise Filter Control
+  773  	#endif
+  774  	
+  775  	#ifdef EZ8_TIMER2
+  776  	#define T1      (*(unsigned int volatile far*)0xF08)               // Reset = 0x0000 Timer 1
+  777  	#define T1H     (*(unsigned char volatile far*)0xF08)              // Reset = 0x00 Timer 1 High
+  778  	#define T1L     (*(unsigned char volatile far*)0xF09)              // Reset = 0x01 Timer 1 Low
+  779  	#define T1CP    (*(unsigned int volatile far*)0xF0A)               // Reset = 0xFFFF Timer 1 Compare
+  780  	#define T1CPH   (*(unsigned char volatile far*)0xF0A)              // Reset = 0xFF Timer 1 Compare High
+  781  	#define T1R     (*(unsigned int volatile far*)0xF0A)               // Reset = 0xFFFF Timer 1 Compare
+  782  	#define T1RH    (*(unsigned char volatile far*)0xF0A)              // Reset = 0xFF Timer 1 Compare High
+  783  	#define T1CPL   (*(unsigned char volatile far*)0xF0B)              // Reset = 0xFF Timer 1 Compare Low
+  784  	#define T1RL    (*(unsigned char volatile far*)0xF0B)              // Reset = 0xFF Timer 1 Compare Low
+  785  	#if defined(_Z8F1680_OR_Z8F648)
+MacExp: #if 0
+  786 X	#define T1PWM0  (*(unsigned int volatile far*)0xF0C)               // Reset = 0x0000 Timer 1 PWM0
+  787 X	#define T1PWM0H (*(unsigned char volatile far*)0xF0C)              // Reset = 0x00 Timer 1 PWM0 High
+  788 X	#define T1PWM0L (*(unsigned char volatile far*)0xF0D)              // Reset = 0x00 Timer 1 PWM0 Low
+  789  	#else
+  790  	#define T1PWM   (*(unsigned int volatile far*)0xF0C)               // Reset = 0x0000 Timer 1 PWM
+  791  	#define T1PWMH  (*(unsigned char volatile far*)0xF0C)              // Reset = 0x00 Timer 1 PWM High
+  792  	#define T1PWML  (*(unsigned char volatile far*)0xF0D)              // Reset = 0x00 Timer 1 PWM Low
+  793  	#endif
+  794  	#if defined(_Z8F642) || defined(_Z8F04A) || defined(_Z8F08) || defined(_Z8F04) || defined(_Z8F1680_OR_Z8F648)
+MacExp: #if 0 || 0 || 1 || 0 || 0
+  795  	#define T1CTL0  (*(unsigned char volatile far*)0xF0E)              // Reset = 0x00 Timer 1 Control 0
+  796  	#define T1CTL1  (*(unsigned char volatile far*)0xF0F)              // Reset = 0x00 Timer 1 Control 1
+  797  	#endif
+  798  	#define T1CTL   (*(unsigned char volatile far*)0xF0F)              // Reset = 0x00 Timer 1 Control
+  799  	#if defined(_Z8F1680_OR_Z8F648)
+MacExp: #if 0
+  800 X	#define T1PWM1  (*(unsigned int volatile far*)0xF24)               // Reset = 0x0000 Timer 1 PWM1
+  801 X	#define T1PWM1H (*(unsigned char volatile far*)0xF24)              // Reset = 0x00 Timer 1 PWM1 High
+  802 X	#define T1PWM1L (*(unsigned char volatile far*)0xF25)              // Reset = 0x00 Timer 1 PMW1 Low
+  803 X	#define T1CTL2  (*(unsigned char volatile far*)0xF26)              // Reset = 0x00 Timer 1 Control 2
+  804 X	#define T1STA   (*(unsigned char volatile far*)0xF27)              // Reset = 0x00 Timer 1 Status
+  805 X	#define T1NFC  (*(unsigned char volatile far*)0xF2D)               // Reset = 0x00 Timer 1 Noise Filter Control
+  806  	#endif
+  807  	#endif
+  808  	
+  809  	#ifdef EZ8_TIMER3
+  810 X	#define T2      (*(unsigned int volatile far*)0xF10)               // Reset = 0x0000 Timer 2
+  811 X	#define T2H     (*(unsigned char volatile far*)0xF10)              // Reset = 0x00 Timer 2 High
+  812 X	#define T2L     (*(unsigned char volatile far*)0xF11)              // Reset = 0x01 Timer 2 Low
+  813 X	#define T2CP    (*(unsigned int volatile far*)0xF12)               // Reset = 0xFFFF Timer 2 Compare
+  814 X	#define T2CPH   (*(unsigned char volatile far*)0xF12)              // Reset = 0xFF Timer 2 Compare High
+  815 X	#define T2R     (*(unsigned int volatile far*)0xF12)               // Reset = 0xFFFF Timer 2 Compare
+  816 X	#define T2RH    (*(unsigned char volatile far*)0xF12)              // Reset = 0xFF Timer 2 Compare High
+  817 X	#define T2CPL   (*(unsigned char volatile far*)0xF13)              // Reset = 0xFF Timer 2 Compare Low
+  818 X	#define T2RL    (*(unsigned char volatile far*)0xF13)              // Reset = 0xFF Timer 2 Compare Low
+  819 X	#if defined(_Z8F1680_OR_Z8F648)
+MacExp: #if 0
+  820 X	#define T2PWM0  (*(unsigned int volatile far*)0xF14)               // Reset = 0x0000 Timer 2 PWM0
+  821 X	#define T2PWM0H (*(unsigned char volatile far*)0xF14)              // Reset = 0x00 Timer 2 PWM0 High
+  822 X	#define T2PWM0L (*(unsigned char volatile far*)0xF15)              // Reset = 0x00 Timer 2 PWM0 Low
+  823 X	#else
+  824 X	#define T2PWM   (*(unsigned int volatile far*)0xF14)               // Reset = 0x0000 Timer 2 PWM
+  825 X	#define T2PWMH  (*(unsigned char volatile far*)0xF14)              // Reset = 0x00 Timer 2 PWM High
+  826 X	#define T2PWML  (*(unsigned char volatile far*)0xF15)              // Reset = 0x00 Timer 2 PWM Low
+  827 X	#endif
+  828 X	#if defined(_Z8F642) || defined(_Z8F1680_OR_Z8F648)
+MacExp: #if 0 || 0
+  829 X	#define T2CTL0  (*(unsigned char volatile far*)0xF16)              // Reset = 0x00 Timer 2 Control 0
+  830 X	#define T2CTL1  (*(unsigned char volatile far*)0xF17)              // Reset = 0x00 Timer 2 Control 1
+  831 X	#endif
+  832 X	#define T2CTL   (*(unsigned char volatile far*)0xF17)              // Reset = 0x00 Timer 2 Control
+  833 X	#if defined(_Z8F1680_OR_Z8F648)
+MacExp: #if 0
+  834 X	#define T2PWM1  (*(unsigned int volatile far*)0xF28)               // Reset = 0x0000 Timer 2 PWM1
+  835 X	#define T2PWM1H (*(unsigned char volatile far*)0xF28)              // Reset = 0x00 Timer 2 PWM1 High
+  836 X	#define T2PWM1L (*(unsigned char volatile far*)0xF29)              // Reset = 0x00 Timer 2 PMW1 Low
+  837 X	#define T2CTL2  (*(unsigned char volatile far*)0xF2A)              // Reset = 0x00 Timer 2 Control 2
+  838 X	#define T2STA   (*(unsigned char volatile far*)0xF2B)              // Reset = 0x00 Timer 2 Status
+  839 X	#define T2NFC  (*(unsigned char volatile far*)0xF2E)               // Reset = 0x00 Timer 2 Noise Filter Control
+  840 X	#endif
+  841  	#endif
+  842  	
+  843  	#ifdef EZ8_TIMER4
+  844 X	#define T3      (*(unsigned int volatile far*)0xF18)               // Reset = 0x0000 Timer 3
+  845 X	#define T3H     (*(unsigned char volatile far*)0xF18)              // Reset = 0x00 Timer 3 High
+  846 X	#define T3L     (*(unsigned char volatile far*)0xF19)              // Reset = 0x01 Timer 3 Low
+  847 X	#define T3CP    (*(unsigned int volatile far*)0xF1A)               // Reset = 0xFFFF Timer 3 Compare
+  848 X	#define T3CPH   (*(unsigned char volatile far*)0xF1A)              // Reset = 0xFF Timer 3 Compare High
+  849 X	#define T3R     (*(unsigned int volatile far*)0xF1A)               // Reset = 0xFFFF Timer 3 Compare
+  850 X	#define T3RH    (*(unsigned char volatile far*)0xF1A)              // Reset = 0xFF Timer 3 Compare High
+  851 X	#define T3CPL   (*(unsigned char volatile far*)0xF1B)              // Reset = 0xFF Timer 3 Compare Low
+  852 X	#define T3RL    (*(unsigned char volatile far*)0xF1B)              // Reset = 0xFF Timer 3 Compare Low
+  853 X	#define T3PWM   (*(unsigned int volatile far*)0xF1C)               // Reset = 0x0000 Timer 3 PWM
+  854 X	#define T3PWMH  (*(unsigned char volatile far*)0xF1C)              // Reset = 0x00 Timer 3 PWM High
+  855 X	#define T3PWML  (*(unsigned char volatile far*)0xF1D)              // Reset = 0x00 Timer 3 PWM Low
+  856 X	#ifdef _Z8F642
+  857 X	#define T3CTL0  (*(unsigned char volatile far*)0xF1E)              // Reset = 0x00 Timer 3 Control 0
+  858 X	#define T3CTL1  (*(unsigned char volatile far*)0xF1F)              // Reset = 0x00 Timer 3 Control 1
+  859 X	#endif
+  860 X	#define T3CTL   (*(unsigned char volatile far*)0xF1F)              // Reset = 0x00 Timer 3 Control
+  861  	#endif  /* EZ8_TIMER4 */
+  862  	
+  863  	#ifdef EZ8_PWM
+  864 X	#define PWMCTL0  (*(unsigned char volatile far*)0xF20)              // Reset = 0x00 PWM Control 0
+  865 X	#define PWMCTL1  (*(unsigned char volatile far*)0xF21)              // Reset = 0x00 PWM Control 1
+  866 X	#define PWMDB    (*(unsigned char volatile far*)0xF22)              // Reset = 0x00 PWM Dead Band
+  867 X	#define PWMMPF   (*(unsigned char volatile far*)0xF23)              // Reset = 0x00 PWM Min Pulse Width Filter
+  868 X	#define PWMFM    (*(unsigned char volatile far*)0xF24)              // Reset = 0x00 PWM Fault Mask
+  869 X	#define PWMFSTAT (*(unsigned char volatile far*)0xF25)              // Reset = 0x00 PWM Fault Status
+  870 X	#define PWMIN    (*(unsigned char volatile far*)0xF26)              // Reset = 0x00 PWM Input Sample
+  871 X	#define PWMOUT   (*(unsigned char volatile far*)0xF27)              // Reset = 0x00 PWM Output Control
+  872 X	#define PWMFCTL  (*(unsigned char volatile far*)0xF28)              // Reset = 0x00 PWM Fault Control
+  873 X	#define CSSHR    (*(unsigned char volatile far*)0xF29)              // Reset = 0x00 PWM Current-Sense Sample & Hold
+  874 X	#define PWMSHC   (*(unsigned char volatile far*)0xF29)              // Reset = 0x00 PWM Current-Sense ADC Trigger Control
+  875 X	#define PWM      (*(unsigned int volatile far*)0xF2C)               // Reset = 0xXXXX PWM
+  876 X	#define PWMH     (*(unsigned char volatile far*)0xF2C)              // Reset = 0xXX PWM High Byte 
+  877 X	#define PWML     (*(unsigned char volatile far*)0xF2D)              // Reset = 0xXX PWM Low Byte
+  878 X	#define PWMR     (*(unsigned int volatile far*)0xF2E)               // Reset = 0xFFFF PWM Reload
+  879 X	#define PWMRH    (*(unsigned char volatile far*)0xF2E)              // Reset = 0xFF PWM Reload High
+  880 X	#define PWMRL    (*(unsigned char volatile far*)0xF2F)              // Reset = 0xFF PWM Reload Low
+  881 X	#define PWMH0D   (*(unsigned int volatile far*)0xF30)               // Reset = 0x0000 PWM0 High Side Duty Cycle
+  882 X	#define PWMH0DH  (*(unsigned char volatile far*)0xF30)              // Reset = 0x00 PWM0 High Side Duty Cycle Hi Byte
+  883 X	#define PWMH0DL  (*(unsigned char volatile far*)0xF31)              // Reset = 0x00 PWM0 High Side Duty Cycle Lo Byte
+  884 X	#define PWML0D   (*(unsigned int volatile far*)0xF32)               // Reset = 0x0000 PWM0 Low Side Duty Cycle
+  885 X	#define PWML0DH  (*(unsigned char volatile far*)0xF32)              // Reset = 0x00 PWM0 Low Side Duty Cycle Hi Byte
+  886 X	#define PWML0DL  (*(unsigned char volatile far*)0xF33)              // Reset = 0x00 PWM0 Low Side Duty Cycle Lo Byte
+  887 X	#define PWMH1D   (*(unsigned int volatile far*)0xF34)               // Reset = 0x0000 PWM1 High Side Duty Cycle
+  888 X	#define PWMH1DH  (*(unsigned char volatile far*)0xF34)              // Reset = 0x00 PWM1 High Side Duty Cycle Hi Byte
+  889 X	#define PWMH1DL  (*(unsigned char volatile far*)0xF35)              // Reset = 0x00 PWM1 High Side Duty Cycle Lo Byte
+  890 X	#define PWML1D   (*(unsigned int volatile far*)0xF36)               // Reset = 0x0000 PWM1 Low Side Duty Cycle
+  891 X	#define PWML1DH  (*(unsigned char volatile far*)0xF36)              // Reset = 0x00 PWM1 Low Side Duty Cycle Hi Byte
+  892 X	#define PWML1DL  (*(unsigned char volatile far*)0xF37)              // Reset = 0x00 PWM1 Low Side Duty Cycle Lo Byte
+  893 X	#define PWMH2D   (*(unsigned int volatile far*)0xF38)               // Reset = 0x0000 PWM2 High Side Duty Cycle
+  894 X	#define PWMH2DH  (*(unsigned char volatile far*)0xF38)              // Reset = 0x00 PWM2 High Side Duty Cycle Hi Byte
+  895 X	#define PWMH2DL  (*(unsigned char volatile far*)0xF39)              // Reset = 0x00 PWM2 High Side Duty Cycle Lo Byte
+  896 X	#define PWML2D   (*(unsigned int volatile far*)0xF3A)               // Reset = 0x0000 PWM2 Low Side Duty Cycle
+  897 X	#define PWML2DH  (*(unsigned char volatile far*)0xF3A)              // Reset = 0x00 PWM2 Low Side Duty Cycle Hi Byte
+  898 X	#define PWML2DL  (*(unsigned char volatile far*)0xF3B)              // Reset = 0x00 PWM2 Low Side Duty Cycle Lo Byte
+  899  	#endif
+  900  	
+  901  	#ifdef EZ8_UART0
+  902  	#define U0D     (*(unsigned char volatile far*)0xF40)              // Reset = 0xXX UART0 Data
+  903  	#define U0TXD   (*(unsigned char volatile far*)0xF40)              // Reset = 0xXX UART0 Data
+  904  	#define U0RXD   (*(unsigned char volatile far*)0xF40)              // Reset = 0xXX UART0 Data
+  905  	#define U0STAT0 (*(unsigned char volatile far*)0xF41)              // Reset = 0x0X UART0 Status 0
+  906  	#define U0CTL0  (*(unsigned char volatile far*)0xF42)              // Reset = 0x00 UART0 Control 0
+  907  	#define U0CTL1  (*(unsigned char volatile far*)0xF43)              // Reset = 0x00 UART0 Control 1
+  908  	#if defined(_Z8FMC16) || defined(_Z8F1680_OR_Z8F648)
+MacExp: #if 0 || 0
+  909 X	#define U0MDSTAT (*(unsigned char volatile far*)0xF44)             // Reset = 0x00 UART0 Mode Select and Status
+  910  	#else
+  911  	#define U0STAT1 (*(unsigned char volatile far*)0xF44)              // Reset = 0x00 UART0 Status 1
+  912  	#endif
+  913  	#if  defined(_Z8F642) || defined(_Z8F04A) || defined(_Z8F08) || defined(_Z8F04) || defined(_Z8FMC16) || defined(_Z8F1680_OR_Z8F648)
+MacExp: #if  0 || 0 || 1 || 0 || 0 || 0
+  914  	#define U0ADDR  (*(unsigned char volatile far*)0xF45)              // Reset = 0x00 UART0 Address Compare Register
+  915  	#endif
+  916  	#define U0BR    (*(unsigned int volatile far*)0xF46)               // Reset = 0xFFFF UARTO Baud Rate
+  917  	#define U0BRH   (*(unsigned char volatile far*)0xF46)              // Reset = 0xFF UARTO Baud Rate High
+  918  	#define U0BRL   (*(unsigned char volatile far*)0xF47)              // Reset = 0xFF UARTO Baud Rate Low
+  919  	#endif
+  920  	
+  921  	#ifdef EZ8_UART1
+  922 X	#define U1D     (*(unsigned char volatile far*)0xF48)              // Reset = 0xXX UART 1 Data
+  923 X	#define U1TXD   (*(unsigned char volatile far*)0xF48)              // Reset = 0xXX UART 1 Data
+  924 X	#define U1RXD   (*(unsigned char volatile far*)0xF48)              // Reset = 0xXX UART 1 Data
+  925 X	#define U1STAT0 (*(unsigned char volatile far*)0xF49)              // Reset = 0x0X UART1 Status 0  		(depends on family)
+  926 X	#define U1CTL0  (*(unsigned char volatile far*)0xF4A)              // Reset = 0x00 UART1 Control 0
+  927 X	#define U1CTL1  (*(unsigned char volatile far*)0xF4B)              // Reset = 0x00 UART1 Control 1
+  928 X	#if defined(_Z8F1680_OR_Z8F648)
+MacExp: #if 0
+  929 X	#define U1MDSTAT (*(unsigned char volatile far*)0xF4C)             // Reset = 0x00 UART1 Mode Select and Status
+  930 X	#else
+  931 X	#define U1STAT1 (*(unsigned char volatile far*)0xF4C)              // Reset = 0x00 UARR1 Status 1
+  932 X	#endif
+  933 X	#if defined(_Z8F642) || defined(_Z8F1680_OR_Z8F648)
+MacExp: #if 0 || 0
+  934 X	#define U1ADDR  (*(unsigned char volatile far*)0xF4D)              // Reset = 0x00 UART1 Address Compare Register
+  935 X	#endif
+  936 X	#define U1BR    (*(unsigned int volatile far*)0xF4E)               // Reset = 0xFFFF UART1 Baud Rate
+  937 X	#define U1BRH   (*(unsigned char volatile far*)0xF4E)              // Reset = 0xFF UART1 Baud Rate High
+  938 X	#define U1BRL   (*(unsigned char volatile far*)0xF4F)              // Reset = 0xFF UART1 Baud Rate Low
+  939  	#endif
+  940  	
+  941  	#ifdef EZ8_I2C
+  942  	#define I2CD    (*(unsigned char volatile far*)0xF50)              // Reset = 0x00 I2C Data
+  943  	#define I2CDATA (*(unsigned char volatile far*)0xF50)              // Reset = 0x00 I2C Data
+  944  	#if defined(_Z8FMC16) || defined(_Z8F1680_OR_Z8F648)
+MacExp: #if 0 || 0
+  945 X	#define I2CISTAT (*(unsigned char volatile far*)0xF51)             // Reset = 0x80 I2C Interrupt Status
+  946  	#else
+  947  	#define I2CSTAT (*(unsigned char volatile far*)0xF51)              // Reset = 0x80 I2C Status
+  948  	#endif
+  949  	#define I2CCTL  (*(unsigned char volatile far*)0xF52)              // Reset = 0x00 I2C Control
+  950  	#define I2CBR   (*(unsigned int volatile far*)0xF53)               // Reset = 0xFFFF I2C Baud Reload
+  951  	#define I2CBRH  (*(unsigned char volatile far*)0xF53)              // Reset = 0xFF I2C Baud Reload High
+  952  	#define I2CBRL  (*(unsigned char volatile far*)0xF54)              // Reset = 0xFF I2C Baud Reload Low
+  953  	
+  954  	#if  defined(_Z8F642) || defined(_Z8F08)
+MacExp: #if  0 || 1
+  955  	#define I2CDST  (*(unsigned char volatile far*)0xF55)              // Reset = 0xC0 I2C Diagnostic State
+  956  	#define I2CDIAG (*(unsigned char volatile far*)0xF56)              // Reset = 0x00 I2C Diagnostic
+  957  	#endif
+  958  	
+  959  	#if defined(_Z8FMC16) || defined(_Z8F1680_OR_Z8F648)
+MacExp: #if 0 || 0
+  960 X	#define I2CSTATE (*(unsigned char volatile far*)0xF55)             // Reset = 0x00 I2C State Register
+  961 X	#define I2CMODE  (*(unsigned char volatile far*)0xF56)             // Reset = 0x00 I2C Mode Register
+  962 X	#define I2CSLVAD (*(unsigned char volatile far*)0xF57)             // Reset = 0x00 I2C Slave Address Register
+  963  	#endif
+  964  	#endif
+  965  	
+  966  	#ifdef EZ8_SPI
+  967  	#define SPID    (*(unsigned char volatile far*)0xF60)              // Reset = 0xXX SPI Data
+  968  	#define SPIDATA (*(unsigned char volatile far*)0xF60)              // Reset = 0xXX SPI Data
+  969  	#define SPICTL  (*(unsigned char volatile far*)0xF61)              // Reset = 0x00 SPI Control
+  970  	#define SPISTAT (*(unsigned char volatile far*)0xF62)              // Reset = 0x00 SPI Status
+  971  	#define SPSTAT  (*(unsigned char volatile far*)0xF62)              // Reset = 0x00 SPI Status
+  972  	#define SPIMODE (*(unsigned char volatile far*)0xF63)              // Reset = 0x00 SPI Mode
+  973  	
+  974  	#if defined(_Z8F642) || defined(_Z8F08) || defined(_Z8FMC16)
+MacExp: #if 0 || 1 || 0
+  975  	#define SPIDST  (*(unsigned char volatile far*)0xF64)              // Reset = 0x00 SPI Diagnostic State
+  976  	#endif
+  977  	
+  978  	#define SPIBR   (*(unsigned int volatile far*)0xF66)               // Reset = 0xFFFF SPI Baud Rate
+  979  	#define SPIBRH  (*(unsigned char volatile far*)0xF66)              // Reset = 0xFF SPI Baud Rate High
+  980  	#define SPIBRL  (*(unsigned char volatile far*)0xF67)              // Reset = 0xFF SPI Baud Rate Low
+  981  	#endif
+  982  	
+  983  	#ifdef EZ8_ESPI
+  984 X	#define ESPIDATA  (*(unsigned char volatile far*)0xF60)              // Reset = 0xXX ESPI Data
+  985 X	#define ESPITDCR  (*(unsigned char volatile far*)0xF61)              // Reset = 0x00 ESPI Transmit Data Command
+  986 X	#define ESPICTL   (*(unsigned char volatile far*)0xF62)              // Reset = 0x00 ESPI Control
+  987 X	#define ESPIMODE  (*(unsigned char volatile far*)0xF63)              // Reset = 0x00 ESPI Mode
+  988 X	#define ESPISTAT  (*(unsigned char volatile far*)0xF64)              // Reset = 0x81 ESPI Status
+  989 X	#define ESPISTATE (*(unsigned char volatile far*)0xF65)              // Reset = 0x00 ESPI State
+  990 X	#define ESPIBR    (*(unsigned int volatile far*)0xF66)               // Reset = 0xFFFF ESPI Baud Rate
+  991 X	#define ESPIBRH   (*(unsigned char volatile far*)0xF66)              // Reset = 0xFF ESPI Baud Rate High
+  992 X	#define ESPIBRL   (*(unsigned char volatile far*)0xF67)              // Reset = 0xFF ESPI Baud Rate Low
+  993  	#endif
+  994  	
+  995  	#ifdef EZ8_DUAL_ESPI
+  996 X	#define ESPI0DATA  (*(unsigned char volatile far*)0xF60)              // Reset = 0xXX ESPI 0 Data
+  997 X	#define ESPI0TDCR  (*(unsigned char volatile far*)0xF61)              // Reset = 0x00 ESPI 0 Transmit Data Command
+  998 X	#define ESPI0CTL   (*(unsigned char volatile far*)0xF62)              // Reset = 0x00 ESPI 0 Control
+  999 X	#define ESPI0MODE  (*(unsigned char volatile far*)0xF63)              // Reset = 0x00 ESPI 0 Mode
+ 1000 X	#define ESPI0STAT  (*(unsigned char volatile far*)0xF64)              // Reset = 0x81 ESPI 0 Status
+ 1001 X	#define ESPI0STATE (*(unsigned char volatile far*)0xF65)              // Reset = 0x00 ESPI 0 State
+ 1002 X	#define ESPI0BR    (*(unsigned int volatile far*)0xF66)               // Reset = 0xFFFF ESPI 0 Baud Rate
+ 1003 X	#define ESPI0BRH   (*(unsigned char volatile far*)0xF66)              // Reset = 0xFF ESPI 0 Baud Rate High
+ 1004 X	#define ESPI0BRL   (*(unsigned char volatile far*)0xF67)              // Reset = 0xFF ESPI 0 Baud Rate Low
+ 1005 X	#ifdef EZ8_DUAL_ESPI_ESPI1
+ 1006 X	#define ESPI1DATA  (*(unsigned char volatile far*)0xF68)              // Reset = 0xXX ESPI 1 Data
+ 1007 X	#define ESPI1TDCR  (*(unsigned char volatile far*)0xF69)              // Reset = 0x00 ESPI 1 Transmit Data Command
+ 1008 X	#define ESPI1CTL   (*(unsigned char volatile far*)0xF6A)              // Reset = 0x00 ESPI 1 Control
+ 1009 X	#define ESPI1MODE  (*(unsigned char volatile far*)0xF6B)              // Reset = 0x00 ESPI 1 Mode
+ 1010 X	#define ESPI1STAT  (*(unsigned char volatile far*)0xF6C)              // Reset = 0x81 ESPI 1 Status
+ 1011 X	#define ESPI1STATE (*(unsigned char volatile far*)0xF6D)              // Reset = 0x00 ESPI 1 State
+ 1012 X	#define ESPI1BR    (*(unsigned int volatile far*)0xF6E)               // Reset = 0xFFFF ESPI 1 Baud Rate
+ 1013 X	#define ESPI1BRH   (*(unsigned char volatile far*)0xF6E)              // Reset = 0xFF ESPI 1 Baud Rate High
+ 1014 X	#define ESPI1BRL   (*(unsigned char volatile far*)0xF6F)              // Reset = 0xFF ESPI 1 Baud Rate Low
+ 1015 X	#endif
+ 1016  	#endif
+ 1017  	
+ 1018  	
+ 1019  	#ifdef EZ8_ADC
+ 1020  	#if defined(_Z8F04A) || defined(_Z8F04)
+MacExp: #if 0 || 0
+ 1021 X	#define ADCCTL0 (*(unsigned char volatile far*)0xF70)              // Reset = 0x00 ADC Control 0
+ 1022 X	#define ADCCTL1 (*(unsigned char volatile far*)0xF71)              // Reset = 0x80 ADC Control 1
+ 1023  	#else
+ 1024  	#define ACTL    (*(unsigned char volatile far*)0xF70)              // Reset = 0x00 ADC Control
+ 1025  	#define ADCCTL  (*(unsigned char volatile far*)0xF70)              // Reset = 0x00 ADC Control
+ 1026  	#endif
+ 1027  	#define ADHR    (*(unsigned char volatile far*)0xF72)              // Reset = 0xXX ADC Data High
+ 1028  	#define ADCD    (*(unsigned int volatile far*)0xF72)               // Reset = 0xXXXX ADC Data
+ 1029  	#define ADCD_H  (*(unsigned char volatile far*)0xF72)              // Reset = 0xXX ADC Data High
+ 1030  	#define ADLR    (*(unsigned char volatile far*)0xF73)              // Reset = 0xXX ADC Data Low
+ 1031  	#define ADCDL   (*(unsigned char volatile far*)0xF73)              // Reset = 0xXX ADC Data Low
+ 1032  	#define ADCD_L  (*(unsigned char volatile far*)0xF73)              // Reset = 0xXX ADC Data Low
+ 1033  	
+ 1034  	#if defined(_Z8F04A)
+MacExp: #if 0
+ 1035 X	#define ADCTHH  (*(unsigned char volatile far*)0xF74)              // Reset = 0xFF ADC High Threshold High Byte
+ 1036 X	#define ADCTLH  (*(unsigned char volatile far*)0xF76)              // Reset = 0x00 ADC Low Threshold High Byte
+ 1037  	#endif
+ 1038  	
+ 1039  	#endif
+ 1040  	
+ 1041  	#ifdef EZ8_ADC_NEW 
+ 1042 X	#define ADCCTL0 (*(unsigned char volatile far*)0xF70)              // Reset = 0x00 ADC Control 0
+ 1043 X	#if !defined(_Z8F0830A)
+MacExp: #if !0
+ 1044 X	#define ADCRD_H (*(unsigned char volatile far*)0xF71)              // Reset = 0xXX ADC Raw Data High Byte
+ 1045 X	#endif
+ 1046 X	#define ADCD    (*(unsigned int volatile far*)0xF72)               // Reset = 0xXXXX ADC Data
+ 1047 X	#define ADCD_H  (*(unsigned char volatile far*)0xF72)              // Reset = 0xXX ADC Data High
+ 1048 X	#define ADCD_L  (*(unsigned char volatile far*)0xF73)              // Reset = 0xXX ADC Data Low
+ 1049 X	#define ADCSST  (*(unsigned char volatile far*)0xF74)              // Reset = 0x0A ADC Sample Settling Time
+ 1050 X	#define ADCST   (*(unsigned char volatile far*)0xF75)              // Reset = 0x14 ADC Sample Time
+ 1051 X	#if !defined(_Z8F0830S)
+MacExp: #if !0
+ 1052 X	#define ADCCP   (*(unsigned char volatile far*)0xF76)              // Reset = 0x00 ADC Clock Prescale
+ 1053 X	#endif
+ 1054  	#endif
+ 1055  	
+ 1056  	#ifdef EZ8_ADC_NEWER
+ 1057 X	#define ADCCTL0		(*(unsigned char volatile far*)0xF70)			// Reset = 0x00 ADC Control 0
+ 1058 X	#define ADCCTL1		(*(unsigned char volatile far*)0xF71)			// Reset = 0x00 ADC Control 1
+ 1059 X	#define ADCCTL2		(*(unsigned char volatile far*)0xF72)			// Reset = 0x00 ADC Control 2
+ 1060 X	#define ADCINS		(*(unsigned int volatile far*)0xF73)			// Reset = 0x00 ADC Input Select
+ 1061 X	#define ADCINSH		(*(unsigned char volatile far*)0xF73)			// Reset = 0x00 ADC Input Select High
+ 1062 X	#define ADCINSL		(*(unsigned char volatile far*)0xF74)			// Reset = 0x00 ADC Input Select Low
+ 1063 X	#define ADCOFF		(*(unsigned char volatile far*)0xF75)			// Reset = 0x00 ADC Offset Calibration
+ 1064 X	#define ADCD		(*(unsigned int volatile far*)0xF76)			// Reset = 0x0000 ADC Data
+ 1065 X	#define ADCD_H		(*(unsigned char volatile far*)0xF76)			// Reset = 0x00 ADC Data High
+ 1066 X	#define ADCD_L		(*(unsigned char volatile far*)0xF77)			// Reset = 0x00 ADC Data Low
+ 1067 X	#define ADCST		(*(unsigned char volatile far*)0xF78)			// Reset = 0x00 ADC Sample Time
+ 1068 X	#define ADCUWIN		(*(unsigned int volatile far*)0xF79)			// Reset = 0xFFFF ADC Upper Window Threshold
+ 1069 X	#define ADCUWINH	(*(unsigned char volatile far*)0xF79)			// Reset = 0xFF ADC Upper Window Threshold High
+ 1070 X	#define ADCUWINL	(*(unsigned char volatile far*)0xF7A)			// Reset = 0xFF ADC Upper Window Threshold Low
+ 1071 X	#define ADCLWIN		(*(unsigned int volatile far*)0xF7B)			// Reset = 0x0000 ADC Lower Window Threshold
+ 1072 X	#define ADCLWINH	(*(unsigned char volatile far*)0xF7B)			// Reset = 0x00 ADC Lower Window Threshold High
+ 1073 X	#define ADCLWINL	(*(unsigned char volatile far*)0xF7C)			// Reset = 0x00 ADC Lower Window Threshold Low
+ 1074  	#endif
+ 1075  	
+ 1076  	#ifdef EZ8_DAC
+ 1077 X	#define DACCTL		(*(unsigned char volatile far*)0xF7D)			// Reset = 0x00 DAC Control 
+ 1078 X	#define DACD		(*(unsigned int volatile far*)0xF7E)			// Reset = 0x0000 DAC Data
+ 1079 X	#define DACD_H		(*(unsigned char volatile far*)0xF7E)			// Reset = 0x00 DAC DAta High
+ 1080 X	#define DACD_L		(*(unsigned char volatile far*)0xF7F)			// Reset = 0x00 DAC Data Low
+ 1081  	#endif
+ 1082  	
+ 1083  	#if defined(_Z8F04A) || defined(_Z8F04) || defined(_Z8F1680_OR_Z8F648) || defined(__ZSLBUILD)
+MacExp: #if 0 || 0 || 0 || 0
+ 1084 X	#define PWRCTL0 (*(unsigned char volatile far*)0xF80)              // Reset = 0xXX Power Control 0
+ 1085 X																	   // (Reset depends on family)
+ 1086 X	#if defined(_Z8F648)
+MacExp: #if 0
+ 1087 X	#define PWRCTL1 (*(unsigned char volatile far*)0xF81)              // Reset = 0x00 Power Control 1
+ 1088 X	#endif
+ 1089 X	
+ 1090 X	#if (defined(_Z8F04A) && !defined(_Z8F04A_8PIN)) || (defined(_Z8F04) && !defined(_Z8F04_8PIN)) || defined(_Z8F1680) || defined(__ZSLBUILD)
+MacExp: #if (0 && !0) || (0 && !0) || 0 || 0
+ 1091 X	#define LEDEN   (*(unsigned char volatile far*)0xF82)              // Reset = 0x00 LED Drive Enable
+ 1092 X	#define LEDLVL  (*(unsigned int volatile far*)0xF83)               // Reset = 0x0000 LED Drive Level
+ 1093 X	#define LEDLVLH (*(unsigned char volatile far*)0xF83)              // Reset = 0x00 LED Drive Level High Byte
+ 1094 X	#define LEDLVLL (*(unsigned char volatile far*)0xF84)              // Reset = 0x00 LED Drive Level Low Byte
+ 1095 X	#endif
+ 1096 X	
+ 1097 X	#if defined(_Z8F1680)
+MacExp: #if 0
+ 1098 X	#define OSCCTL0 (*(unsigned char volatile far*)0xF86)              // Reset = 0xA0 Oscillator Control 0
+ 1099 X	#define OSCCTL1 (*(unsigned char volatile far*)0xF87)              // Reset = 0x00 Oscillator Control 1
+ 1100 X	#else
+ 1101 X	#define OSCCTL  (*(unsigned char volatile far*)0xF86)              // Reset = 0x20 Oscillator Control
+ 1102 X	#endif
+ 1103 X	
+ 1104 X	#if defined(_Z8F04A) || defined(_Z8F04) || defined(_Z8F1680)
+MacExp: #if 0 || 0 || 0
+ 1105 X	#define CMP0    (*(unsigned char volatile far*)0xF90)              // Reset = 0x14 Comparator 0 Control
+ 1106 X	#endif
+ 1107 X	
+ 1108 X	#ifdef EZ8_CMP1
+ 1109 X	#define CMP1    (*(unsigned char volatile far*)0xF91)              // Reset = 0x14 Comparator 1 Control
+ 1110 X	#endif
+ 1111  	#endif
+ 1112  	
+ 1113  	#ifdef EZ8_DUAL_CMP
+ 1114 X	// Dual Comparators
+ 1115 X	#define CMPCTL		(*(unsigned char volatile far*)0xF8F)			// Reset = 0x00 Comparator Control
+ 1116 X	#define CMP0CTL0	(*(unsigned char volatile far*)0xF90)			// Reset = 0x00 Comparator 0 Control 0
+ 1117 X	#define CMP0CTL1	(*(unsigned char volatile far*)0xF91)			// Reset = 0x05 Comparator 0 Control 1
+ 1118 X	#ifdef EZ8_DUAL_CMP_CMP1
+ 1119 X	#define CMP1CTL0	(*(unsigned char volatile far*)0xF92)			// Reset = 0x00 Comparator 1 Control 0 
+ 1120 X	#define CMP1CTL1	(*(unsigned char volatile far*)0xF93)			// Reset = 0x03 Comparator 1 Control 1
+ 1121 X	#endif
+ 1122  	#endif
+ 1123  	
+ 1124  	#if defined(_Z8FMC16)
+MacExp: #if 0
+ 1125 X	#define OSCCTL  (*(unsigned char volatile far*)0xF86)              // Reset = 0x20 Oscillator Control
+ 1126 X	#define OSCDIV  (*(unsigned char volatile far*)0xF87)              // Reset = 0x00 Oscillator Divide
+ 1127 X	#define CMPOPC  (*(unsigned char volatile far*)0xF90)              // Reset = 0x00 Comparator and Opamp Control
+ 1128  	#endif
+ 1129  	
+ 1130  	#ifdef EZ8_MCT
+ 1131 X	#define MCTHL    (*(unsigned int volatile far*)0xFA0)               // Reset = 0x0000 MCT
+ 1132 X	#define MCTH     (*(unsigned char volatile far*)0xFA0)              // Reset = 0x00 MCT High
+ 1133 X	#define MCTL     (*(unsigned char volatile far*)0xFA1)              // Reset = 0x00 MCT Low
+ 1134 X	#define MCTR     (*(unsigned int volatile far*)0xFA2)               // Reset = 0xFFFF MCT Reload
+ 1135 X	#define MCTRH    (*(unsigned char volatile far*)0xFA2)              // Reset = 0xFF MCT Reload High
+ 1136 X	#define MCTRL    (*(unsigned char volatile far*)0xFA3)              // Reset = 0xFF MCT Reload Low
+ 1137 X	#define MCTSA    (*(unsigned char volatile far*)0xFA4)              // Reset = 0xXX MCT Sub Address
+ 1138 X	#define MCTSR0   (*(unsigned char volatile far*)0xFA5)              // Reset = 0xXX MCT Sub Register 0
+ 1139 X	#define MCTSR1   (*(unsigned char volatile far*)0xFA6)              // Reset = 0xXX MCT Sub Register 1
+ 1140 X	#define MCTSR2   (*(unsigned char volatile far*)0xFA7)              // Reset = 0xXX MCT Sub Register 2
+ 1141 X	
+ 1142 X	#define __MCT_CONTROL             0x00
+ 1143 X	#define __MCT_CHANNEL_STATUS      0x01
+ 1144 X	#define __MCT_CHANNEL_A           0x02
+ 1145 X	#define __MCT_CHANNEL_B           0x03
+ 1146 X	#define __MCT_CHANNEL_C           0x04
+ 1147 X	#define __MCT_CHANNEL_D           0x05
+ 1148 X	
+ 1149 X	#define MCTCTL0	  (((MCTSA) =          __MCT_CONTROL),((MCTSR0)))
+ 1150 X	#define MCTCTL1	  (((MCTSA) =          __MCT_CONTROL),((MCTSR1)))
+ 1151 X	#define MCTCHS0	  (((MCTSA) =   __MCT_CHANNEL_STATUS),((MCTSR0)))
+ 1152 X	#define MCTCHS1	  (((MCTSA) =   __MCT_CHANNEL_STATUS),((MCTSR1)))
+ 1153 X	#define MCTCHACTL (((MCTSA) =        __MCT_CHANNEL_A),((MCTSR2)))
+ 1154 X	#define MCTCHBCTL (((MCTSA) =        __MCT_CHANNEL_B),((MCTSR2)))
+ 1155 X	#define MCTCHCCTL (((MCTSA) =        __MCT_CHANNEL_C),((MCTSR2)))
+ 1156 X	#define MCTCHDCTL (((MCTSA) =        __MCT_CHANNEL_D),((MCTSR2)))
+ 1157 X	#define MCTCHAH   (((MCTSA) =        __MCT_CHANNEL_A),((MCTSR0)))
+ 1158 X	#define MCTCHBH   (((MCTSA) =        __MCT_CHANNEL_B),((MCTSR0)))
+ 1159 X	#define MCTCHCH   (((MCTSA) =        __MCT_CHANNEL_C),((MCTSR0)))
+ 1160 X	#define MCTCHDH   (((MCTSA) =        __MCT_CHANNEL_D),((MCTSR0)))
+ 1161 X	#define MCTCHAL   (((MCTSA) =        __MCT_CHANNEL_A),((MCTSR1)))
+ 1162 X	#define MCTCHBL   (((MCTSA) =        __MCT_CHANNEL_B),((MCTSR1)))
+ 1163 X	#define MCTCHCL   (((MCTSA) =        __MCT_CHANNEL_C),((MCTSR1)))
+ 1164 X	#define MCTCHDL   (((MCTSA) =        __MCT_CHANNEL_D),((MCTSR1)))
+ 1165 X	
+ 1166  	#endif
+ 1167  	
+ 1168  	#ifdef EZ8_DMA
+ 1169 X	#define D0CTL     (*(unsigned char volatile far*)0xFB0)            // Reset = 0x00 DMA0 Control
+ 1170 X	#define DMA0CTL   (*(unsigned char volatile far*)0xFB0)            // Reset = 0x00 DMA0 Control
+ 1171 X	#define D0IO      (*(unsigned char volatile far*)0xFB1)            // Reset = 0xXX DMA0 I/O Address
+ 1172 X	#define DMA0IO    (*(unsigned char volatile far*)0xFB1)            // Reset = 0xXX DMA0 I/O Address
+ 1173 X	#define D0HIGH    (*(unsigned char volatile far*)0xFB2)            // Reset = 0xXX DMA0 End/Start Address High
+ 1174 X	#define DMA0H     (*(unsigned char volatile far*)0xFB2)            // Reset = 0xXX DMA0 End/Start Address High
+ 1175 X	#define D0START   (*(unsigned char volatile far*)0xFB3)            // Reset = 0xXX DMA0 Start Address Low
+ 1176 X	#define DMA0START (*(unsigned char volatile far*)0xFB3)            // Reset = 0xXX DMA0 Start Address Low
+ 1177 X	#define D0END     (*(unsigned char volatile far*)0xFB4)            // Reset = 0xXX DMA0 End Address Low
+ 1178 X	#define DMA0END   (*(unsigned char volatile far*)0xFB4)            // Reset = 0xXX DMA0 End Address Low
+ 1179 X	
+ 1180 X	#define D1CTL     (*(unsigned char volatile far*)0xFB8)            // Reset = 0x00 DMA1 Control
+ 1181 X	#define DMA1CTL   (*(unsigned char volatile far*)0xFB8)            // Reset = 0x00 DMA1 Control
+ 1182 X	#define D1IO      (*(unsigned char volatile far*)0xFB9)            // Reset = 0xXX DMA1 I/O Address
+ 1183 X	#define DMA1IO    (*(unsigned char volatile far*)0xFB9)            // Reset = 0xXX DMA1 I/O Address
+ 1184 X	#define D1HIGH    (*(unsigned char volatile far*)0xFBA)            // Reset = 0xXX DMA1 End/Start Address High
+ 1185 X	#define DMA1H     (*(unsigned char volatile far*)0xFBA)            // Reset = 0xXX DMA1 End/Start Address High
+ 1186 X	#define D1START   (*(unsigned char volatile far*)0xFBB)            // Reset = 0xXX DMA1 Start Address Low
+ 1187 X	#define DMA1START (*(unsigned char volatile far*)0xFBB)            // Reset = 0xXX DMA1 Start Address Low
+ 1188 X	#define D1END     (*(unsigned char volatile far*)0xFBC)            // Reset = 0xXX DMA1 End Address Low
+ 1189 X	#define DMA1END   (*(unsigned char volatile far*)0xFBC)            // Reset = 0xXX DMA1 End Address Low
+ 1190 X	
+ 1191 X	#define DAADDR    (*(unsigned char volatile far*)0xFBD)            // Reset = 0xXX ADC DMA Address
+ 1192 X	#define DMAA_ADDR (*(unsigned char volatile far*)0xFBD)            // Reset = 0xXX ADC DMA Address
+ 1193 X	#define DACTL     (*(unsigned char volatile far*)0xFBE)            // Reset = 0x00 ADC DMA Control
+ 1194 X	#define DMAACTL   (*(unsigned char volatile far*)0xFBE)            // Reset = 0x00 ADC DMA Control
+ 1195 X	#define DSTAT     (*(unsigned char volatile far*)0xFBF)            // Reset = 0x00 DMA Status
+ 1196 X	#define DMAASTAT  (*(unsigned char volatile far*)0xFBF)            // Reset = 0x00 DMA Status
+ 1197  	#endif
+ 1198  	
+ 1199  	#ifdef EZ8_DMA_NEW
+ 1200 X	#define DMA0SA		(*(unsigned char volatile far*)0xFA8)			// Reset = 0x00 DMA ch 0 Subregister Address
+ 1201 X	#define DMA0SD		(*(unsigned char volatile far*)0xFA9)			// Reset = 0x00 DMA ch 0 Subregister Data
+ 1202 X	#define DMA1SA		(*(unsigned char volatile far*)0xFAA)			// Reset = 0x00 DMA ch 1 Subregister Address
+ 1203 X	#define DMA1SD		(*(unsigned char volatile far*)0xFAB)			// Reset = 0x00 DMA ch 1 Subregister Data
+ 1204 X	#define DMA2SA		(*(unsigned char volatile far*)0xFAC)			// Reset = 0x00 DMA ch 2 Subregister Address
+ 1205 X	#define DMA2SD		(*(unsigned char volatile far*)0xFAD)			// Reset = 0x00 DMA ch 2 Subregister Data
+ 1206 X	#define DMA3SA		(*(unsigned char volatile far*)0xFAE)			// Reset = 0x00 DMA ch 3 Subregister Address
+ 1207 X	#define DMA3SD		(*(unsigned char volatile far*)0xFAF)			// Reset = 0x00 DMA ch 3 Subregister Data
+ 1208 X	#define DMACTL		(*(unsigned char volatile far*)0xFB0)			// Reset = 0x00 DMA Control Register
+ 1209 X	
+ 1210 X	// The following definitions may be useful if the subregisters must be manipulated directly
+ 1211 X	#define __DMA_SOURCE_HIGH	0x00
+ 1212 X	#define __DMA_SOURCE_LOW	0x01
+ 1213 X	#define __DMA_DEST_HIGH		0x02
+ 1214 X	#define __DMA_DEST_LOW		0x03
+ 1215 X	#define __DMA_COUNT_HIGH	0x04
+ 1216 X	#define __DMA_COUNT_LOW		0x05
+ 1217 X	#define __DMA_CTRL_0		0x06
+ 1218 X	#define __DMA_CTRL_1		0x07
+ 1219 X	#define __DMA_LLA_HIGH		0x08
+ 1220 X	#define __DMA_LLA_LOW		0x09
+ 1221 X	
+ 1222 X	// Due to the auto-incrementing through the subregisters in direct operation, and the implied incrementing
+ 1223 X	// by address in linked list operation,  software generally should not need to define the 40 DMA subregisters
+ 1224 X	// explicitly (4 channels times 10 subregisters per channel), except for the Linked List Address subregisters.
+ 1225 X	// Note that this rather elaborate form for accessing the LLA subregisters (or any others that the user decides
+ 1226 X	// to access directly for any reason) is compelled by the requirement not to overwrite the upper nibble of the
+ 1227 X	// DMAxSA register.  Compare this to the somewhat simpler form used for accessing MCT subregisters.
+ 1228 X	#define DMA0LAH		(((DMA0SA) = (((DMA0SA) & 0xF0) | __DMA_LLA_HIGH)),((DMA0SD)))
+ 1229 X	#define DMA0LAL		(((DMA0SA) = (((DMA0SA) & 0xF0) | __DMA_LLA_LOW)), ((DMA0SD)))
+ 1230 X	#define DMA1LAH		(((DMA1SA) = (((DMA1SA) & 0xF0) | __DMA_LLA_HIGH)),((DMA1SD)))
+ 1231 X	#define DMA1LAL		(((DMA1SA) = (((DMA1SA) & 0xF0) | __DMA_LLA_LOW)), ((DMA1SD)))
+ 1232 X	#define DMA2LAH		(((DMA2SA) = (((DMA2SA) & 0xF0) | __DMA_LLA_HIGH)),((DMA2SD)))
+ 1233 X	#define DMA2LAL		(((DMA2SA) = (((DMA2SA) & 0xF0) | __DMA_LLA_LOW)), ((DMA2SD)))
+ 1234 X	#define DMA3LAH		(((DMA3SA) = (((DMA3SA) & 0xF0) | __DMA_LLA_HIGH)),((DMA3SD)))
+ 1235 X	#define DMA3LAL		(((DMA3SA) = (((DMA3SA) & 0xF0) | __DMA_LLA_LOW)), ((DMA3SD)))
+ 1236 X	
+ 1237  	#endif	// EZ8_DMA_NEW
+ 1238  	
+ 1239  	
+ 1240  	#define IRQ0    (*(unsigned char volatile far*)0xFC0)              // Reset = 0x00 Interrupt Request 0
+ 1241  	#define IRQ0E0  (*(unsigned char volatile far*)0xFC1)              // Reset = 0x00 IRQ0 Enable 0
+ 1242  	#define IRQ0EN  (*(unsigned int volatile far*)0xFC1)               // Reset = 0x0000 IRQ0 Enable
+ 1243  	#define IRQ0ENH (*(unsigned char volatile far*)0xFC1)              // Reset = 0x00 IRQ0 Enable 0
+ 1244  	#define IRQ0E1  (*(unsigned char volatile far*)0xFC2)              // Reset = 0x00 IRQ0 Enable 1
+ 1245  	#define IRQ0ENL (*(unsigned char volatile far*)0xFC2)              // Reset = 0x00 IRQ0 Enable 1
+ 1246  	
+ 1247  	#define IRQ1    (*(unsigned char volatile far*)0xFC3)              // Reset = 0x00 Interrupt Request 1
+ 1248  	#define IRQ1E0  (*(unsigned char volatile far*)0xFC4)              // Reset = 0x00 IRQ1 Enable 0
+ 1249  	#define IRQ1EN  (*(unsigned int volatile far*)0xFC4)               // Reset = 0x0000 IRQ1 Enable
+ 1250  	#define IRQ1ENH (*(unsigned char volatile far*)0xFC4)              // Reset = 0x00 IRQ1 Enable 0
+ 1251  	#define IRQ1E1  (*(unsigned char volatile far*)0xFC5)              // Reset = 0x00 IRQ1 Enable 1
+ 1252  	#define IRQ1ENL (*(unsigned char volatile far*)0xFC5)              // Reset = 0x00 IRQ1 Enable 1
+ 1253  	
+ 1254  	#ifdef EZ8_IRQ3
+ 1255  	#define IRQ2    (*(unsigned char volatile far*)0xFC6)              // Reset = 0x00 Interrupt Request 2
+ 1256  	#define IRQ2E0  (*(unsigned char volatile far*)0xFC7)              // Reset = 0x00 IRQ2 Enable 0
+ 1257  	#define IRQ2EN  (*(unsigned int volatile far*)0xFC7)               // Reset = 0x0000 IRQ2 Enable
+ 1258  	#define IRQ2ENH (*(unsigned char volatile far*)0xFC7)              // Reset = 0x00 IRQ2 Enable 0
+ 1259  	#define IRQ2E1  (*(unsigned char volatile far*)0xFC8)              // Reset = 0xXX IRQ2 Enable 1
+ 1260  	#define IRQ2ENL (*(unsigned char volatile far*)0xFC8)              // Reset = 0xXX IRQ2 Enable 1
+ 1261  	#endif
+ 1262  	
+ 1263  	#ifdef EZ8_IRQ4
+ 1264 X	#define IRQ3    (*(unsigned char volatile far*)0xFC9)              // Reset = 0x00 Interrupt Request 3
+ 1265 X	#define IRQ3E0  (*(unsigned char volatile far*)0xFCA)              // Reset = 0x00 IRQ3 Enable 0
+ 1266 X	#define IRQ3EN  (*(unsigned int volatile far*)0xFCA)               // Reset = 0x0000 IRQ3 Enable
+ 1267 X	#define IRQ3ENH (*(unsigned char volatile far*)0xFCA)              // Reset = 0x00 IRQ3 Enable 0
+ 1268 X	#define IRQ3E1  (*(unsigned char volatile far*)0xFCB)              // Reset = 0xXX IRQ3 Enable 1
+ 1269 X	#define IRQ3ENL (*(unsigned char volatile far*)0xFCB)              // Reset = 0xXX IRQ3 Enable 1
+ 1270  	#endif
+ 1271  	
+ 1272  	#if (!defined (_Z8FMC16) && !defined (_Z8F648))
+MacExp: #if (!0 && !0)
+ 1273  	#define IRQES   (*(unsigned char volatile far*)0xFCD)              // Reset = 0x00 Interrupt Edge Select
+ 1274  	#endif
+ 1275  	
+ 1276  	#if defined(_Z8F648)
+MacExp: #if 0
+ 1277 X	#define IRQES   (*(unsigned char volatile far*)0xFCC)              // Reset = 0x00 Interrupt Edge Select
+ 1278  	#endif
+ 1279  	
+ 1280  	#if defined(_Z8F04A) || defined(_Z8F04) || defined(_Z8F1680) || defined(__ZSLBUILD)
+MacExp: #if 0 || 0 || 0 || 0
+ 1281 X	#define IRQSS   (*(unsigned char volatile far*)0xFCE)              // Reset = 0x00 Shared Interrupt Select
+ 1282  	#endif
+ 1283  	
+ 1284  	#if defined(_Z8F648)
+MacExp: #if 0
+ 1285 X	#define IRQSS0   (*(unsigned char volatile far*)0xFCD)              // Reset = 0x00 Shared Interrupt Select 0
+ 1286 X	#define IRQSS1   (*(unsigned char volatile far*)0xFCE)              // Reset = 0x00 Shared Interrupt Select 1
+ 1287  	#endif
+ 1288  	
+ 1289  	#if (!defined(_Z8F04A) && !defined(_Z8F04) && !defined(_Z8F08) && !defined(_Z8FMC16)) && !defined(_Z8F1680_OR_Z8F648) || defined(__ZSLBUILD)
+MacExp: #if (!0 && !0 && !1 && !0) && !0 || 0
+ 1290 X	#define PS      (*(unsigned char volatile far*)0xFCE)              // Reset = 0x00 Port Select
+ 1291 X	#define IRQPS   (*(unsigned char volatile far*)0xFCE)              // Reset = 0x00 Port Select
+ 1292  	#endif
+ 1293  	
+ 1294  	#define IRQCTL  (*(unsigned char volatile far*)0xFCF)              // Reset = 0x00 Interrupt Control
+ 1295  	
+ 1296  	
+ 1297 C	// GPIO Ports material follows (elaborate!)
+ 1298 C	
+ 1299  	#define __DATA_DIRECTION          0x01
+ 1300  	#define __ALTERNATE_FUNCTION      0x02
+ 1301  	#define __ALTERNATE_FUNCTION0     0x02
+ 1302  	#define __OUTPUT_CONTROL          0x03
+ 1303  	#define __HIGH_DRIVE_ENABLE       0x04
+ 1304  	#define __SMR_ENABLE              0x05
+ 1305  	#define __PULLUP_ENABLE           0x06
+ 1306  	#define __ALTERNATE_FUNCTION1     0x07
+ 1307  	#define __ALTERNATE_FUNCTION_SET1 0x07
+ 1308  	#define __ALTERNATE_FUNCTION_SET2 0x08
+ 1309  	#define __IRQ_EDGE_SELECT         0x08
+ 1310  	#define __IRQ_PORT_SELECT         0x09
+ 1311  	
+ 1312  	#define PAADDR  (*(unsigned char volatile far*)0xFD0)              // Reset = 0x00 Port A Address
+ 1313  	#define PACTL   (*(unsigned char volatile far*)0xFD1)              // Reset = 0x00 Port A Control
+ 1314  	#define PAIN    (*(unsigned char volatile far*)0xFD2)              // Reset = 0xXX Port A Input Data
+ 1315  	#define PAOUT   (*(unsigned char volatile far*)0xFD3)              // Reset = 0x00 Pot A Output Data
+ 1316  	
+ 1317  	#define PADD	(((PAADDR) =          __DATA_DIRECTION),((PACTL)))
+ 1318  	#if defined(_Z8FMC16)
+MacExp: #if 0
+ 1319 X	#define PAAF0	(((PAADDR) =     __ALTERNATE_FUNCTION0),((PACTL)))
+ 1320  	#else
+ 1321  	#define PAAF	(((PAADDR) =      __ALTERNATE_FUNCTION),((PACTL)))
+ 1322  	#endif
+ 1323  	#define PAOC	(((PAADDR) =          __OUTPUT_CONTROL),((PACTL)))
+ 1324  	#define PAHDE	(((PAADDR) =       __HIGH_DRIVE_ENABLE),((PACTL)))
+ 1325  	#define PASMRE	(((PAADDR) =              __SMR_ENABLE),((PACTL)))
+ 1326  	
+ 1327  	#if defined(_Z8F08) || defined(_Z8F04A) || defined(_Z8F04) || defined(_Z8FMC16) || defined(_Z8F1680_OR_Z8F648) || defined (__ZSLBUILD)
+MacExp: #if 1 || 0 || 0 || 0 || 0 || 0
+ 1328  	#define PAPUE	(((PAADDR) =           __PULLUP_ENABLE),((PACTL)))
+ 1329  	#endif
+ 1330  	
+ 1331  	#if defined(_Z8F04A) || defined(_Z8F04) || defined(_Z8F1680_OR_Z8F648) || defined(__ZSLBUILD)
+MacExp: #if 0 || 0 || 0 || 0
+ 1332 X	#define PAAFS1	(((PAADDR) = __ALTERNATE_FUNCTION_SET1),((PACTL)))
+ 1333 X	#if !defined(_Z8F648)
+MacExp: #if !0
+ 1334 X	#define PAAFS2	(((PAADDR) = __ALTERNATE_FUNCTION_SET2),((PACTL)))
+ 1335 X	#endif
+ 1336  	#endif
+ 1337  	
+ 1338  	#if defined(_Z8FMC16)
+MacExp: #if 0
+ 1339 X	#define PAAF1     (((PAADDR) =   __ALTERNATE_FUNCTION1),((PACTL)))
+ 1340 X	#define PAIRQES   (((PAADDR) =       __IRQ_EDGE_SELECT),((PACTL)))
+ 1341 X	#define PAIRQPSEL (((PAADDR) =       __IRQ_PORT_SELECT),((PACTL)))
+ 1342  	#endif
+ 1343  	
+ 1344  	#ifndef EZ8_PORT1
+ 1345  	#define PBADDR  (*(unsigned char volatile far*)0xFD4)              // Reset = 0x00 Port B Address
+ 1346  	#define PBCTL   (*(unsigned char volatile far*)0xFD5)              // Reset = 0x00 Port B Control
+ 1347  	#define PBIN    (*(unsigned char volatile far*)0xFD6)              // Reset = 0xXX Port B Input Data
+ 1348  	#define PBOUT   (*(unsigned char volatile far*)0xFD7)              // Reset = 0x00 Port B Output Data
+ 1349  	
+ 1350  	#define PBDD	(((PBADDR) =          __DATA_DIRECTION),((PBCTL)))
+ 1351  	#if defined(_Z8FMC16)
+MacExp: #if 0
+ 1352 X	#define PBAF0	(((PBADDR) =     __ALTERNATE_FUNCTION0),((PBCTL)))
+ 1353  	#else
+ 1354  	#define PBAF	(((PBADDR) =      __ALTERNATE_FUNCTION),((PBCTL)))
+ 1355  	#endif
+ 1356  	#define PBOC	(((PBADDR) =          __OUTPUT_CONTROL),((PBCTL)))
+ 1357  	#define PBHDE	(((PBADDR) =       __HIGH_DRIVE_ENABLE),((PBCTL)))
+ 1358  	#define PBSMRE	(((PBADDR) =              __SMR_ENABLE),((PBCTL)))
+ 1359  	
+ 1360  	#if  defined(_Z8F08) || defined(_Z8F04A) || defined(_Z8F04) || defined(_Z8FMC16) || defined(_Z8F1680_OR_Z8F648) || defined(__ZSLBUILD)
+MacExp: #if  1 || 0 || 0 || 0 || 0 || 0
+ 1361  	#define PBPUE	(((PBADDR) =           __PULLUP_ENABLE),((PBCTL)))
+ 1362  	#endif
+ 1363  	
+ 1364  	#if defined(_Z8F04A) || defined(_Z8F04) || defined(_Z8F1680_OR_Z8F648) || defined(__ZSLBUILD)
+MacExp: #if 0 || 0 || 0 || 0
+ 1365 X	#define PBAFS1	(((PBADDR) = __ALTERNATE_FUNCTION_SET1),((PBCTL)))
+ 1366 X	#if !defined(_Z8F648)
+MacExp: #if !0
+ 1367 X	#define PBAFS2	(((PBADDR) = __ALTERNATE_FUNCTION_SET2),((PBCTL)))
+ 1368 X	#endif
+ 1369  	#endif
+ 1370  	
+ 1371  	#if defined(_Z8FMC16)
+MacExp: #if 0
+ 1372 X	#define PBAF1	(((PBADDR) =     __ALTERNATE_FUNCTION1),((PBCTL)))
+ 1373  	#endif
+ 1374  	
+ 1375  	#define PCADDR  (*(unsigned char volatile far*)0xFD8)              // Reset = 0x00 Port C Address
+ 1376  	#define PCCTL   (*(unsigned char volatile far*)0xFD9)              // Reset = 0x00 Port C Control
+ 1377  	#define PCIN    (*(unsigned char volatile far*)0xFDA)              // Reset = 0xXX Port C Input Data
+ 1378  	#define PCOUT   (*(unsigned char volatile far*)0xFDB)              // Reset = 0x00 Port C Output Data
+ 1379  	
+ 1380  	#define PCDD	(((PCADDR) =          __DATA_DIRECTION),((PCCTL)))
+ 1381  	#if !defined(_Z8FMC16)
+MacExp: #if !0
+ 1382  	#define PCAF	(((PCADDR) =      __ALTERNATE_FUNCTION),((PCCTL)))
+ 1383  	#endif
+ 1384  	#define PCOC	(((PCADDR) =          __OUTPUT_CONTROL),((PCCTL)))
+ 1385  	#define PCHDE	(((PCADDR) =       __HIGH_DRIVE_ENABLE),((PCCTL)))
+ 1386  	#define PCSMRE	(((PCADDR) =              __SMR_ENABLE),((PCCTL)))
+ 1387  	
+ 1388  	#if defined(_Z8F08) || defined(_Z8F04A) || defined(_Z8F04) || defined(_Z8FMC16) || defined(_Z8F1680_OR_Z8F648) || defined(__ZSLBUILD)
+MacExp: #if 1 || 0 || 0 || 0 || 0 || 0
+ 1389  	#define PCPUE	(((PCADDR) =           __PULLUP_ENABLE),((PCCTL)))
+ 1390  	#endif
+ 1391  	
+ 1392  	#if defined(_Z8F04A) || defined(_Z8F04) || defined(_Z8F1680_OR_Z8F648) || defined(__ZSLBUILD)
+MacExp: #if 0 || 0 || 0 || 0
+ 1393 X	#define PCAFS1	(((PCADDR) = __ALTERNATE_FUNCTION_SET1),((PCCTL)))
+ 1394 X	#define PCAFS2	(((PCADDR) = __ALTERNATE_FUNCTION_SET2),((PCCTL)))
+ 1395  	#endif
+ 1396  	
+ 1397  	#if defined(_Z8FMC16)
+MacExp: #if 0
+ 1398 X	#define PCIRQES   (((PCADDR) =       __IRQ_EDGE_SELECT),((PCCTL)))
+ 1399  	#endif
+ 1400  	
+ 1401  	#if (defined(EZ8_PORT4) && !defined(_Z8F04)) || defined(EZ8_PORT8) || defined(EZ8_PORT5) || defined(__ZSLBUILD)
+MacExp: #if (0 && !0) || 0 || 0 || 0
+ 1402 X	#define PDADDR  (*(unsigned char volatile far*)0xFDC)              // Reset = 0x00 Port D Address
+ 1403 X	#define PDCTL   (*(unsigned char volatile far*)0xFDD)              // Reset = 0x00 Port D Control
+ 1404 X	#if !defined(_Z8F04A) || defined(__ZSLBUILD)
+MacExp: #if !0 || 0
+ 1405 X	#define PDIN    (*(unsigned char volatile far*)0xFDE)              // Reset = 0xXX Port D Input Data
+ 1406 X	#endif
+ 1407 X	#define PDOUT   (*(unsigned char volatile far*)0xFDF)              // Reset = 0x00 Port D Output Data
+ 1408 X	
+ 1409 X	#define PDDD	(((PDADDR) =          __DATA_DIRECTION),((PDCTL)))
+ 1410 X	#define PDAF	(((PDADDR) =      __ALTERNATE_FUNCTION),((PDCTL)))
+ 1411 X	#define PDOC	(((PDADDR) =          __OUTPUT_CONTROL),((PDCTL)))
+ 1412 X	#define PDHDE	(((PDADDR) =       __HIGH_DRIVE_ENABLE),((PDCTL)))
+ 1413 X	#define PDSMRE	(((PDADDR) =              __SMR_ENABLE),((PDCTL)))
+ 1414 X	
+ 1415 X	#if defined(_Z8F04A) || defined(_Z8F648) || defined(__ZSLBUILD)
+MacExp: #if 0 || 0 || 0
+ 1416 X	#define PDPUE	(((PDADDR) =           __PULLUP_ENABLE),((PDCTL)))
+ 1417 X	#define PDAFS1	(((PDADDR) = __ALTERNATE_FUNCTION_SET1),((PDCTL)))
+ 1418 X	#if !defined(_Z8F648)
+MacExp: #if !0
+ 1419 X	#define PDAFS2	(((PDADDR) = __ALTERNATE_FUNCTION_SET2),((PDCTL)))
+ 1420 X	#endif
+ 1421 X	#endif
+ 1422 X	#if defined(_Z8F1680)
+MacExp: #if 0
+ 1423 X	#define PDPUE	(((PDADDR) =           __PULLUP_ENABLE),((PDCTL)))
+ 1424 X	#endif
+ 1425  	#endif
+ 1426  	#endif  // ifndef EZ8_PORT1
+ 1427  	
+ 1428  	#if defined(EZ8_PORT8) || defined(EZ8_PORT5) || defined(EZ8_PORT9) || defined(__ZSLBUILD)
+MacExp: #if 0 || 0 || 0 || 0
+ 1429 X	#ifndef EZ8_NO_PORT5
+ 1430 X	#define PEADDR  (*(unsigned char volatile far*)0xFE0)              // Reset = 0x00 Port E Address
+ 1431 X	#define PECTL   (*(unsigned char volatile far*)0xFE1)              // Reset = 0x00 Port E Control
+ 1432 X	#define PEIN    (*(unsigned char volatile far*)0xFE2)              // Reset = 0xXX Port E Input Data
+ 1433 X	#define PEOUT   (*(unsigned char volatile far*)0xFE3)              // Reset = 0x00 Port E Output Data
+ 1434 X	
+ 1435 X	#define PEDD	(((PEADDR) =     __DATA_DIRECTION),((PECTL)))
+ 1436 X	#define PEAF	(((PEADDR) = __ALTERNATE_FUNCTION),((PECTL)))
+ 1437 X	#define PEOC	(((PEADDR) =     __OUTPUT_CONTROL),((PECTL)))
+ 1438 X	#define PEHDE	(((PEADDR) =  __HIGH_DRIVE_ENABLE),((PECTL)))
+ 1439 X	#define PESMRE	(((PEADDR) =         __SMR_ENABLE),((PECTL)))
+ 1440 X	#if defined(_Z8F1680_OR_Z8F648)
+MacExp: #if 0
+ 1441 X	#define PEPUE	(((PEADDR) =      __PULLUP_ENABLE),((PECTL)))
+ 1442 X	#endif
+ 1443 X	#if defined(_Z8F648)
+MacExp: #if 0
+ 1444 X	#define PEAFS1	(((PEADDR) = __ALTERNATE_FUNCTION_SET1),((PECTL)))
+ 1445 X	#endif
+ 1446 X	#endif		// ifndef EZ8_NO_PORT5
+ 1447 X	
+ 1448 X	#if defined(EZ8_PORT7) || defined(EZ8_PORT8) || defined(EZ8_PORT9)
+MacExp: #if 0 || 0 || 0
+ 1449 X	#define PFADDR  (*(unsigned char volatile far*)0xFE4)              // Reset = 0x00 Port F Address
+ 1450 X	#define PFCTL   (*(unsigned char volatile far*)0xFE5)              // Reset = 0x00 Port F Control
+ 1451 X	#define PFIN    (*(unsigned char volatile far*)0xFE6)              // Reset = 0xXX Port F Input Data
+ 1452 X	#define PFOUT   (*(unsigned char volatile far*)0xFE7)              // Reset = 0x00 Port F Output Data
+ 1453 X	
+ 1454 X	#define PFDD	(((PFADDR) =     __DATA_DIRECTION),((PFCTL)))
+ 1455 X	#define PFAF	(((PFADDR) = __ALTERNATE_FUNCTION),((PFCTL)))
+ 1456 X	#define PFOC	(((PFADDR) =     __OUTPUT_CONTROL),((PFCTL)))
+ 1457 X	#define PFHDE	(((PFADDR) =  __HIGH_DRIVE_ENABLE),((PFCTL)))
+ 1458 X	#define PFSMRE	(((PFADDR) =         __SMR_ENABLE),((PFCTL)))
+ 1459 X	#if defined(_Z8F648)
+MacExp: #if 0
+ 1460 X	#define PFPUE	(((PFADDR) =           __PULLUP_ENABLE),((PFCTL)))
+ 1461 X	#define PFAFS1	(((PFADDR) = __ALTERNATE_FUNCTION_SET1),((PFCTL)))
+ 1462 X	#endif
+ 1463 X	
+ 1464 X	#define PGADDR  (*(unsigned char volatile far*)0xFE8)              // Reset = 0x00 Port G Address
+ 1465 X	#define PGCTL   (*(unsigned char volatile far*)0xFE9)              // Reset = 0x00 Port G Control
+ 1466 X	#define PGIN    (*(unsigned char volatile far*)0xFEA)              // Reset = 0xXX Port G Input Data
+ 1467 X	#define PGOUT   (*(unsigned char volatile far*)0xFEB)              // Reset = 0x00 Port G Output Data
+ 1468 X	 
+ 1469 X	#define PGDD	(((PGADDR) =     __DATA_DIRECTION),((PGCTL)))
+ 1470 X	#define PGAF	(((PGADDR) = __ALTERNATE_FUNCTION),((PGCTL)))
+ 1471 X	#define PGOC	(((PGADDR) =     __OUTPUT_CONTROL),((PGCTL)))
+ 1472 X	#define PGHDE	(((PGADDR) =  __HIGH_DRIVE_ENABLE),((PGCTL)))
+ 1473 X	#define PGSMRE	(((PGADDR) =         __SMR_ENABLE),((PGCTL)))
+ 1474 X	#if defined(_Z8F648)
+MacExp: #if 0
+ 1475 X	#define PGPUE	(((PGADDR) =           __PULLUP_ENABLE),((PGCTL)))
+ 1476 X	#define PGAFS1	(((PGADDR) = __ALTERNATE_FUNCTION_SET1),((PGCTL)))
+ 1477 X	#endif
+ 1478 X	#endif          // EZ8_PORT7 || EZ8_PORT8  || EZ8_PORT9
+ 1479 X	
+ 1480 X	#if defined(EZ8_PORT8) || defined(EZ8_PORT9)
+MacExp: #if 0 || 0
+ 1481 X	#define PHADDR  (*(unsigned char volatile far*)0xFEC)              // Reset = 0x00 Port H Address
+ 1482 X	#define PHCTL   (*(unsigned char volatile far*)0xFED)              // Reset = 0x00 Port H Control
+ 1483 X	#define PHIN    (*(unsigned char volatile far*)0xFEE)              // Reset = 0xXX Port H Input Data
+ 1484 X	#define PHOUT   (*(unsigned char volatile far*)0xFEF)              // Reset = 0x00 Port H Output Data
+ 1485 X	
+ 1486 X	#define PHDD	(((PHADDR) =     __DATA_DIRECTION),((PHCTL)))
+ 1487 X	#define PHAF	(((PHADDR) = __ALTERNATE_FUNCTION),((PHCTL)))
+ 1488 X	#define PHOC	(((PHADDR) =     __OUTPUT_CONTROL),((PHCTL)))
+ 1489 X	#define PHHDE	(((PHADDR) =  __HIGH_DRIVE_ENABLE),((PHCTL)))
+ 1490 X	#define PHSMRE	(((PHADDR) =         __SMR_ENABLE),((PHCTL)))
+ 1491 X	#if defined(_Z8F648)
+MacExp: #if 0
+ 1492 X	#define PHPUE	(((PHADDR) =           __PULLUP_ENABLE),((PHCTL)))
+ 1493 X	#define PHAFS1	(((PHADDR) = __ALTERNATE_FUNCTION_SET1),((PHCTL)))
+ 1494 X	#endif
+ 1495 X	
+ 1496 X	#endif /* EZ8_PORT8 || EZ8_PORT9 */
+ 1497  	#endif 
+ 1498  	
+ 1499  	#if defined(EZ8_PORT9)
+MacExp: #if 0
+ 1500 X	#define PJADDR  (*(unsigned char volatile far*)0xFBC)              // Reset = 0x00 Port J Address
+ 1501 X	#define PJCTL   (*(unsigned char volatile far*)0xFBD)              // Reset = 0x00 Port J Control
+ 1502 X	#define PJIN    (*(unsigned char volatile far*)0xFBE)              // Reset = 0xXX Port J Input Data
+ 1503 X	#define PJOUT   (*(unsigned char volatile far*)0xFBF)              // Reset = 0x00 Port JOutput Data
+ 1504 X	
+ 1505 X	#define PJDD	(((PJADDR) =     	  __DATA_DIRECTION),((PJCTL)))
+ 1506 X	#define PJAF	(((PJADDR) = 	  __ALTERNATE_FUNCTION),((PJCTL)))
+ 1507 X	#define PJOC	(((PJADDR) =     	  __OUTPUT_CONTROL),((PJCTL)))
+ 1508 X	#define PJHDE	(((PJADDR) =  	   __HIGH_DRIVE_ENABLE),((PJCTL)))
+ 1509 X	#define PJSMRE	(((PJADDR) =         	  __SMR_ENABLE),((PJCTL)))
+ 1510 X	#define PJPUE	(((PJADDR) =           __PULLUP_ENABLE),((PJCTL)))
+ 1511 X	#if !defined(_Z8F648)
+MacExp: #if !0
+ 1512 X	#define PJAFS1	(((PCADDR) = __ALTERNATE_FUNCTION_SET1),((PJCTL)))
+ 1513 X	#define PJAFS2	(((PJADDR) = __ALTERNATE_FUNCTION_SET2),((PJCTL)))
+ 1514 X	#endif
+ 1515  	#endif /* EZ8_PORT9 */
+ 1516  	
+ 1517  	
+ 1518  	#if defined(_Z8F04A) || defined(_Z8F04) || defined(_Z8FMC16) || defined(_Z8F1680_OR_Z8F648)
+MacExp: #if 0 || 0 || 0 || 0
+ 1519 X	#define RSTSTAT (*(unsigned char volatile far*)0xFF0)              // Reset = 0xX0 Watchdog Timer Status
+ 1520  	#endif
+ 1521  	#if !defined(_Z8FMC16) && !defined(_Z8F1680_OR_Z8F648)
+MacExp: #if !0 && !0
+ 1522  	#define WDTCTL  (*(unsigned char volatile far*)0xFF0)              // Reset = 0xX0 Watchdog Timer Control
+ 1523  	#define WDTU    (*(unsigned char volatile far*)0xFF1)              // Reset = 0xFF Watchdog Timer Reload Upper
+ 1524  	#endif
+ 1525  	#define WDTHL   (*(unsigned int volatile far*)0xFF2)               // Reset = 0xFFFF Watchdog Timer Reload
+ 1526  	#define WDTH    (*(unsigned char volatile far*)0xFF2)              // Reset = 0xFF Watchdog Timer Reload High
+ 1527  	#define WDTL    (*(unsigned char volatile far*)0xFF3)              // Reset = 0xFF Watchdog Timer Reload Low
+ 1528  	
+ 1529  	#if defined(_Z8F04A) || defined(_Z8F04) || defined(_Z8FMC16) || defined(_Z8F1680_OR_Z8F648)
+MacExp: #if 0 || 0 || 0 || 0
+ 1530 X	#define TRMADR  (*(unsigned char volatile far*)0xFF6)              // Reset = 0x00 Trim Bit Address Register
+ 1531 X	#define TRMDR   (*(unsigned char volatile far*)0xFF7)              // Reset = 0xXX Trim Data Register
+ 1532 X	
+ 1533 X	#if defined(_Z8F04A) || defined(_Z8F1680)
+MacExp: #if 0 || 0
+ 1534 X	#define TTEMP0  (((TRMADR) = 0x00),((TRMDR)))                      // Reset = 0xXX Trim Temperature 0
+ 1535 X	#define TTEMP1  (((TRMADR) = 0x01),((TRMDR)))                      // Reset = 0xXX Trim Temperature 1
+ 1536 X	#endif
+ 1537 X	
+ 1538 X	#if defined(_Z8F648)
+MacExp: #if 0
+ 1539 X	#define TTEMP0  (((TRMADR) = 0x01),((TRMDR)))                      // Reset = 0xXX Trim Temperature 0
+ 1540 X	#define TTEMP1  (((TRMADR) = 0x02),((TRMDR)))                      // Reset = 0xXX Trim Temperature 1
+ 1541 X	#endif
+ 1542 X	
+ 1543 X	#if defined(_Z8FMC16)
+MacExp: #if 0
+ 1544 X	#define IPO_TRIM  (((TRMADR) = 0x01),((TRMDR)))                    // Reset = 0xXX Trim Internal Precision Oscillator
+ 1545 X	#define IPO_TRIM1 (((TRMADR) = 0x02),((TRMDR)))                    // Reset = 0xXX Trim Internal Precision Oscillator
+ 1546 X	#define ADCCAL    (((TRMADR) = 0x03),((TRMDR)))
+ 1547 X	#elif !defined(_Z8F648)
+ 1548 X	#define TIPO      (((TRMADR) = 0x02),((TRMDR)))                    // Reset = 0xXX Trim Internal Precision Oscillator
+ 1549 X	#else
+ 1550 X	#define TIPO      (((TRMADR) = 0x03),((TRMDR)))                    // Reset = 0xXX Trim Internal Precision Oscillator
+ 1551 X	#endif
+ 1552 X	
+ 1553 X	#if defined(_Z8F1680)
+MacExp: #if 0
+ 1554 X	#define TLVD_VBO  (((TRMADR) = 0x03),((TRMDR)))                    // Reset = 0xXX Trim Low Voltage Detect
+ 1555 X	#define TCOMP_ADC (((TRMADR) = 0x04),((TRMDR)))                    // Reset = 0xXX Trim Comparator and ADC
+ 1556 X	#define TVREF     (((TRMADR) = 0x05),((TRMDR)))                    // Reset = 0xXX Trim Voltage Reference
+ 1557 X	#define TBG       (((TRMADR) = 0x06),((TRMDR)))                    // Reset = 0xXX Trim Band Gap
+ 1558 X	#define TFILTER0  (((TRMADR) = 0x07),((TRMDR)))                    // Reset = 0xXX Trim Filter 0
+ 1559 X	#define TFILTER1  (((TRMADR) = 0x08),((TRMDR)))                    // Reset = 0xXX Trim Filter 1
+ 1560 X	#endif
+ 1561 X	
+ 1562 X	#if defined(_Z8F648)
+MacExp: #if 0
+ 1563 X	#define TLVD_VBO  (((TRMADR) = 0x04),((TRMDR)))                    // Reset = 0xXX Trim Low Voltage Detect
+ 1564 X	#define TADC_DAC  (((TRMADR) = 0x05),((TRMDR)))                    // Reset = 0xXX Trim ADC/DAC Reference Voltage
+ 1565 X	#define TBG       (((TRMADR) = 0x06),((TRMDR)))                    // Reset = 0xXX Trim Band Gap & Voltage Regulator
+ 1566 X	#define TWDT      (((TRMADR) = 0x07),((TRMDR)))                    // Reset = 0xXX Trim WDT
+ 1567 X	#define TLCD0     (((TRMADR) = 0x08),((TRMDR)))                    // Reset = 0xXX LCD Trim 0
+ 1568 X	#define TLCD1     (((TRMADR) = 0x09),((TRMDR)))                    // Reset = 0xXX LCD Trim 1
+ 1569 X	#define TVBIAS	  (((TRMADR) = 0x0C),((TRMDR)))                    // Reset = 0xXX VBIAS Trim
+ 1570 X	#endif
+ 1571 X	
+ 1572 X	#if defined(_Z8F04A)
+MacExp: #if 0
+ 1573 X	#if !defined(_Z8F0830A)
+MacExp: #if !0
+ 1574 X	#define TLVD    (((TRMADR) = 0x03),((TRMDR)))                      // Reset = 0xXX Trim Low Voltage Detect Trim
+ 1575 X	#endif
+ 1576 X	#define TBG     (((TRMADR) = 0x04),((TRMDR)))                      // Reset = 0xXX Trim Band Gap Trim
+ 1577 X	#define TUSER5  (((TRMADR) = 0x05),((TRMDR)))                      // Reset = 0xXX Trim User 5
+ 1578 X	#define TUSER6  (((TRMADR) = 0x06),((TRMDR)))                      // Reset = 0xXX Trim User 6
+ 1579 X	#define TUSER7  (((TRMADR) = 0x07),((TRMDR)))                      // Reset = 0xXX Trim User 7
+ 1580 X	#define TUSER8  (((TRMADR) = 0x08),((TRMDR)))                      // Reset = 0xXX Trim User 8
+ 1581 X	#define TUSER9  (((TRMADR) = 0x09),((TRMDR)))                      // Reset = 0xXX Trim User 9
+ 1582 X	#define TUSER10 (((TRMADR) = 0x0A),((TRMDR)))                      // Reset = 0xXX Trim User 10
+ 1583 X	#define TUSER11 (((TRMADR) = 0x0B),((TRMDR)))                      // Reset = 0xXX Trim User 11
+ 1584 X	#define TUSER12 (((TRMADR) = 0x0C),((TRMDR)))                      // Reset = 0xXX Trim User 12
+ 1585 X	#define TUSER13 (((TRMADR) = 0x0D),((TRMDR)))                      // Reset = 0xXX Trim User 13
+ 1586 X	#define TUSER14 (((TRMADR) = 0x0E),((TRMDR)))                      // Reset = 0xXX Trim User 14
+ 1587 X	#define TUSER15 (((TRMADR) = 0x0F),((TRMDR)))                      // Reset = 0xXX Trim User 15
+ 1588 X	#define TUSER16 (((TRMADR) = 0x10),((TRMDR)))                      // Reset = 0xXX Trim User 16
+ 1589 X	#define TUSER17 (((TRMADR) = 0x11),((TRMDR)))                      // Reset = 0xXX Trim User 17
+ 1590 X	#define TUSER18 (((TRMADR) = 0x12),((TRMDR)))                      // Reset = 0xXX Trim User 18
+ 1591 X	#define TUSER19 (((TRMADR) = 0x13),((TRMDR)))                      // Reset = 0xXX Trim User 19
+ 1592 X	#define TUSER20 (((TRMADR) = 0x14),((TRMDR)))                      // Reset = 0xXX Trim User 20
+ 1593 X	#define TUSER21 (((TRMADR) = 0x15),((TRMDR)))                      // Reset = 0xXX Trim User 21
+ 1594 X	#define TUSER22 (((TRMADR) = 0x16),((TRMDR)))                      // Reset = 0xXX Trim User 22
+ 1595 X	#define TUSER23 (((TRMADR) = 0x17),((TRMDR)))                      // Reset = 0xXX Trim User 23
+ 1596 X	#define TUSER24 (((TRMADR) = 0x18),((TRMDR)))                      // Reset = 0xXX Trim User 24
+ 1597 X	#define TUSER25 (((TRMADR) = 0x19),((TRMDR)))                      // Reset = 0xXX Trim User 25
+ 1598 X	#define TUSER26 (((TRMADR) = 0x1A),((TRMDR)))                      // Reset = 0xXX Trim User 26
+ 1599 X	#define TUSER27 (((TRMADR) = 0x1B),((TRMDR)))                      // Reset = 0xXX Trim User 27
+ 1600 X	#define TUSER28 (((TRMADR) = 0x1C),((TRMDR)))                      // Reset = 0xXX Trim User 28
+ 1601 X	#define TUSER29 (((TRMADR) = 0x1D),((TRMDR)))                      // Reset = 0xXX Trim User 29
+ 1602 X	#define TUSER30 (((TRMADR) = 0x1E),((TRMDR)))                      // Reset = 0xXX Trim User 30
+ 1603 X	#define TUSER31 (((TRMADR) = 0x1F),((TRMDR)))                      // Reset = 0xXX Trim User 31
+ 1604 X	#endif
+ 1605  	#endif		/* TRIM BITS */
+ 1606  	
+ 1607  	#define FCTL    (*(unsigned char volatile far*)0xFF8)              // Reset = 0x00 FLASH Control
+ 1608  	#define FSTAT   (*(unsigned char volatile far*)0xFF8)              // Reset = 0x00 FLASH Status
+ 1609  	#define FPS     (*(unsigned char volatile far*)0xFF9)              // Reset = 0x00 FLASH Page Select
+ 1610  	#if defined(_Z8F642) || defined(_Z8F08)
+MacExp: #if 0 || 1
+ 1611  	#define RPS     (*(unsigned char volatile far*)0xFF9)              // Reset = 0x00 ROM Page Select
+ 1612  	#endif
+ 1613  	#if  defined(_Z8F642) || defined(_Z8F04A) || defined(_Z8F08) || defined(_Z8F04) || defined(_Z8FMC16)|| defined(_Z8F1680)
+MacExp: #if  0 || 0 || 1 || 0 || 0|| 0
+ 1614  	#define FPROT   (*(unsigned char volatile far*)0xFF9)              // Reset = 0x00 FLASH Sector Protect
+ 1615  	#endif
+ 1616  	#if defined(_Z8F648)
+MacExp: #if 0
+ 1617 X	#define FBP     (*(unsigned char volatile far*)0xFF9)              // Reset = 0x00 FLASH Block Protect
+ 1618  	#endif
+ 1619  	
+ 1620  	#if !defined(_Z8F648)
+MacExp: #if !0
+ 1621  	#define FPF     (*(unsigned int volatile far*)0xFFA)               // Reset = 0x0000 FLASH Programming Frequency
+ 1622  	#define FPFH    (*(unsigned char volatile far*)0xFFA)              // Reset = 0x00 FLASH Programming Frequency High
+ 1623  	#define FFREQ   (*(unsigned int volatile far*)0xFFA)               // Reset = 0x0000 FLASH Programming Frequency
+ 1624  	#define FFREQH  (*(unsigned char volatile far*)0xFFA)              // Reset = 0x00 FLASH Programming Frequency High
+ 1625  	#define FPFL    (*(unsigned char volatile far*)0xFFB)              // Reset = 0x00 FLASH Programming Frequency Low
+ 1626  	#define FFREQL  (*(unsigned char volatile far*)0xFFB)              // Reset = 0x00 FLASH Programming Frequency Low
+ 1627  	#endif
+ 1628  	
+ 1629  	#if defined(_Z8F648)
+MacExp: #if 0
+ 1630 X	#define FPCONFIG	(*(unsigned char volatile far*)0xFFA)          // Reset = 0x00 FLASH Programming Configuration
+ 1631  	#endif
+ 1632  	
+ 1633  	
+ 1634  	#define FLAGS   (*(unsigned char volatile far*)0xFFC)              // Reset = 0xXX Flags Register
+ 1635  	#define RP      (*(unsigned char volatile far*)0xFFD)              // Reset = 0xXX Register Pointer
+ 1636  	#define SPH     (*(unsigned char volatile far*)0xFFE)              // Reset = 0xXX Stack Pointer High
+ 1637  	#define SPL     (*(unsigned char volatile far*)0xFFF)              // Reset = 0xXX  Stack Pointer Low
+ 1638  	
+ 1639  	#if defined(EZ8_RTC)
+MacExp: #if 0
+ 1640 X	// Real-Time Clock Registers
+ 1641 X	#define RTC_SEC 	(*(unsigned char volatile far*)0xF30)			// Reset = 0xXX RTC Seconds Register
+ 1642 X	#define RTC_MIN		(*(unsigned char volatile far*)0xF31)			// Reset = 0xXX RTC Minutes Register
+ 1643 X	#define RTC_HRS		(*(unsigned char volatile far*)0xF32)			// Reset = 0xXX RTC Hours Register
+ 1644 X	#define RTC_DOW		(*(unsigned char volatile far*)0xF33)			// Reset = 0x0X RTC Day Of Week Register
+ 1645 X	#define RTC_DOM		(*(unsigned char volatile far*)0xF34)			// Reset = 0xXX RTC Day Of Month Register
+ 1646 X	#define RTC_MON		(*(unsigned char volatile far*)0xF35)			// Reset = 0xXX RTC Month Register
+ 1647 X	#define RTC_YR		(*(unsigned char volatile far*)0xF36)			// Reset = 0xXX RTC Year Register
+ 1648 X	#define RTC_ASEC	(*(unsigned char volatile far*)0xF37)			// Reset = 0xXX RTC Alarm Seconds Register
+ 1649 X	#define RTC_AMIN	(*(unsigned char volatile far*)0xF38)			// Reset = 0xXX RTC Alarm Minutes Register
+ 1650 X	#define RTC_AHRS	(*(unsigned char volatile far*)0xF39)			// Reset = 0xXX RTC Alarm hours Register
+ 1651 X	#define RTC_ADOW	(*(unsigned char volatile far*)0xF3A)			// Reset = 0x0X RTC Alarm Day Of Week Register
+ 1652 X	#define RTC_ADOM	(*(unsigned char volatile far*)0xF3B)			// Reset = 0xXX RTC Alarm Day Of Month Register
+ 1653 X	#define RTC_ACTRL	(*(unsigned char volatile far*)0xF3C)			// Reset = 0x00 RTC Alarm Control Register
+ 1654 X	#define RTC_CAL		(*(unsigned char volatile far*)0xF3D)			// Reset = 0x00 RTC Calibration Register
+ 1655 X	#define RTC_TIM		(*(unsigned char volatile far*)0xF3E)			// Reset = 0x00 RTC Timing Register
+ 1656 X	#define RTC_CTRL	(*(unsigned char volatile far*)0xF3F)			// Reset = 0x00 RTC Control Register
+ 1657  	#endif
+ 1658  	
+ 1659  	#if defined(EZ8_USB)
+MacExp: #if 0
+ 1660 X	// USB support
+ 1661 X	#define USBSA			(*(unsigned char volatile far*)0xF59)		// Reset = 0x00 USB Subaddress Register
+ 1662 X	#define USBSD			(*(unsigned char volatile far*)0xF5A)		// Reset = 0x00 USB Subdata Register
+ 1663 X	#define USBCTL			(*(unsigned char volatile far*)0xF5B)		// Reset = 0x00 USB Control Register
+ 1664 X	#define USBDMA0CTL		(*(unsigned char volatile far*)0xF5C)		// Reset = 0x00 USB DMA 0 Control Register
+ 1665 X	#define USBDMA1CTL		(*(unsigned char volatile far*)0xF5D)		// Reset = 0x00 USB DMA 1 Control Register
+ 1666 X	#define USBDMADATA		(*(unsigned char volatile far*)0xF5E)		// Reset = 0x00 USB DMA Data Register
+ 1667 X	#define USBIRQCTL		(*(unsigned char volatile far*)0xF5F)		// Reset = 0x00 USB Interrupt Control Register
+ 1668 X	
+ 1669 X	// Now, definitions used for the very numerous USB subregisters
+ 1670 X	#define __OUT_ENDPT1_START_ADDR		0x01
+ 1671 X	#define __OUT_ENDPT2_START_ADDR		0x02
+ 1672 X	#define __OUT_ENDPT3_START_ADDR		0x03
+ 1673 X	#define __IN_ENDPTS_START_ADDR		0x08
+ 1674 X	#define __IN_ENDPT1_START_ADDR		0x09
+ 1675 X	#define __IN_ENDPT2_START_ADDR		0x0A
+ 1676 X	#define __IN_ENDPT3_START_ADDR		0x0B
+ 1677 X	#define __CLOCK_GATE				0x10
+ 1678 X	#define __INTERPT_ID				0x28
+ 1679 X	#define __IN_INTERPT_REQ			0x29
+ 1680 X	#define __OUT_INTERPT_REQ			0x2A
+ 1681 X	#define __USB_INTERPT_REQ			0x2B
+ 1682 X	#define __IN_INTERPT_EN				0x2C
+ 1683 X	#define __OUT_INTERPT_EN			0x2D
+ 1684 X	#define __USB_INTERPT_EN			0x2E
+ 1685 X	#define __ENDPT0_CTL_STAT			0x34
+ 1686 X	#define __IN0_BYTE_CNT				0x35
+ 1687 X	#define __IN1_BYTE_CNT				0x37
+ 1688 X	#define __IN2_BYTE_CNT				0x39
+ 1689 X	#define __IN3_BYTE_CNT				0x3B
+ 1690 X	#define __IN1_CTL_STAT				0x36
+ 1691 X	#define __IN2_CTL_STAT				0x38
+ 1692 X	#define __IN3_CTL_STAT				0x3A
+ 1693 X	#define __OUT0_BYTE_CNT				0x45
+ 1694 X	#define __OUT1_BYTE_CNT				0x47
+ 1695 X	#define __OUT2_BYTE_CNT				0x49
+ 1696 X	#define __OUT3_BYTE_CNT				0x4B
+ 1697 X	#define __OUT1_CTL_STAT				0x46
+ 1698 X	#define __OUT2_CTL_STAT				0x48
+ 1699 X	#define __OUT3_CTL_STAT				0x4A
+ 1700 X	#define __CTL_STAT					0x56
+ 1701 X	#define __TOG_CTL					0x57
+ 1702 X	#define __FRAME_CNT_LO				0x58
+ 1703 X	#define __FRAME_CNT_HI				0x59
+ 1704 X	#define __FN_ADDR					0x5B
+ 1705 X	#define __PAIRING					0x5D
+ 1706 X	#define __IN_ENDPT_VALID			0x5E
+ 1707 X	#define __OUT_ENDPT_VALID			0x5F
+ 1708 X	#define __IN_ENDPTS_STOP_ADDR		0x62
+ 1709 X	#define __SETUP_BUF_BYTE0			0x68
+ 1710 X	#define __SETUP_BUF_BYTE1			0x69
+ 1711 X	#define __SETUP_BUF_BYTE2			0x6A
+ 1712 X	#define __SETUP_BUF_BYTE3			0x6B
+ 1713 X	#define __SETUP_BUF_BYTE4			0x6C
+ 1714 X	#define __SETUP_BUF_BYTE5			0x6D
+ 1715 X	#define __SETUP_BUF_BYTE6			0x6E
+ 1716 X	#define __SETUP_BUF_BYTE7			0x6F
+ 1717 X	
+ 1718 X	// Subregisters
+ 1719 X	#define USBO1ADDR		(((USBSA) = __OUT_ENDPT1_START_ADDR),((USBSD)))
+ 1720 X	#define USBO2ADDR		(((USBSA) = __OUT_ENDPT2_START_ADDR),((USBSD)))
+ 1721 X	#define USBO3ADDR		(((USBSA) = __OUT_ENDPT3_START_ADDR),((USBSD)))
+ 1722 X	#define USBISTADDR		(((USBSA) =  __IN_ENDPTS_START_ADDR),((USBSD)))
+ 1723 X	#define USBI1ADDR		(((USBSA) =  __IN_ENDPT1_START_ADDR),((USBSD)))
+ 1724 X	#define USBI2ADDR		(((USBSA) =  __IN_ENDPT2_START_ADDR),((USBSD)))
+ 1725 X	#define USBI3ADDR		(((USBSA) =  __IN_ENDPT3_START_ADDR),((USBSD)))
+ 1726 X	#define USBCLKGATE		(((USBSA) =            __CLOCK_GATE),((USBSD)))
+ 1727 X	#define USBIID			(((USBSA) =            __INTERPT_ID),((USBSD)))
+ 1728 X	#define USBINIRQ		(((USBSA) =        __IN_INTERPT_REQ),((USBSD)))
+ 1729 X	#define USBOUTIRQ		(((USBSA) =       __OUT_INTERPT_REQ),((USBSD)))
+ 1730 X	#define USBIRQ			(((USBSA) =       __USB_INTERPT_REQ),((USBSD)))
+ 1731 X	#define USBINIEN		(((USBSA) =         __IN_INTERPT_EN),((USBSD)))
+ 1732 X	#define USBOUTIEN		(((USBSA) =        __OUT_INTERPT_EN),((USBSD)))
+ 1733 X	#define USBIEN			(((USBSA) =        __USB_INTERPT_EN),((USBSD)))
+ 1734 X	#define USBEP0CS		(((USBSA) =       __ENDPT0_CTL_STAT),((USBSD)))
+ 1735 X	#define USBI0BC			(((USBSA) =          __IN0_BYTE_CNT),((USBSD)))
+ 1736 X	#define USBI1BC			(((USBSA) =          __IN1_BYTE_CNT),((USBSD)))
+ 1737 X	#define USBI2BC			(((USBSA) =          __IN2_BYTE_CNT),((USBSD)))
+ 1738 X	#define USBI3BC			(((USBSA) =          __IN3_BYTE_CNT),((USBSD)))
+ 1739 X	#define USBI1CS			(((USBSA) =          __IN1_CTL_STAT),((USBSD)))
+ 1740 X	#define USBI2CS			(((USBSA) =          __IN2_CTL_STAT),((USBSD)))
+ 1741 X	#define USBI3CS			(((USBSA) =          __IN3_CTL_STAT),((USBSD)))
+ 1742 X	#define USBO0BC			(((USBSA) =         __OUT0_BYTE_CNT),((USBSD)))
+ 1743 X	#define USBO1BC			(((USBSA) =         __OUT1_BYTE_CNT),((USBSD)))
+ 1744 X	#define USBO2BC			(((USBSA) =         __OUT2_BYTE_CNT),((USBSD)))
+ 1745 X	#define USBO3BC			(((USBSA) =         __OUT3_BYTE_CNT),((USBSD)))
+ 1746 X	#define USBO1CS			(((USBSA) =         __OUT1_CTL_STAT),((USBSD)))
+ 1747 X	#define USBO2CS			(((USBSA) =         __OUT2_CTL_STAT),((USBSD)))
+ 1748 X	#define USBO3CS			(((USBSA) =         __OUT3_CTL_STAT),((USBSD)))
+ 1749 X	#define USBCS			(((USBSA) =              __CTL_STAT),((USBSD)))
+ 1750 X	#define USBTOGCTL		(((USBSA) =               __TOG_CTL),((USBSD)))
+ 1751 X	#define USBFCL			(((USBSA) =          __FRAME_CNT_LO),((USBSD)))
+ 1752 X	#define USBFCH			(((USBSA) =          __FRAME_CNT_HI),((USBSD)))
+ 1753 X	#define USBFNADDR		(((USBSA) =               __FN_ADDR),((USBSD)))
+ 1754 X	#define USBPAIR			(((USBSA) =               __PAIRING),((USBSD)))
+ 1755 X	#define USBINVAL		(((USBSA) =        __IN_ENDPT_VALID),((USBSD)))
+ 1756 X	#define USBOUTVAL		(((USBSA) =       __OUT_ENDPT_VALID),((USBSD)))
+ 1757 X	#define USBISPADDR		(((USBSA) =   __IN_ENDPTS_STOP_ADDR),((USBSD)))
+ 1758 X	#define USBSU0			(((USBSA) =       __SETUP_BUF_BYTE0),((USBSD)))
+ 1759 X	#define USBSU1			(((USBSA) =       __SETUP_BUF_BYTE1),((USBSD)))
+ 1760 X	#define USBSU2			(((USBSA) =       __SETUP_BUF_BYTE2),((USBSD)))
+ 1761 X	#define USBSU3			(((USBSA) =       __SETUP_BUF_BYTE3),((USBSD)))
+ 1762 X	#define USBSU4			(((USBSA) =       __SETUP_BUF_BYTE4),((USBSD)))
+ 1763 X	#define USBSU5			(((USBSA) =       __SETUP_BUF_BYTE5),((USBSD)))
+ 1764 X	#define USBSU6			(((USBSA) =       __SETUP_BUF_BYTE6),((USBSD)))
+ 1765 X	#define USBSU7			(((USBSA) =       __SETUP_BUF_BYTE7),((USBSD)))
+ 1766 X	
+ 1767  	#endif	// EZ8_USB
+ 1768  	
+ 1769  	#if defined(EZ8_CLKCTL)
+MacExp: #if 0
+ 1770 X	#define CLKCTL0			(*(unsigned char volatile far*)0xF82)		// Reset = 0x00 Clock Control 0
+ 1771 X	#define CLKCTL1			(*(unsigned char volatile far*)0xF83)		// Reset = 0x01 Clock Control 1
+ 1772 X	#define CLKCTL2			(*(unsigned char volatile far*)0xF84)		// Reset = 0x00 Clock Control 2
+ 1773 X	#define CLKCTL3			(*(unsigned char volatile far*)0xF85)		// Reset = 0x08 Clock Control 3
+ 1774 X	#define CLKCTL4			(*(unsigned char volatile far*)0xF86)		// Reset = 0x00 Clock Control 4
+ 1775 X	#define CLKCTL5			(*(unsigned char volatile far*)0xF87)		// Reset = 0x05 Clock Control 5
+ 1776 X	#define CLKCTL6			(*(unsigned char volatile far*)0xF88)		// Reset = 0x00 Clock Control 6
+ 1777 X	#define CLKCTL7			(*(unsigned char volatile far*)0xF89)		// Reset = 0x00 Clock Control 7
+ 1778 X	#define CLKCTL8			(*(unsigned char volatile far*)0xF8A)		// Reset = 0xXX Clock Control 8
+ 1779 X	#define CLKCTL9			(*(unsigned char volatile far*)0xF8B)		// Reset = 0xXX Clock Control 9
+ 1780 X	#define CLKCTLA			(*(unsigned char volatile far*)0xF8C)		// Reset = 0x00 Clock Control A
+ 1781 X	#define CLKCTLB			(*(unsigned char volatile far*)0xF8D)		// Reset = 0x00 Clock Control B
+ 1782 X	#define CLKCTLC			(*(unsigned char volatile far*)0xF8E)		// Reset = 0x00 Clock Control C
+ 1783  	#endif
+ 1784  	
+ 1785  	#if defined(EZ8_OP_AMPS_AB)
+MacExp: #if 0
+ 1786 X	#define AMPACTL0		(*(unsigned char volatile far*)0xF94)		// Reset = 0x00 Op Amp_A Control 0
+ 1787 X	#define AMPACTL1		(*(unsigned char volatile far*)0xF95) 		// Reset = 0x00 Op Amp_A Control 1
+ 1788 X	#ifdef EZ8_OP_AMPS_AB_AMP_B
+ 1789 X	#define AMPBCTL0		(*(unsigned char volatile far*)0xF96) 		// Reset = 0x00 Op Amp_B Control 0 
+ 1790 X	#define AMPBCTL1		(*(unsigned char volatile far*)0xF97) 		// Reset = 0x00 Op Amp_B Control 1
+ 1791 X	#endif
+ 1792  	#endif
+ 1793  	
+ 1794  	#if defined (EZ8_EVENT_SYS)
+MacExp: #if 0
+ 1795 X	#define ESSSA			(*(unsigned char volatile far*)0xF98)		// Reset = 0x00 Event System Source Address
+ 1796 X	#define ESSSD			(*(unsigned char volatile far*)0xF99)		// Reset = 0x00 Event System  Source Control
+ 1797 X	#define ESDSA			(*(unsigned char volatile far*)0xF9A)		// Reset = 0x00 Event System Destination Address
+ 1798 X	#define ESDSD			(*(unsigned char volatile far*)0xF9B)		// Reset = 0x00 Event System Destination Control
+ 1799 X	
+ 1800 X	// Event system subregisters
+ 1801 X	// Source channels
+ 1802 X	#define __SRC_CH0		0x0
+ 1803 X	#define __SRC_CH1		0x1
+ 1804 X	#define __SRC_CH2		0x2
+ 1805 X	#define __SRC_CH3		0x3
+ 1806 X	#define __SRC_CH4		0x4
+ 1807 X	#define __SRC_CH5		0x5
+ 1808 X	#define __SRC_CH6		0x6
+ 1809 X	#define __SRC_CH7		0x7
+ 1810 X	
+ 1811 X	#define ESCH0SRC	(((ESSSA) =          __SRC_CH0),((ESSSD)))
+ 1812 X	#define ESCH1SRC	(((ESSSA) =          __SRC_CH1),((ESSSD)))
+ 1813 X	#define ESCH2SRC	(((ESSSA) =          __SRC_CH2),((ESSSD)))
+ 1814 X	#define ESCH3SRC	(((ESSSA) =          __SRC_CH3),((ESSSD)))
+ 1815 X	#define ESCH4SRC	(((ESSSA) =          __SRC_CH4),((ESSSD)))
+ 1816 X	#define ESCH5SRC	(((ESSSA) =          __SRC_CH5),((ESSSD)))
+ 1817 X	#define ESCH6SRC	(((ESSSA) =          __SRC_CH6),((ESSSD)))
+ 1818 X	#define ESCH7SRC	(((ESSSA) =          __SRC_CH7),((ESSSD)))
+ 1819 X	
+ 1820 X	//Destination channels
+ 1821 X	// Reserved channels are omitted here.
+ 1822 X	#define __DST_CH04		0x04
+ 1823 X	#define __DST_CH08		0x08
+ 1824 X	#define __DST_CH10		0x10
+ 1825 X	#define __DST_CH11		0x11
+ 1826 X	#define __DST_CH14		0x14
+ 1827 X	#define __DST_CH15		0x15
+ 1828 X	#define __DST_CH18		0x18
+ 1829 X	#define __DST_CH19		0x19
+ 1830 X	#define __DST_CH1C		0x1C
+ 1831 X	#define __DST_CH1D		0x1D
+ 1832 X	#define __DST_CH1E		0x1E
+ 1833 X	#define __DST_CH1F		0x1F
+ 1834 X	#define __DST_CH20		0x20
+ 1835 X	#define __DST_CH2C		0x2C
+ 1836 X	#define __DST_CH30		0x30
+ 1837 X	#define __DST_CH31		0x31
+ 1838 X	#define __DST_CH32		0x32
+ 1839 X	#define __DST_CH33		0x33
+ 1840 X	
+ 1841 X	#define ESCDST04CH	(((ESDSA) =          __DST_CH04),((ESDSD)))
+ 1842 X	#define ESCDST08CH	(((ESDSA) =          __DST_CH08),((ESDSD)))
+ 1843 X	#define ESCDST10CH	(((ESDSA) =          __DST_CH10),((ESDSD)))
+ 1844 X	#define ESCDST11CH	(((ESDSA) =          __DST_CH11),((ESDSD)))
+ 1845 X	#define ESCDST14CH	(((ESDSA) =          __DST_CH14),((ESDSD)))
+ 1846 X	#define ESCDST15CH	(((ESDSA) =          __DST_CH15),((ESDSD)))
+ 1847 X	#define ESCDST18CH	(((ESDSA) =          __DST_CH18),((ESDSD)))
+ 1848 X	#define ESCDST19CH	(((ESDSA) =          __DST_CH19),((ESDSD)))
+ 1849 X	#define ESCDST1CCH	(((ESDSA) =          __DST_CH1C),((ESDSD)))
+ 1850 X	#define ESCDST1DCH	(((ESDSA) =          __DST_CH1D),((ESDSD)))
+ 1851 X	#define ESCDST1ECH	(((ESDSA) =          __DST_CH1E),((ESDSD)))
+ 1852 X	#define ESCDST1FCH	(((ESDSA) =          __DST_CH1F),((ESDSD)))
+ 1853 X	#define ESCDST20CH	(((ESDSA) =          __DST_CH20),((ESDSD)))
+ 1854 X	#define ESCDST2CCH	(((ESDSA) =          __DST_CH2C),((ESDSD)))
+ 1855 X	#define ESCDST30CH	(((ESDSA) =          __DST_CH30),((ESDSD)))
+ 1856 X	#define ESCDST31CH	(((ESDSA) =          __DST_CH31),((ESDSD)))
+ 1857 X	#define ESCDST32CH	(((ESDSA) =          __DST_CH32),((ESDSD)))
+ 1858 X	#define ESCDST33CH	(((ESDSA) =          __DST_CH33),((ESDSD)))
+ 1859 X	
+ 1860  	#endif		// EZ8_EVENT_SYS
+ 1861  	
+ 1862  	#if defined (EZ8_LCD)
+MacExp: #if 0
+ 1863 X	#define LCDSA			(*(unsigned char volatile far*)0xFB1)		// Reset = 0x00 LCD Subaddress
+ 1864 X	#define LCDSD			(*(unsigned char volatile far*)0xFB2)		// Reset = 0xXX LCD Subdata
+ 1865 X	#define LCDCLK			(*(unsigned char volatile far*)0xFB3)		// Reset = 0x00 LCD Clock
+ 1866 X	#define LCDCTL0		    (*(unsigned char volatile far*)0xFB4)		// Reset = 0x00 LCD Control 0
+ 1867 X	#define LCDCTL1		    (*(unsigned char volatile far*)0xFB5)		// Reset = 0x00 LCD Control 1
+ 1868 X	#define LCDCTL2		    (*(unsigned char volatile far*)0xFB6)		// Reset = 0x00 LCD Control 2
+ 1869 X	#define LCDCTL3		    (*(unsigned char volatile far*)0xFB7)		// Reset = 0x00 LCD Control 3
+ 1870 X	
+ 1871 X	// LCD Subregisters
+ 1872 X	
+ 1873 X	#define __LCD_MEMA_0	0x00
+ 1874 X	#define __LCD_MEMA_1	0x01
+ 1875 X	#define __LCD_MEMA_2	0x02
+ 1876 X	#define __LCD_MEMA_3	0x03
+ 1877 X	#define __LCD_MEMA_4	0x04
+ 1878 X	#define __LCD_MEMA_5	0x05
+ 1879 X	#define __LCD_MEMA_6	0x06
+ 1880 X	#define __LCD_MEMA_7	0x07
+ 1881 X	#define __LCD_MEMA_8	0x08
+ 1882 X	#define __LCD_MEMA_9	0x09
+ 1883 X	#define __LCD_MEMA_A	0x0A
+ 1884 X	#define __LCD_MEMA_B	0x0B
+ 1885 X	#define __LCD_MEMB_0	0x10
+ 1886 X	#define __LCD_MEMB_1	0x11
+ 1887 X	#define __LCD_MEMB_2	0x12
+ 1888 X	#define __LCD_MEMB_3	0x13
+ 1889 X	#define __LCD_MEMB_4	0x14
+ 1890 X	#define __LCD_MEMB_5	0x15
+ 1891 X	#define __LCD_MEMB_6	0x16
+ 1892 X	#define __LCD_MEMB_7	0x17
+ 1893 X	#define __LCD_MEMB_8	0x18
+ 1894 X	#define __LCD_MEMB_9	0x19
+ 1895 X	#define __LCD_MEMB_A	0x1A
+ 1896 X	#define __LCD_MEMB_B	0x1B
+ 1897 X	
+ 1898 X	#define LCDMEMA0	(((LCDSA) =          __LCD_MEMA_0),((LCDSD)))
+ 1899 X	#define LCDMEMA1	(((LCDSA) =          __LCD_MEMA_1),((LCDSD)))
+ 1900 X	#define LCDMEMA2	(((LCDSA) =          __LCD_MEMA_2),((LCDSD)))
+ 1901 X	#define LCDMEMA3	(((LCDSA) =          __LCD_MEMA_3),((LCDSD)))
+ 1902 X	#define LCDMEMA4	(((LCDSA) =          __LCD_MEMA_4),((LCDSD)))
+ 1903 X	#define LCDMEMA5	(((LCDSA) =          __LCD_MEMA_5),((LCDSD)))
+ 1904 X	#define LCDMEMA6	(((LCDSA) =          __LCD_MEMA_6),((LCDSD)))
+ 1905 X	#define LCDMEMA7	(((LCDSA) =          __LCD_MEMA_7),((LCDSD)))
+ 1906 X	#define LCDMEMA8	(((LCDSA) =          __LCD_MEMA_8),((LCDSD)))
+ 1907 X	#define LCDMEMA9	(((LCDSA) =          __LCD_MEMA_9),((LCDSD)))
+ 1908 X	#define LCDMEMAA	(((LCDSA) =          __LCD_MEMA_A),((LCDSD)))
+ 1909 X	#define LCDMEMAB	(((LCDSA) =          __LCD_MEMA_B),((LCDSD)))
+ 1910 X	#define LCDMEMB0	(((LCDSA) =          __LCD_MEMB_0),((LCDSD)))
+ 1911 X	#define LCDMEMB1	(((LCDSA) =          __LCD_MEMB_1),((LCDSD)))
+ 1912 X	#define LCDMEMB2	(((LCDSA) =          __LCD_MEMB_2),((LCDSD)))
+ 1913 X	#define LCDMEMB3	(((LCDSA) =          __LCD_MEMB_3),((LCDSD)))
+ 1914 X	#define LCDMEMB4	(((LCDSA) =          __LCD_MEMB_4),((LCDSD)))
+ 1915 X	#define LCDMEMB5	(((LCDSA) =          __LCD_MEMB_5),((LCDSD)))
+ 1916 X	#define LCDMEMB6	(((LCDSA) =          __LCD_MEMB_6),((LCDSD)))
+ 1917 X	#define LCDMEMB7	(((LCDSA) =          __LCD_MEMB_7),((LCDSD)))
+ 1918 X	#define LCDMEMB8	(((LCDSA) =          __LCD_MEMB_8),((LCDSD)))
+ 1919 X	#define LCDMEMB9	(((LCDSA) =          __LCD_MEMB_9),((LCDSD)))
+ 1920 X	#define LCDMEMBA	(((LCDSA) =          __LCD_MEMB_A),((LCDSD)))
+ 1921 X	#define LCDMEMBB	(((LCDSA) =          __LCD_MEMB_B),((LCDSD)))
+ 1922 X	
+ 1923  	#endif // EZ8_LCD
+ 1924  	
+ 1925  	#if defined (EZ8_AES)
+MacExp: #if 0
+ 1926 X	#define AESDATA			(*(unsigned char volatile far*)0xFB8)		// Reset = 0xXX AES Data
+ 1927 X	#define AESIV			(*(unsigned char volatile far*)0xFB8)		// Reset = 0xXX AES Initialization Vector
+ 1928 X	#define AESKEY			(*(unsigned char volatile far*)0xFB9)		// Reset = 0xXX AES Key
+ 1929 X	#define AESCTL			(*(unsigned char volatile far*)0xFBA)		// Reset = 0x00 AES Control
+ 1930 X	#define AESSTAT			(*(unsigned char volatile far*)0xFBB)		// Reset = 0x00 AES Status
+ 1931  	#endif
+ 1932  	
+ 1933  	#if defined(_Z8F1680)
+MacExp: #if 0
+ 1934 X	// Flash Information Memory Registers 
+ 1935 X	// The following registers can be accessed after selecting flash information area in FPS 
+ 1936 X	#define TEMPCALH  (*(unsigned char volatile rom*)0xFE60)           // Reset = 0xXX Temp Sensor Calibration High 
+ 1937 X	#define TEMPCALL  (*(unsigned char volatile rom*)0xFE61)           // Reset = 0xXX Temp Sensor Calibration Low 
+ 1938 X	#define TEMPCAL   (*(unsigned int volatile rom*)0xFE60)            // Reset = 0xXXXX Temp Sensor Calibration
+ 1939  	#endif
+ 1940  	
+ 1941  	
+ 1942  	
+ 1943  	#define FLASH_OPTION1  rom char flash_option1 _At 0x0
+ 1944  	
+ 1945  	#define FLASH_OPTION2  rom char flash_option2 _At 0x1                                        
+ 1946  	
+ 1947 C	/*      Macros to enable and disable interrupts */
+ 1948 C	
+ 1949  	intrinsic void EI(void);
+ 1950  	intrinsic void DI(void);
+ 1951  	intrinsic void SET_VECTOR(int vect,void (*hndlr)(void));
+ 1952  	intrinsic unsigned char TDI(void);
+ 1953  	intrinsic void RI(unsigned char istat);
+ 1954  	
+ 1955 C	// Compatibility
+ 1956 C	
+ 1957  	#define _ei EI
+ 1958  	#define _di DI
+ 1959  	#define _setvector SET_VECTOR
+ 1960  	#define FREQ20000	(20000000/1000)
+ 1961  	#define FREQ18432	(18432000/1000)
+ 1962  	#define FREQ16000	(16000000/1000)
+ 1963  	#define FREQ14000	(14000000/1000)
+ 1964  	#define FREQ12000	(12000000/1000)
+ 1965  	#define FREQ08000	( 8000000/1000)
+ 1966  	#define FREQ04000	( 4000000/1000)
+ 1967  	
+ 1968  	extern unsigned long get_freq(void);
+ 1969  	
+ 1970  	#define _DEFFREQ get_freq()     // the clock frequency as set in the IDE Configure Target dialog box  
+ 1971  	
+ 1972  	
+ 1973  	void reentrant INIT_FLASH(unsigned short freq);
+ 1974  	void reentrant WRITE_FLASH(rom const void *addr,char val);
+ 1975  	char reentrant READ_FLASH(rom const void *addr); 
+ 1976  	
+ 1977  	#if defined(EZ8_NVDS)
+MacExp: #if 0
+ 1978 X	char cdecl reentrant READ_NVDS(char addr);
+ 1979 X	int cdecl reentrant WRITE_NVDS(char value, char addr);
+ 1980 X	
+ 1981 X	int cdecl reentrant READ_NVDS_GET_STATUS(char addr);
+ 1982 X	char cdecl reentrant WRITE_NVDS_GET_STATUS(char value, char addr);
+ 1983 X	
+ 1984 X	#define nvds_read READ_NVDS
+ 1985 X	#define nvds_write WRITE_NVDS
+ 1986 X	
+ 1987 X	#define nvds_read_get_status READ_NVDS_GET_STATUS
+ 1988 X	#define nvds_write_get_status WRITE_NVDS_GET_STATUS
+ 1989  	#endif
+ 1990  	
+ 1991  	#if defined(_ZSL_PORT_USED) || defined(__ZSLBUILD)
+MacExp: #if 1 || 0
+ 1992  	#include <gpio.h>
+
+Enter File:	C:\PROGRA~2\ZiLOG\ZDSII_~1.0\include\zilog\gpio.h
+    1 C	/*!\file gpio.h
+    2 C	 * \brief Definition file for the Z8 Encore! GPIO Ports.
+    3 C	 *
+    4 C	 *  This file contains header information required by GPIO Port
+    5 C	 *  driver implementations for Z8 Encore! microcontrollers.
+    6 C	 *
+    7 C	 *  This source file uses Doxygen-style comments to generate documentation
+    8 C	 *  automatically.
+    9 C	 *
+   10 C	 *  Copyright (C) 1999-2004 by  ZiLOG, Inc.
+   11 C	 *  All Rights Reserved.
+   12 C	 */
+   13 C	
+   14  	#pragma once // Include this file only once
+   15  	#ifndef _GPIO_H_
+   16  	#define _GPIO_H_
+   17  	
+   18  	#include <defines.h>
+
+Enter File:	C:\PROGRA~2\ZiLOG\ZDSII_~1.0\include\zilog\defines.h
+    1 C	/*!\file defines.h
+    2 C	 * \brief Definition file for data type and other definitions used
+    3 C	 *        across Z8 Encore! ZiLOG Standard Library.
+    4 C	 *
+    5 C	 *  This file contains data type and other definitions that are
+    6 C	 *  used across ZiLOG Standard Library implementations for Z8 Encore!
+    7 C	 *  microcontrollers.
+    8 C	 *
+    9 C	 *  This source file uses Doxygen-style comments to generate documentation
+   10 C	 *  automatically.
+   11 C	 *
+   12 C	 *  Copyright (C) 1999-2004 by  ZiLOG, Inc.
+   13 C	 *  All Rights Reserved.
+   14 C	 */
+   15 C	
+   16  	#pragma once // Include this file only once
+   17  	#ifndef _DEFINES_H_
+   18  	#define _DEFINES_H_
+   19  	
+   20  	
+   21  	#ifndef TRUE			
+   22  	#define TRUE			1			//!< The TRUE definition.
+   23  	#endif					
+   24  	#ifndef FALSE			
+   25  	#define FALSE			0			//!< The FALSE definition.
+   26  	#endif
+   27  	#ifndef ALWAYS
+   28  	#define ALWAYS			1
+   29  	#endif
+   30  	
+   31  	#define INTPRIORITY_DISABLE					(BYTE)0x00				//!< Interrupt priorities.
+   32  	#define INTPRIORITY_LOW						(BYTE)0x01
+   33  	#define INTPRIORITY_NOMINAL					(BYTE)0x02
+   34  	#define INTPRIORITY_HIGH					(BYTE)0x03
+   35  	
+   36  	
+   37 C	/*! The type name for void data type char */
+   38  	typedef void VOID ;
+   39  	
+   40 C	/*! The type name for standard C data type char */
+   41  	typedef char CHAR ;
+   42  	
+   43 C	/*! The type name for standard C data type unsigned char */
+   44  	typedef unsigned char UCHAR ;
+   45  	
+   46 C	/*! The type name for standard C data type unsigned char as byte */
+   47  	typedef unsigned char BYTE ;
+   48  	
+   49 C	/*! The type name for standard C data type unsigned char as bool */
+   50  	typedef	unsigned char BOOL ;
+   51  	
+   52 C	/*! The type name for standard C data type char as integer */
+   53  	typedef char INT8 ;
+   54  	
+   55 C	/*! The type name for standard C data type unsigned char as unsigned integer */
+   56  	typedef unsigned char UINT8 ;
+   57  	
+   58 C	/*! The type name for standard C data type short */
+   59  	typedef short INT16 ;
+   60  	
+   61 C	/*! The type name for standard C data type unsigned short */
+   62  	typedef unsigned short UINT16 ;
+   63  	
+   64 C	/*! The type name for standard C data type unsigned short as word*/
+   65  	typedef unsigned short WORD ;
+   66  	
+   67 C	/*! The type name for standard C data type int */
+   68  	typedef int INT ;
+   69  	
+   70 C	/*! The type name for standard C data type unsigned int */
+   71  	typedef unsigned int UINT ;
+   72  	
+   73 C	/*! The type name for standard C data type long */
+   74  	typedef long INT32 ;
+   75  	
+   76 C	/*! The type name for standard C data type unsigned long */
+   77  	typedef unsigned long UINT32 ;
+   78  	
+   79 C	/*! The type name for standard C data type unsigned long as dword */
+   80  	typedef unsigned long DWORD ;
+   81  	
+   82 C	/*! The type name for standard C data type float */
+   83  	typedef float FLOAT ;
+   84  	
+   85 C	/*! The type name for standard C data type float */
+   86  	typedef float FLOAT32 ;
+   87  	
+   88 C	/*! The type name for standard C data type double */
+   89  	typedef double DOUBLE ;
+   90  	
+   91  	#endif /*! _DEFINES_H_ */
+   92  	
+   93  	
+
+Return To	C:\PROGRA~2\ZiLOG\ZDSII_~1.0\include\zilog\gpio.h
+   19  	
+   20  	
+   21  	#ifdef _DEBUG
+   22 X	#define GPIOPARAMETER_CHECKING									//!< Parameter validation control macro.
+   23  	#endif
+   24  	
+   25  	
+   26 C	/*! The GPIO ports available for particular target. Port A, B and C are available for all targets */
+   27  	#if (defined(EZ8_PORT4) && !defined(_Z8F04)) || defined(EZ8_PORT8)||defined(EZ8_PORT5)
+MacExp: #if (0 && !0) || 0||0
+   28 X	#define PORTD
+   29  	#endif
+   30  	
+   31  	#if defined(EZ8_PORT8)||defined(EZ8_PORT5)
+MacExp: #if 0||0
+   32 X	#define PORTE
+   33  	#endif
+   34  	#if defined(EZ8_PORT8)
+MacExp: #if 0
+   35 X	#define PORTF
+   36 X	#define PORTG
+   37 X	#define PORTH
+   38  	#endif
+   39  	
+   40  	#define GPIOERR_SUCCESS		(CHAR)0			//!< Error code for success returned by GPIO APIs.
+   41  	#define GPIOERR_INVALIDPINS	(CHAR)1			//!< Error code for invalid GPIO pin for the target.
+   42  	#define GPIOERR_FAILURE		(CHAR)(-1)		//!< Error code for failure returned by GPIO APIs.
+   43  	
+   44  	
+   45 C	/*! all the ports bits are set to input mode */
+   46  	#define PORTA_ADDRVAL_DEF   0x01
+   47  	#define PORTA_CTLVAL_DEF    0xFF
+   48  	#define PORTA_OUTVAL_DEF    0x00
+   49  	
+   50  	#define PORTB_ADDRVAL_DEF   0x01
+   51  	#define PORTB_CTLVAL_DEF    0xFF
+   52  	#define PORTB_OUTVAL_DEF    0x00
+   53  	
+   54  	#define PORTC_ADDRVAL_DEF   0x01
+   55  	#define PORTC_CTLVAL_DEF    0xFF
+   56  	#define PORTC_OUTVAL_DEF    0x00
+   57  	
+   58  	#ifdef PORTD
+   59 X	#define PORTD_ADDRVAL_DEF   0x01
+   60 X	#define PORTD_CTLVAL_DEF    0xFF
+   61 X	#define PORTD_OUTVAL_DEF    0x00
+   62  	#endif
+   63  	
+   64  	#ifdef PORTE
+   65 X	#define PORTE_ADDRVAL_DEF   0x01
+   66 X	#define PORTE_CTLVAL_DEF    0xFF
+   67 X	#define PORTE_OUTVAL_DEF    0x00
+   68  	#endif
+   69  	
+   70  	#ifdef PORTF
+   71 X	#define PORTF_ADDRVAL_DEF   0x01
+   72 X	#define PORTF_CTLVAL_DEF    0xFF
+   73 X	#define PORTF_OUTVAL_DEF    0x00
+   74  	#endif
+   75  	
+   76  	#ifdef PORTG
+   77 X	#define PORTG_ADDRVAL_DEF   0x01
+   78 X	#define PORTG_CTLVAL_DEF    0xFF
+   79 X	#define PORTG_OUTVAL_DEF    0x00
+   80  	#endif
+   81  	
+   82  	#ifdef PORTH
+   83 X	#define PORTH_ADDRVAL_DEF   0x01
+   84 X	#define PORTH_CTLVAL_DEF    0xFF
+   85 X	#define PORTH_OUTVAL_DEF    0x00
+   86  	#endif
+   87  	
+   88  	
+   89 C	/*! Control Register access codes used in Address registers */
+   90  	#define PORTADDR_NOFUNC			0x00
+   91  	#define PORTADDR_DATADIR		0x01
+   92  	#define PORTADDR_ALTFUNC		0x02
+   93  	#if defined(_Z8FMC16) || defined(__ZSLBUILD)
+MacExp: #if 0 || 0
+   94 X	#define PORTADDR_ALTFUNC0		0x02
+   95  	#endif
+   96  	#define PORTADDR_OPENDRAIN		0x03
+   97  	#define PORTADDR_HIGHDRIVE		0x04
+   98  	#define PORTADDR_STPMDREC		0x05
+   99  	#if defined (_Z8F1680)||defined(_Z8F04) || defined(_Z8F04A) || defined(_Z8F04A_8PIN) || defined(_Z8F04_8PIN) || defined(_Z8F08) || defined(_Z8F0823_8PIN) || defined(_Z8F08A) || defined(_Z8FMC16) || defined(__ZSLBUILD)
+MacExp: #if 0||0 || 0 || 0 || 0 || 1 || 0 || 0 || 0 || 0
+  100  	#define PORTADDR_PULLUP		0x06
+  101  	#endif
+  102  	#if defined (_Z8F1680)||defined(_Z8F04) || defined(_Z8F04A) || defined(_Z8F04A_8PIN) || defined(_Z8F04_8PIN) || defined(_Z8F0823_8PIN) || defined(_Z8F08A) || defined(__ZSLBUILD)
+MacExp: #if 0||0 || 0 || 0 || 0 || 0 || 0 || 0
+  103 X	#define PORTADDR_ALTFUNCSET1	0x07
+  104 X	#define PORTADDR_ALTFUNCSET2	0x08
+  105  	#endif
+  106  	#if defined(_Z8FMC16) || defined(__ZSLBUILD)
+MacExp: #if 0 || 0
+  107 X	#define PORTADDR_ALTFUNC1		0x07
+  108 X	#define PORTADDR_IRQES			0x08
+  109 X	#define PORTADDR_IRQPS			0x09
+  110  	#endif
+  111  	
+  112  	
+  113 C	/*! Definitions for Current Drive Levels used in LED Drive Mode */
+  114  	#if defined(_Z8F04A) ||defined (_Z8F1680)|| defined(__ZSLBUILD)
+MacExp: #if 0 ||0|| 0
+  115 X	#define DRIVELEVEL_3MA			0
+  116 X	#define DRIVELEVEL_7MA			1
+  117 X	#define DRIVELEVEL_13MA			2
+  118 X	#define DRIVELEVEL_20MA			3
+  119  	#endif
+  120  	
+  121 C	/*! Definitions for trigger edges */
+  122  	#define EDGE_FALLING			0
+  123  	#define EDGE_RISING				1
+  124  	
+  125 C	/*! GPIO pin patterns */
+  126  	#define PORTPIN_ZERO		(BYTE)0x01			//!< The bit mask for Port bit 0.
+  127  	#define PORTPIN_ONE			(BYTE)0x02			//!< The bit mask for Port bit 1.
+  128  	#define PORTPIN_TWO			(BYTE)0x04			//!< The bit mask for Port bit 2.
+  129  	#define PORTPIN_THREE		(BYTE)0x08			//!< The bit mask for Port bit 3.
+  130  	#define PORTPIN_FOUR		(BYTE)0x10			//!< The bit mask for Port bit 4.
+  131  	#define PORTPIN_FIVE 		(BYTE)0x20			//!< The bit mask for Port bit 5.
+  132  	#define PORTPIN_SIX			(BYTE)0x40			//!< The bit mask for Port bit 6.
+  133  	#define PORTPIN_SEVEN		(BYTE)0x80			//!< The bit mask for Port bit 7.
+  134  	#define PORTPIN_FOURPINS_L	(BYTE)0x0F			//!< The bit mask for lower four Port bits.
+  135  	#define PORTPIN_FOURPINS_U	(BYTE)0xF0			//!< The bit mask for upper four Port bits.
+  136  	#define PORTPIN_PATTERN_AA	(BYTE)0xAA			//!< The bit mask for alternate bits (odd numbered pins).
+  137  	#define PORTPIN_PATTERN_55	(BYTE)0x55			//!< The bit mask for alternate bits (even numbered pins).
+  138  	#define PORTPIN_ALL			(BYTE)0xFF			//!< The bit mask for all Port bits.
+  139  	
+  140 C	/*! Port mask index used for validating the port pins */
+  141  	#define MSKINDEX_PORTB		(BYTE)0
+  142  	#define MSKINDEX_PORTC		(BYTE)1
+  143  	#define MSKINDEX_PORTD		(BYTE)2
+  144  	#define MSKINDEX_PORTE		(BYTE)3
+  145  	#define MSKINDEX_PORTF		(BYTE)4
+  146  	#define MSKINDEX_PORTG		(BYTE)5
+  147  	#define MSKINDEX_PORTH		(BYTE)6
+  148  	
+  149 C	/*!
+  150 C	 * \brief The settings required to configure the GPIO Port.
+  151 C	 */
+  152  	typedef struct
+  153  	{
+  154  		BYTE addr ;					//!< The address register.
+  155  		BYTE ctl ;					//!< The control register.
+  156  		BYTE out ;					//!< The output register (write-only).
+  157  		BYTE in ;					//!< The input register (read-only).
+  158  	
+  159  	} PORT ;
+  160  	
+  161  	
+  162  	
+  163 C	//! Macro definitions.
+  164 C	
+  165 C	/*!
+  166 C	 * Resets all those bits in \a x as specified by the bit pattern in \a y.
+  167 C	 */
+  168  	#define	RESETBIT( x, y )	( (x) &= (BYTE)(0xFF ^ (y)) )
+  169  	
+  170 C	/*!
+  171 C	 * Sets all those bits in \a x as specified by the bit pattern in \a y.
+  172 C	 */
+  173  	#define SETBIT( x, y )		( (x) |= ((BYTE)(y)) )
+  174  	
+  175 C	/*!
+  176 C	 * Sets all those Port A pins as specified by the bit pattern in \a x.
+  177 C	 */
+  178  	#define SETBITPA( x )			SETBIT( PAOUT, x )
+  179  	
+  180 C	/*!
+  181 C	 * Resets all those Port A pins as specified by the bit pattern in \a x.
+  182 C	 */
+  183  	#define RESETBITPA( x )		RESETBIT( PAOUT, x )
+  184  	
+  185 C	/*!
+  186 C	 * Sets all those Port B pins as specified by the bit pattern in \a x.
+  187 C	 */
+  188  	#define SETBITPB( x )			SETBIT( PBOUT, x )
+  189  	
+  190 C	/*!
+  191 C	 * Resets all those Port B pins as specified by the bit pattern in \a x.
+  192 C	 */
+  193  	#define RESETBITPB( x )		RESETBIT( PBOUT, x )
+  194  	
+  195 C	/*!
+  196 C	 * Sets all those Port C pins as specified by the bit pattern in \a x.
+  197 C	 */
+  198  	#define SETBITPC( x )			SETBIT( PCOUT, x )
+  199  	
+  200 C	/*!
+  201 C	 * Resets all those Port C pins as specified by the bit pattern in \a x.
+  202 C	 */
+  203  	#define RESETBITPC( x )		RESETBIT( PCOUT, x )
+  204  	
+  205  	#ifdef PORTD
+  206 X	/*!
+  207 X	 * Sets all those Port D pins as specified by the bit pattern in \a x.
+  208 X	 */
+  209 X	#define SETBITPD( x )			SETBIT( PDOUT, x )
+  210 X	
+  211 X	/*!
+  212 X	 * Resets all those Port D pins as specified by the bit pattern in \a x.
+  213 X	 */
+  214 X	#define RESETBITPD( x )		RESETBIT( PDOUT, x )
+  215  	#endif
+  216  	#ifdef PORTE
+  217 X	/*!
+  218 X	 * Sets all those Port E pins as specified by the bit pattern in \a x.
+  219 X	 */
+  220 X	#define SETBITPE( x )			SETBIT( PEOUT, x )
+  221 X	
+  222 X	/*!
+  223 X	 * Resets all those Port E pins as specified by the bit pattern in \a x.
+  224 X	 */
+  225 X	#define RESETBITPE( x )		RESETBIT( PEOUT, x )
+  226  	#endif
+  227  	#ifdef PORTF
+  228 X	/*!
+  229 X	 * Sets all those Port F pins as specified by the bit pattern in \a x.
+  230 X	 */
+  231 X	#define SETBITPF( x )			SETBIT( PFOUT, x )
+  232 X	
+  233 X	/*!
+  234 X	 * Resets all those Port F pins as specified by the bit pattern in \a x.
+  235 X	 */
+  236 X	#define RESETBITPF( x )		RESETBIT( PFOUT, x )
+  237  	#endif
+  238  	#ifdef PORTG
+  239 X	/*!
+  240 X	 * Sets all those Port G pins as specified by the bit pattern in \a x.
+  241 X	 */
+  242 X	#define SETBITPG( x )			SETBIT( PGOUT, x )
+  243 X	
+  244 X	/*!
+  245 X	 * Resets all those Port G pins as specified by the bit pattern in \a x.
+  246 X	 */
+  247 X	#define RESETBITPG( x )		RESETBIT( PGOUT, x )
+  248  	#endif
+  249  	#ifdef PORTH
+  250 X	/*!
+  251 X	 * Sets all those Port H pins as specified by the bit pattern in \a x.
+  252 X	 */
+  253 X	#define SETBITPH( x )			SETBIT( PHOUT, x )
+  254 X	
+  255 X	/*!
+  256 X	 * Resets all those Port H pins as specified by the bit pattern in \a x.
+  257 X	 */
+  258 X	#define RESETBITPH( x )		RESETBIT( PHOUT, x )
+  259  	#endif
+  260  	
+  261  	
+  262 C	/*!
+  263 C	 * \brief Initialize the Port A.
+  264 C	 */
+  265  	VOID open_PortA( VOID ) ;
+  266  	
+  267 C	/*!
+  268 C	 * \brief Configure the Port A.
+  269 C	 */
+  270  	VOID control_PortA( PORT *port ) ;
+  271  	
+  272 C	/*!
+  273 C	 * \brief Set Input mode for Port A bits.
+  274 C	 */
+  275  	CHAR setmodeInput_PortA( UCHAR pins ) ;
+  276  	
+  277 C	/*!
+  278 C	 * \brief Set Output mode for Port A bits.
+  279 C	 */
+  280  	CHAR setmodeOutput_PortA( UCHAR pins ) ;
+  281  	
+  282 C	/*!
+  283 C	 * \brief Set Open Drain mode for Port A bits.
+  284 C	 */
+  285  	CHAR setmodeOpenDrain_PortA( UCHAR pins ) ;
+  286  	
+  287 C	/*!
+  288 C	 * \brief Set High Drive Enable mode for Port A bits.
+  289 C	 */
+  290  	CHAR setmodeHighDrive_PortA( UCHAR pins ) ;
+  291  	
+  292 C	/*!
+  293 C	 * \brief Set STOP Mode Recovery Source Enable mode for Port A bits.
+  294 C	 */
+  295  	CHAR setmodeStopRecovery_PortA( UCHAR pins ) ;
+  296  	
+  297  	#if defined (_Z8F1680)||defined(_Z8F04) || defined(_Z8F04A) || defined(_Z8F04A_8PIN) || defined(_Z8F04_8PIN) || defined(_Z8F08) || defined(_Z8F0823_8PIN) || defined(_Z8F08A) || defined(_Z8FMC16)  || defined(__ZSLBUILD)
+MacExp: #if 0||0 || 0 || 0 || 0 || 1 || 0 || 0 || 0  || 0
+  298 C	/*!
+  299 C	 * \brief Set Pull Up mode for Port A bits.
+  300 C	 */
+  301  	CHAR setmodePullUp_PortA( UCHAR pins ) ;
+  302  	#endif
+  303  	
+  304 C	/*!
+  305 C	 * \brief Set Alternate Function mode for Port A bits.
+  306 C	 */
+  307  	CHAR setmodeAltFunc_PortA( UCHAR pins ) ;
+  308  	
+  309  	#if defined(_Z8F04A_8PIN) || defined(_Z8F04_8PIN) || defined(_Z8F0823_8PIN) || defined(_Z8FMC16) || defined(__ZSLBUILD)
+MacExp: #if 0 || 0 || 0 || 0 || 0
+  310 X	/*!
+  311 X	 * \brief Set Alternate Function Set-2 mode for Port A bits.
+  312 X	 */
+  313 X	CHAR setmodeAltFuncSet2_PortA( UCHAR pins ) ;
+  314 X	
+  315 X	/*!
+  316 X	 * \brief Set Alternate Function Set-3 mode for Port A bits.
+  317 X	 */
+  318 X	CHAR setmodeAltFuncSet3_PortA( UCHAR pins ) ;
+  319 X	
+  320 X	/*!
+  321 X	 * \brief Set Alternate Function Set-4 mode for Port A bits.
+  322 X	 */
+  323 X	CHAR setmodeAltFuncSet4_PortA( UCHAR pins ) ;
+  324  	#endif
+  325  	
+  326 C	/*!
+  327 C	 * \brief Set Interrupt mode for Port A bits.
+  328 C	 */
+  329  	#if defined(_Z8FMC16)
+MacExp: #if 0
+  330 X	CHAR setmodeInterrupt_PortA( UCHAR pins, UCHAR edge, UCHAR priority ) ;
+  331  	#endif
+  332  	
+  333  	#if defined(_Z8F04A) || defined(_Z8F08A) || defined(__ZSLBUILD)
+MacExp: #if 0 || 0 || 0
+  334 X	CHAR setmodeInterrupt_PortA_XP( UCHAR pins, UCHAR edge, UCHAR priority ) ;
+  335  	#endif
+  336  	
+  337  	#if defined(_Z8F04A_8PIN) || defined(_Z8F04_8PIN) || defined(_Z8F0823_8PIN) || defined(__ZSLBUILD)
+MacExp: #if 0 || 0 || 0 || 0
+  338 X	CHAR setmodeInterrupt_PortA_8Pn( UCHAR pins, UCHAR edge, UCHAR priority ) ;
+  339  	#endif
+  340  	
+  341  	#if defined(_Z8F04) || defined(__ZSLBUILD)
+MacExp: #if 0 || 0
+  342 X	CHAR setmodeInterrupt_PortA_4K( UCHAR pins, UCHAR edge, UCHAR priority ) ;
+  343  	#endif
+  344  	
+  345  	#if defined(_Z8F08) || defined(__ZSLBUILD)
+MacExp: #if 1 || 0
+  346  	CHAR setmodeInterrupt_PortA_F08( UCHAR pins, UCHAR edge, UCHAR priority ) ;
+  347  	#endif
+  348  	
+  349  	#if defined(_Z8ENCORE_F0823_SERIES) || defined(__ZSLBUILD)
+MacExp: #if 0 || 0
+  350 X	CHAR setmodeInterrupt_PortA_F0823( UCHAR pins, UCHAR edge, UCHAR priority ) ;
+  351  	#endif
+  352  	
+  353  	#if defined(_Z8F640) || defined(_Z8F642) || defined(__ZSLBUILD)
+MacExp: #if 0 || 0 || 0
+  354 X	CHAR setmodeInterrupt_PortA_F64( UCHAR pins, UCHAR edge, UCHAR priority ) ;
+  355  	#endif
+  356  	
+  357  	#if defined (_Z8F1680)|| defined(__ZSLBUILD)
+MacExp: #if 0|| 0
+  358 X	CHAR setmodeInterrupt_PortA_F1680( UCHAR pins, UCHAR edge, UCHAR priority ) ;
+  359  	#endif
+  360  	
+  361  	
+  362 C	/*!
+  363 C	 * \brief Close the Port A.
+  364 C	 */
+  365  	VOID close_PortA( VOID ) ;
+  366  	
+  367  	
+  368  	
+  369  	
+  370 C	/*!
+  371 C	 * \brief Initialize the Port B.
+  372 C	 */
+  373  	VOID open_PortB( VOID ) ;
+  374  	
+  375 C	/*!
+  376 C	 * \brief Configure the Port B.
+  377 C	 */
+  378  	VOID control_PortB( PORT *port ) ;
+  379  	
+  380 C	/*!
+  381 C	 * \brief Set Input mode for Port B bits.
+  382 C	 */
+  383  	CHAR setmodeInput_PortB( UCHAR pins ) ;
+  384  	
+  385 C	/*!
+  386 C	 * \brief Set Output mode for Port B bits.
+  387 C	 */
+  388  	CHAR setmodeOutput_PortB( UCHAR pins ) ;
+  389  	
+  390 C	/*!
+  391 C	 * \brief Set Open Drain mode for Port B bits.
+  392 C	 */
+  393  	CHAR setmodeOpenDrain_PortB( UCHAR pins ) ;
+  394  	
+  395 C	/*!
+  396 C	 * \brief Set High Drive Enable mode for Port B bits.
+  397 C	 */
+  398  	CHAR setmodeHighDrive_PortB( UCHAR pins ) ;
+  399  	
+  400 C	/*!
+  401 C	 * \brief Set STOP Mode Recovery Source Enable mode for Port B bits.
+  402 C	 */
+  403  	CHAR setmodeStopRecovery_PortB( UCHAR pins ) ;
+  404  	
+  405  	#if defined(_Z8F1680)||defined(_Z8F04) || defined(_Z8F04A) || defined(_Z8F08) || defined(_Z8FMC16) || defined(_Z8F08A) || defined(__ZSLBUILD)
+MacExp: #if 0||0 || 0 || 1 || 0 || 0 || 0
+  406 C	/*!
+  407 C	 * \brief Set Pull Up mode for Port B bits.
+  408 C	 */
+  409  	CHAR setmodePullUp_PortB( UCHAR pins ) ;
+  410  	#endif
+  411  	
+  412  	#if defined(_Z8F04) || defined(_Z8F04A) || defined(_Z8F08A) || defined(__ZSLBUILD)
+MacExp: #if 0 || 0 || 0 || 0
+  413 X	/*!
+  414 X	 * \brief Set Alternate Function Set-1 mode for Port B bits.
+  415 X	 */
+  416 X	CHAR setmodeAltFuncSet1_PortB( UCHAR pins ) ;
+  417 X	
+  418 X	/*!
+  419 X	 * \brief Set Alternate Function Set-2 mode for Port B bits.
+  420 X	 */
+  421 X	CHAR setmodeAltFuncSet2_PortB( UCHAR pins ) ;
+  422  	#endif
+  423  	
+  424  	#if defined(_Z8FMC16)
+MacExp: #if 0
+  425 X	/*!
+  426 X	 * \brief Set Alternate Function Set-2 mode for Port B bits.
+  427 X	 */
+  428 X	CHAR setmodeAltFuncSet2_PortB( UCHAR pins ) ;
+  429 X	
+  430 X	/*!
+  431 X	 * \brief Set Alternate Function Set-3 mode for Port B bits.
+  432 X	 */
+  433 X	CHAR setmodeAltFuncSet3_PortB( UCHAR pins ) ;
+  434 X	
+  435 X	/*!
+  436 X	 * \brief Set Alternate Function Set-4 mode for Port B bits.
+  437 X	 */
+  438 X	CHAR setmodeAltFuncSet4_PortB( UCHAR pins ) ;
+  439 X	
+  440 X	/*!
+  441 X	 * \brief Set Interrupt mode for Port B bits.
+  442 X	 */
+  443 X	CHAR setmodeInterrupt_PortB( UCHAR pins, UCHAR priority ) ;
+  444  	#endif
+  445  	
+  446  	#if (!defined(_Z8F04A) && !defined(_Z8F04)) || defined(_Z8F08A) || defined(_Z8FMC16)|| defined(_Z8F1680) || defined(__ZSLBUILD)
+MacExp: #if (!0 && !0) || 0 || 0|| 0 || 0
+  447 C	/*!
+  448 C	 * \brief Set Alternate Function mode for Port B bits.
+  449 C	 */
+  450  	CHAR setmodeAltFunc_PortB( UCHAR pins ) ;
+  451  	#endif
+  452  	
+  453 C	/*!
+  454 C	 * \brief Close the Port B.
+  455 C	 */
+  456  	VOID close_PortB( VOID ) ;
+  457  	
+  458  	
+  459  	
+  460 C	/*!
+  461 C	 * \brief Initialize the Port C.
+  462 C	 */
+  463  	VOID open_PortC( VOID ) ;
+  464  	
+  465 C	/*!
+  466 C	 * \brief Configure the Port C.
+  467 C	 */
+  468  	VOID control_PortC( PORT *port ) ;
+  469  	
+  470 C	/*!
+  471 C	 * \brief Set Input mode for Port C bits.
+  472 C	 */
+  473  	CHAR setmodeInput_PortC( UCHAR pins ) ;
+  474  	
+  475 C	/*!
+  476 C	 * \brief Set Output mode for Port C bits.
+  477 C	 */
+  478  	CHAR setmodeOutput_PortC( UCHAR pins ) ;
+  479  	
+  480 C	/*!
+  481 C	 * \brief Set Open Drain mode for Port C bits.
+  482 C	 */
+  483  	CHAR setmodeOpenDrain_PortC( UCHAR pins ) ;
+  484  	
+  485 C	/*!
+  486 C	 * \brief Set High Drive Enable mode for Port C bits.
+  487 C	 */
+  488  	CHAR setmodeHighDrive_PortC( UCHAR pins ) ;
+  489  	
+  490 C	/*!
+  491 C	 * \brief Set STOP Mode Recovery Source Enable mode for Port C bits.
+  492 C	 */
+  493  	CHAR setmodeStopRecovery_PortC( UCHAR pins ) ;
+  494  	
+  495  	#if defined(_Z8F04) || defined(_Z8F04A) || defined(_Z8F08) || defined(_Z8F08A) || defined(_Z8FMC16) ||defined (_Z8F1680)|| defined(__ZSLBUILD)
+MacExp: #if 0 || 0 || 1 || 0 || 0 ||0|| 0
+  496 C	/*!
+  497 C	 * \brief Set Pull Up mode for Port C bits.
+  498 C	 */
+  499  	CHAR setmodePullUp_PortC( UCHAR pins ) ;
+  500  	#endif
+  501  	
+  502  	#if defined(_Z8F04) || defined(_Z8F04A) || defined(_Z8F08A) || defined(__ZSLBUILD)
+MacExp: #if 0 || 0 || 0 || 0
+  503 X	/*!
+  504 X	 * \brief Set Alternate Function Set-1 mode for Port C bits.
+  505 X	 */
+  506 X	CHAR setmodeAltFuncSet1_PortC( UCHAR pins ) ;
+  507 X	
+  508 X	/*!
+  509 X	 * \brief Set Alternate Function Set-2 mode for Port C bits.
+  510 X	 */
+  511 X	CHAR setmodeAltFuncSet2_PortC( UCHAR pins ) ;
+  512 X	
+  513 X	#if defined(_Z8F04A) || defined(_Z8F08A) || defined (_Z8F1680)||defined(__ZSLBUILD)
+MacExp: #if 0 || 0 || 0||0
+  514 X	/*!
+  515 X	 * \brief Set LED Drive mode for Port C bits.
+  516 X	 */
+  517 X	CHAR setmodeLEDDrive_PortC( UCHAR pins, BYTE drivelevels ) ;
+  518 X	#endif
+  519  	#endif
+  520  	
+  521  	#if (!defined(_Z8F04) && !defined(_Z8F04A)) ||defined (_Z8F1680)|| defined(_Z8F08A) || defined(_Z8FMC16) || defined(__ZSLBUILD)
+MacExp: #if (!0 && !0) ||0|| 0 || 0 || 0
+  522 C	/*!
+  523 C	 * \brief Set Alternate Function mode for Port C bits.
+  524 C	 */
+  525  	CHAR setmodeAltFunc_PortC( UCHAR pins ) ;
+  526  	#endif
+  527  	
+  528  	#if defined(_Z8FMC16)
+MacExp: #if 0
+  529 X	/*!
+  530 X	 * \brief Set Alternate Function Set-3 mode for Port C bits.
+  531 X	 */
+  532 X	CHAR setmodeAltFuncSet3_PortC( UCHAR pins ) ;
+  533  	#endif
+  534  	
+  535 C	/*!
+  536 C	 * \brief Set Interrupt mode for Port C bits.
+  537 C	 */
+  538  	#if defined(_Z8FMC16)
+MacExp: #if 0
+  539 X	CHAR setmodeInterrupt_PortC( UCHAR pins, UCHAR edge, UCHAR priority ) ;
+  540  	#else
+  541  	CHAR setmodeInterrupt_PortC( UCHAR pins, UCHAR priority ) ;
+  542  	#endif
+  543  	
+  544 C	/*!
+  545 C	 * \brief Close the Port C.
+  546 C	 */
+  547  	VOID close_PortC( VOID ) ;
+  548  	
+  549  	
+  550  	
+  551  	
+  552  	#ifdef PORTD
+  553 X	/*!
+  554 X	 * \brief Initialize the Port D.
+  555 X	 */
+  556 X	VOID open_PortD( VOID ) ;
+  557 X	
+  558 X	/*!
+  559 X	 * \brief Configure the Port D.
+  560 X	 */
+  561 X	VOID control_PortD( PORT *port ) ;
+  562 X	
+  563 X	/*!
+  564 X	 * \brief Set Input mode for Port D bits.
+  565 X	 */
+  566 X	CHAR setmodeInput_PortD( UCHAR pins ) ;
+  567 X	
+  568 X	/*!
+  569 X	 * \brief Set Output mode for Port D bits.
+  570 X	 */
+  571 X	CHAR setmodeOutput_PortD( UCHAR pins ) ;
+  572 X	
+  573 X	/*!
+  574 X	 * \brief Set Open Drain mode for Port D bits.
+  575 X	 */
+  576 X	CHAR setmodeOpenDrain_PortD( UCHAR pins ) ;
+  577 X	
+  578 X	/*!
+  579 X	 * \brief Set High Drive Enable mode for Port D bits.
+  580 X	 */
+  581 X	CHAR setmodeHighDrive_PortD( UCHAR pins ) ;
+  582 X	
+  583 X	/*!
+  584 X	 * \brief Set STOP Mode Recovery Source Enable mode for Port D bits.
+  585 X	 */
+  586 X	CHAR setmodeStopRecovery_PortD( UCHAR pins ) ;
+  587 X	
+  588 X	#if defined(_Z8F04) || defined(_Z8F04A) || defined(_Z8F08A) || defined (_Z8F1680)||defined(__ZSLBUILD)
+MacExp: #if 0 || 0 || 0 || 0||0
+  589 X	/*!
+  590 X	 * \brief Set Pull Up mode for Port D bits.
+  591 X	 */
+  592 X	CHAR setmodePullUp_PortD( UCHAR pins ) ;
+  593 X	#endif
+  594 X	
+  595 X	#if defined(_Z8F640) || defined(_Z8F642)||defined(_Z8F1680) || defined(__ZSLBUILD)
+MacExp: #if 0 || 0||0 || 0
+  596 X	/*!
+  597 X	 * \brief Set Alternate Function mode for Port D bits.
+  598 X	 */
+  599 X	CHAR setmodeAltFunc_PortD( UCHAR pins ) ;
+  600 X	#endif
+  601 X	
+  602 X	/*!
+  603 X	 * \brief Set Interrupt mode for Port D bits.
+  604 X	 */
+  605 X	#if  defined(_Z8F640) || defined(_Z8F642) || defined(__ZSLBUILD)
+MacExp: #if  0 || 0 || 0
+  606 X	CHAR setmodeInterrupt_PortD_F64( UCHAR pins, UCHAR edge, UCHAR priority ) ;
+  607 X	#endif
+  608 X	#if defined (_Z8F1680)|| defined(__ZSLBUILD)
+MacExp: #if 0|| 0
+  609 X	CHAR setmodeInterrupt_PortD_F1680( UCHAR pins, UCHAR edge, UCHAR priority ) ;
+  610 X	#endif
+  611 X	
+  612 X	/*!
+  613 X	 * \brief Close the Port D.
+  614 X	 */
+  615 X	VOID close_PortD( VOID ) ;
+  616  	#endif
+  617  	
+  618  	
+  619  	
+  620  	#ifdef PORTE
+  621 X	/*!
+  622 X	 * \brief Initialize the Port E.
+  623 X	 */
+  624 X	VOID open_PortE( VOID ) ;
+  625 X	
+  626 X	/*!
+  627 X	 * \brief Configure the Port E.
+  628 X	 */
+  629 X	VOID control_PortE( PORT *port ) ;
+  630 X	
+  631 X	/*!
+  632 X	 * \brief Set Input mode for Port E bits.
+  633 X	 */
+  634 X	CHAR setmodeInput_PortE( UCHAR pins ) ;
+  635 X	
+  636 X	/*!
+  637 X	 * \brief Set Output mode for Port E bits.
+  638 X	 */
+  639 X	CHAR setmodeOutput_PortE( UCHAR pins ) ;
+  640 X	
+  641 X	/*!
+  642 X	 * \brief Set Open Drain mode for Port E bits.
+  643 X	 */
+  644 X	CHAR setmodeOpenDrain_PortE( UCHAR pins ) ;
+  645 X	
+  646 X	/*!
+  647 X	 * \brief Set High Drive Enable mode for Port E bits.
+  648 X	 */
+  649 X	CHAR setmodeHighDrive_PortE( UCHAR pins ) ;
+  650 X	
+  651 X	/*!
+  652 X	 * \brief Set STOP Mode Recovery Source Enable mode for Port E bits.
+  653 X	 */
+  654 X	CHAR setmodeStopRecovery_PortE( UCHAR pins ) ;
+  655 X	
+  656 X	/*!
+  657 X	 * \brief Close the Port E.
+  658 X	 */
+  659 X	VOID close_PortE( VOID ) ;
+  660 X	
+  661 X	/*!
+  662 X	 * \brief Set Pull Up mode for Port E bits.
+  663 X	 */
+  664 X	CHAR setmodePullUp_PortE( UCHAR pins );
+  665 X	/*!
+  666 X	 * \brief Set Alternate Function mode for Port D bits.
+  667 X	 */
+  668 X	CHAR setmodeAltFunc_PortE( UCHAR pins );
+  669  	#endif
+  670  	
+  671  	
+  672  	
+  673  	
+  674  	#ifdef PORTF
+  675 X	/*!
+  676 X	 * \brief Initialize the Port F.
+  677 X	 */
+  678 X	VOID open_PortF( VOID ) ;
+  679 X	
+  680 X	/*!
+  681 X	 * \brief Configure the Port F.
+  682 X	 */
+  683 X	VOID control_PortF( PORT *port ) ;
+  684 X	
+  685 X	/*!
+  686 X	 * \brief Set Input mode for Port F bits.
+  687 X	 */
+  688 X	CHAR setmodeInput_PortF( UCHAR pins ) ;
+  689 X	
+  690 X	/*!
+  691 X	 * \brief Set Output mode for Port F bits.
+  692 X	 */
+  693 X	CHAR setmodeOutput_PortF( UCHAR pins ) ;
+  694 X	
+  695 X	/*!
+  696 X	 * \brief Set Open Drain mode for Port F bits.
+  697 X	 */
+  698 X	CHAR setmodeOpenDrain_PortF( UCHAR pins ) ;
+  699 X	
+  700 X	/*!
+  701 X	 * \brief Set High Drive Enable mode for Port F bits.
+  702 X	 */
+  703 X	CHAR setmodeHighDrive_PortF( UCHAR pins ) ;
+  704 X	
+  705 X	/*!
+  706 X	 * \brief Set STOP Mode Recovery Source Enable mode for Port F bits.
+  707 X	 */
+  708 X	CHAR setmodeStopRecovery_PortF( UCHAR pins ) ;
+  709 X	
+  710 X	/*!
+  711 X	 * \brief Close the Port F.
+  712 X	 */
+  713 X	VOID close_PortF( VOID ) ;
+  714  	#endif
+  715  	
+  716  	
+  717  	
+  718  	#ifdef PORTG
+  719 X	/*!
+  720 X	 * \brief Initialize the Port G.
+  721 X	 */
+  722 X	VOID open_PortG( VOID ) ;
+  723 X	
+  724 X	/*!
+  725 X	 * \brief Configure the Port G.
+  726 X	 */
+  727 X	VOID control_PortG( PORT *port ) ;
+  728 X	
+  729 X	/*!
+  730 X	 * \brief Set Input mode for Port G bits.
+  731 X	 */
+  732 X	CHAR setmodeInput_PortG( UCHAR pins ) ;
+  733 X	
+  734 X	/*!
+  735 X	 * \brief Set Output mode for Port G bits.
+  736 X	 */
+  737 X	CHAR setmodeOutput_PortG( UCHAR pins ) ;
+  738 X	
+  739 X	/*!
+  740 X	 * \brief Set Open Drain mode for Port G bits.
+  741 X	 */
+  742 X	CHAR setmodeOpenDrain_PortG( UCHAR pins ) ;
+  743 X	
+  744 X	/*!
+  745 X	 * \brief Set High Drive Enable mode for Port G bits.
+  746 X	 */
+  747 X	CHAR setmodeHighDrive_PortG( UCHAR pins ) ;
+  748 X	
+  749 X	/*!
+  750 X	 * \brief Set STOP Mode Recovery Source Enable mode for Port G bits.
+  751 X	 */
+  752 X	CHAR setmodeStopRecovery_PortG( UCHAR pins ) ;
+  753 X	
+  754 X	/*!
+  755 X	 * \brief Close the Port G.
+  756 X	 */
+  757 X	VOID close_PortG( VOID ) ;
+  758  	#endif
+  759  	
+  760  	
+  761  	
+  762  	#ifdef PORTH
+  763 X	/*!
+  764 X	 * \brief Initialize the Port H.
+  765 X	 */
+  766 X	VOID open_PortH( VOID ) ;
+  767 X	
+  768 X	/*!
+  769 X	 * \brief Configure the Port H.
+  770 X	 */
+  771 X	VOID control_PortH( PORT *port ) ;
+  772 X	
+  773 X	/*!
+  774 X	 * \brief Set Input mode for Port H bits.
+  775 X	 */
+  776 X	CHAR setmodeInput_PortH( UCHAR pins ) ;
+  777 X	
+  778 X	/*!
+  779 X	 * \brief Set Output mode for Port H bits.
+  780 X	 */
+  781 X	CHAR setmodeOutput_PortH( UCHAR pins ) ;
+  782 X	
+  783 X	/*!
+  784 X	 * \brief Set Open Drain mode for Port H bits.
+  785 X	 */
+  786 X	CHAR setmodeOpenDrain_PortH( UCHAR pins ) ;
+  787 X	
+  788 X	/*!
+  789 X	 * \brief Set High Drive Enable mode for Port H bits.
+  790 X	 */
+  791 X	CHAR setmodeHighDrive_PortH( UCHAR pins ) ;
+  792 X	
+  793 X	/*!
+  794 X	 * \brief Set STOP Mode Recovery Source Enable mode for Port H bits.
+  795 X	 */
+  796 X	CHAR setmodeStopRecovery_PortH( UCHAR pins ) ;
+  797 X	
+  798 X	/*!
+  799 X	 * \brief Set Alternate Function mode for Port H bits.
+  800 X	 */
+  801 X	CHAR setmodeAltFunc_PortH( UCHAR pins ) ;
+  802 X	
+  803 X	/*!
+  804 X	 * \brief Close the Port H.
+  805 X	 */
+  806 X	VOID close_PortH( VOID ) ;
+  807  	#endif
+  808  	
+  809  	
+  810  	
+  811  	#endif /*! _GPIO_H_ */
+  812  	
+  813  	
+
+Return To	C:\PROGRA~2\ZiLOG\ZDSII_~1.0\include\zilog\eZ8.h
+ 1993  	#endif
+ 1994  	
+ 1995  	#if defined(_ZSL_UART_USED) || defined(__ZSLBUILD)
+MacExp: #if 0 || 0
+ 1996 X	#include <uart.h>
+ 1997 X	#include <dmadefs.h>
+ 1998  	#endif
+ 1999  	
+ 2000  	#endif
+ 2001  	
+ 2002  	
+
+Return To	X:\ePin\source\SwitchMatrix\sysclk.c
+   17  	#include "sysclk.h"
+
+Enter File:	include\sysclk.h
+    1 C	/********************************************************************************************************
+    2 C	 * File: sysclk.h
+    3 C	 * Description:
+    4 C	 *   include sytem clock function prototypes and global constants/variables
+    5 C	 *
+    6 C	 * Last modified: 21 Apr 2006
+    7 C	 ********************************************************************************************************
+    8 C	 * Copyright (C) 2008 by Zilog, Inc.  All Rights Reserved.
+    9 C	 ********************************************************************************************************/
+   10  	#ifndef _SYSCLK_H_
+   11  	#define _SYSCLK_H_
+   12  	
+   13  	#define OSCCTL  (*(unsigned char volatile far*)0xF86)              // Reset = 0x20 Oscillator Control
+   14  	
+   15  	
+   16 C	//////////////////////////////////////////////////////////////////////////////
+   17 C	// Oscillator enable bits
+   18  	#define OSC_INTEN               0x80   // Internal Precision Oscillator Enable
+   19  	#define OSC_XTLEN               0x40   // External Oscillator Enable
+   20  	#define OSC_WDTEN               0x20   // Watchdog Timer Oscillator Enable
+   21 C	// System Clock Oscillator Select bits
+   22  	#define SCK_IPO                 0x00   // Internal precision oscillator at 5.5296MHz
+   23  	#define SCK_IPO_32K             0x01   // Internal precision oscillator at 32KHz
+   24  	#define SCK_XTAL                0x02   // Crystal oscillator or external RC oscillator
+   25  	#define SCK_WDT                 0x03   // Watch-Dog Timer oscillator
+   26  	#define SCK_CLKIN               0x04   // External clock signal on PB3 (8-Pin PA1)
+   27  	#define SCK_IPO_MASK			0x01   // Mask bit of internal precision oscillator
+   28  	
+   29 C	// System clock options
+   30  	#define CLOCK_INTERNAL          0
+   31  	#define CLOCK_EXTERNAL		    1
+   32  	#define CLOCK_SOURCE_DEFAULT    CLOCK_INTERNAL
+   33  	
+   34  	
+   35 C	//////////////////////////////////////////////////////////////////////////////
+   36 C	// Function Prototypes
+   37  	void sysclk_init(void);
+   38  	
+   39  	
+   40  	#endif
+
+Return To	X:\ePin\source\SwitchMatrix\sysclk.c
+   18  	
+   19  	
+   20 C	/*********************************************************************************************************
+   21 C	 * local constant defintions
+   22 C	 *********************************************************************************************************
+   23 C	/*--------------------------------------------------------------------------------------
+   24 C	 *  System clock selection
+   25 C	 *
+   26 C	 *  Instructions for enabling the external clock:
+   27 C	 *      1. Select External clock and Frequency in the Debugger Setup Target dialog
+   28 C	 *      2. Uncomment the following line; "#define CLOCK_SOURCE    CLOCK_EXTERNAL"
+   29 C	 *--------------------------------------------------------------------------------------*/
+   30 C	//#define CLOCK_SOURCE    CLOCK_EXTERNAL        // external oscillator
+   31  	#ifndef CLOCK_SOURCE
+   32  	#define CLOCK_SOURCE    CLOCK_INTERNAL        // internal oscillator
+   33  	#endif
+   34  	
+   35  	#ifndef CLOCK_SOURCE
+   36 X	#define CLOCK_SOURCE    CLOCK_SOURCE_DEFAULT
+   37  	#endif
+   38  	
+   39 C	/*--------------------------------------------------------------------------------------
+   40 C	 * The Osciallator control registers(OSCTL) is used to configure the clock source and select Internal 
+   41 C	 * Precision Frequency.
+   42 C	 *
+   43 C	 * +--------+-------+-------+-------+-------+-------+-------+---+---+---+
+   44 C	 * |        | BITS  |   7   |   6   |   5   |   4   |   3   | 2 | 1 | 0 |
+   45 C	 * | OSCTL  | ------+-------+-------+-------+-------+-------+---+---+---+
+   46 C	 * |        | FIELD | INTEN | XTLEN | WDTEN | POFEN | WDFEN |   SCKSEL  |
+   47 C	 * +--------+-------+-------+-------+-------+-------+-------+-----------+
+   48 C	 *                      |       |        |      |       |        |_ System clock oscillator select
+   49 C	 *                      |	    |		 |      |       |            000 = Internal precision oscillator 
+   50 C	 * 					    |	    |		 |	    |       |                  functions as system clock at 5.53MHz
+   51 C	 *                      |       |        |      |       |            001 = Internal precision oscillator functions
+   52 C	 *					    |	    |		 |	    |	    |  		          as system clock at 32KHz
+   53 C	 *                      |       |        |      |       |            010 = Crystal oscillator or external RC 
+   54 C	 *					    |	    |		 |	    |	    |	              oscillator functions as system clock
+   55 C	 *                      |       |        |      |       |            011 = Watchdog timer oscillator functions as 
+   56 C	 *    				    |	    |		 |	    |       | 		           system clock
+   57 C	 *                      |       |        |      |       |            100 = External clock signal on PB3 functions
+   58 C	 * 					    |	    |		 |	    |	    | 		          as system clock
+   59 C	 *                      |       |        |      |       |            101 = Reserved
+   60 C	 *                      |       |        |      |       |            110 = Reserved
+   61 C	 *                      |       |        |      |       |            111 = Reserved
+   62 C	 *                      |       |        |      |       |
+   63 C	 *                      |       |        |      |       |_ Watchdog timer oscillator failure detection enable
+   64 C	 *                      |       |        |      |          1 = Failure detection of Watchdog timer oscillator
+   65 C	 *                      |       |        |      |              is enabled
+   66 C	 *                      |       |        |      |          0 = Failure detection of Watchdog timer oscillator
+   67 C	 *                      |       |        |      |              is disabled          
+   68 C	 *                      |       |        |      |
+   69 C	 *                      |       |        |      |_ Primary oscillator failure detection enable
+   70 C	 *                      |       |        |         1 = Failure detection and recovery of primary oscillator 
+   71 C	 *                      |       |        |             is enabled
+   72 C	 *                      |       |        |         0 = Failure detection and recovery of primary oscillator 
+   73 C	 *                      |       |        |             is disabled 
+   74 C	 *                      |       |        |_ Watchdog timer oscillator enable
+   75 C	 *                      |       |           1 = Watchdog timer oscillator is enabled
+   76 C	 *                      |       |           0 = Watchdog timer oscillator is disabled
+   77 C	 *                      |       |
+   78 C	 *                      |       |_ Crystal oscillator enable * this setting overrides the GPIO register 
+   79 C	 *                      |          control for PA0 and PA1
+   80 C	 *                      |
+   81 C	 *                      |_ Internal precision oscillator enable
+   82 C	 *                         1 = Internal precision oscillator is enabled
+   83 C	 *                         0 = Internal precision oscillator is disabled
+   84 C	 *
+   85 C	 -----------------------------------------------------------------------------------------------------------*/
+   86  	#if (CLOCK_SOURCE == CLOCK_EXTERNAL)
+MacExp: #if (0 == 1)
+   87 X	#define SCKSEL          SCK_XTAL
+   88 X	#define OSCEN           OSC_INTEN | OSC_XTLEN
+   89  	#elif (CLOCK_SOURCE == CLOCK_INTERNAL)
+MacExp: #elif (0 == 0)
+   90 C	/*--------------------------------------------------------------------------------------
+   91 C	 *  Instructions to use 32 KHz IPO supported only with USB/Ethernet SmartCable
+   92 C	 *      1. Enter 0.032 to Project settings->Debugger->Target\Setup->Internal\other
+   93 C	 *      2. Ensure to comment out the above statement; "#define CLOCK_SOURCE    CLOCK_EXTERNAL"
+   94 C	 *      3. Uncomment the following line ; "//#define SCKSEL          SCK_IPO_32K"
+   95 C	 *--------------------------------------------------------------------------------------*/
+   96 C	//#define SCKSEL          SCK_IPO_32K	// Select 32KHZ
+   97  	#ifndef SCKSEL
+   98  	#define SCKSEL          SCK_IPO			// Select 5.5926 MHZ
+   99  	#endif
+  100  	#define OSCEN           OSC_INTEN		// Enable IPO bit
+  101  	#endif
+  102  	
+  103 C	/*********************************************************************************************************
+  104 C	 * Function: sysclk_init
+  105 C	 * Description: 
+  106 C	 *     Initialize system clock source 
+  107 C	 *
+  108 C	 **********************************************************************************************************/
+  109  	void sysclk_init(void)
+  110  	{
+  111 C	    /*******
+  112 C		 * If clock source is selected as external, enable it
+  113 C		 */
+  114  	#if (SCKSEL & ~SCK_IPO_MASK) 
+MacExp: #if (0x00 & ~0x01) 
+  115 X		unsigned long delay = 1000; 	// delay used for oscillator stabilization after enabled
+  116 X	
+  117 X	    /******
+  118 X		 *  Enable external source if not yet enabled
+  119 X		 */
+  120 X	    if ((OSCCTL & 0x06) != SCKSEL)
+  121 X	    {
+  122 X	
+  123 X			/******
+  124 X			 *  Enable external oscillator source
+  125 X			 */
+  126 X	        OSCCTL = 0xE7;              // Unlock sequence for OSCTL write
+  127 X	        OSCCTL = 0x18;              //
+  128 X	        OSCCTL |= OSC_XTLEN;        // start external oscillator
+  129 X	
+  130 X	        while(delay--);				// wait for clock to stabilize
+  131 X		}
+  132  	#endif
+  133 C	 	/******
+  134 C		 *  Switch to selected oscillator source
+  135 C		 */	
+  136  		OSCCTL = 0xE7;              // Unlock sequence for OSCTL write
+MacExp: 	(*(unsigned char volatile far*)0xF86) = 0xE7;              // Unlock sequence for OSCTL write
+  137  	    OSCCTL = 0x18;              //
+MacExp:     (*(unsigned char volatile far*)0xF86) = 0x18;              //
+  138  	    OSCCTL = OSCEN | SCKSEL;    // switch to other clock source
+MacExp:     (*(unsigned char volatile far*)0xF86) = 0x80 | 0x00;    // switch to other clock source
+  139  	}
+  140  	

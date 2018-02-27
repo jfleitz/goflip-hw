@@ -1,0 +1,13 @@
+"Id";"Designator";"Package";"Quantity";"Designation";"Supplier and ref";
+1;"P1,P2";"Molex_KK_6410-06";2;"CONN_01X06";;;
+2;"P3,P4,P5,P6,P7";"Molex_KK_6410-05";5;"CONN_01X05";;;
+3;"P8";"IDC_Header_Straight_40pins";1;"CONN_02X20";;;
+4;"P9-EXP";"Molex_KK_6410-09";1;"CONN_01X09";;;
+5;"P10 - POWER";"Molex_KK_6410-04";1;"POWER";;;
+6;"P11,P12";"Molex_KK_6410-07";2;"CONN_01X07";;;
+7;"Q1,Q2";"SOT-23_Handsoldering";2;"BSS138";;;
+8;"R1,R2,R3,R4";"Resistor_Horizontal_RM15mm";4;"10k";;;
+9;"U1";"TO-92_Molded_Narrow";1;"LM2931Z-3.3/5.0";;;
+10;"C1";"C_Radial_D5_L11_P2";1;"0.1uf";;;
+11;"C2";"C_Radial_D5_L11_P2";1;"100uf";;;
+12;"P13,P14,P15,P16";"1pin";4;"CONN_01X01";;;

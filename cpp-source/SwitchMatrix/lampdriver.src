@@ -1,0 +1,2400 @@
+; Z8 Encore! ANSI C Compiler Release 3.64
+; -nofastcall -const=ROM -listinc -model=S -optlink -regvar
+; -noreduceopt -debug -norevaa -peephole -localcse -optsize
+; -alias 
+	DEFINE pdriver_TEXT,SPACE=ROM
+	FILE	".\lampdriver.c"
+.debug "C"
+	SEGMENT ROM_DATA
+__ldu_map:
+	DB	16
+	DB	17
+	DB	18
+	DB	19
+	DB	20
+	DB	21
+	DB	22
+	DB	23
+	DB	24
+	DB	25
+	DB	26
+	DB	27
+	DB	28
+	DB	29
+	DB	30
+	DB	31
+	DB	32
+	DB	33
+	DB	34
+	DB	35
+	DB	36
+	DB	37
+	DB	38
+	DB	39
+	DB	40
+	DB	41
+	DB	42
+	DB	43
+	DB	44
+	DB	45
+	DB	46
+	DB	47
+	DB	64
+	DB	65
+	DB	66
+	DB	67
+	DB	68
+	DB	69
+	DB	70
+	DB	71
+	DB	72
+	DB	73
+	DB	74
+	DB	75
+	DB	76
+	DB	77
+	DB	78
+	DB	79
+	DB	128
+	DB	129
+	DB	130
+	DB	131
+	DB	132
+	DB	133
+	DB	134
+	DB	135
+	DB	136
+	DB	137
+	DB	138
+	DB	139
+	DB	140
+	DB	141
+	DB	142
+	DB	143
+.define "_ldu_map"
+.alias "__ldu_map"
+.class 52
+.value __ldu_map
+.dim 64
+.type 108
+.endef
+	SEGMENT pdriver_TEXT
+;    1	/*!\file gpio.h
+;    2	 * \brief Definition file for the Z8 Encore! GPIO Ports.
+;    3	 *
+;    4	 *  This file contains header information required by GPIO Port
+;    5	 *  driver implementations for Z8 Encore! microcontrollers.
+;    6	 *
+;    7	 *  This source file uses Doxygen-style comments to generate documentation
+;    8	 *  automatically.
+;    9	 *
+;   10	 *  Copyright (C) 1999-2004 by  ZiLOG, Inc.
+;   11	 *  All Rights Reserved.
+;   12	 */
+;   13	
+;   14	#pragma once // Include this file only once
+;   15	#ifndef _GPIO_H_
+;   16	#define _GPIO_H_
+;   17	
+;   18	#include <defines.h>
+;   19	
+;   20	
+;   21	#ifdef _DEBUG
+;   22	#define GPIOPARAMETER_CHECKING									//!< Parameter validation control macro.
+;   23	#endif
+;   24	
+;   25	
+;   26	/*! The GPIO ports available for particular target. Port A, B and C are available for all targets */
+;   27	#if (defined(EZ8_PORT4) && !defined(_Z8F04)) || defined(EZ8_PORT8)||defined(EZ8_PORT5)
+;   28	#define PORTD
+;   29	#endif
+;   30	
+;   31	#if defined(EZ8_PORT8)||defined(EZ8_PORT5)
+;   32	#define PORTE
+;   33	#endif
+;   34	#if defined(EZ8_PORT8)
+;   35	#define PORTF
+;   36	#define PORTG
+;   37	#define PORTH
+;   38	#endif
+;   39	
+;   40	#define GPIOERR_SUCCESS		(CHAR)0			//!< Error code for success returned by GPIO APIs.
+;   41	#define GPIOERR_INVALIDPINS	(CHAR)1			//!< Error code for invalid GPIO pin for the target.
+;   42	#define GPIOERR_FAILURE		(CHAR)(-1)		//!< Error code for failure returned by GPIO APIs.
+;   43	
+;   44	
+;   45	/*! all the ports bits are set to input mode */
+;   46	#define PORTA_ADDRVAL_DEF   0x01
+;   47	#define PORTA_CTLVAL_DEF    0xFF
+;   48	#define PORTA_OUTVAL_DEF    0x00
+;   49	
+;   50	#define PORTB_ADDRVAL_DEF   0x01
+;   51	#define PORTB_CTLVAL_DEF    0xFF
+;   52	#define PORTB_OUTVAL_DEF    0x00
+;   53	
+;   54	#define PORTC_ADDRVAL_DEF   0x01
+;   55	#define PORTC_CTLVAL_DEF    0xFF
+;   56	#define PORTC_OUTVAL_DEF    0x00
+;   57	
+;   58	#ifdef PORTD
+;   59	#define PORTD_ADDRVAL_DEF   0x01
+;   60	#define PORTD_CTLVAL_DEF    0xFF
+;   61	#define PORTD_OUTVAL_DEF    0x00
+;   62	#endif
+;   63	
+;   64	#ifdef PORTE
+;   65	#define PORTE_ADDRVAL_DEF   0x01
+;   66	#define PORTE_CTLVAL_DEF    0xFF
+;   67	#define PORTE_OUTVAL_DEF    0x00
+;   68	#endif
+;   69	
+;   70	#ifdef PORTF
+;   71	#define PORTF_ADDRVAL_DEF   0x01
+;   72	#define PORTF_CTLVAL_DEF    0xFF
+;   73	#define PORTF_OUTVAL_DEF    0x00
+;   74	#endif
+;   75	
+;   76	#ifdef PORTG
+;   77	#define PORTG_ADDRVAL_DEF   0x01
+;   78	#define PORTG_CTLVAL_DEF    0xFF
+;   79	#define PORTG_OUTVAL_DEF    0x00
+;   80	#endif
+;   81	
+;   82	#ifdef PORTH
+;   83	#define PORTH_ADDRVAL_DEF   0x01
+;   84	#define PORTH_CTLVAL_DEF    0xFF
+;   85	#define PORTH_OUTVAL_DEF    0x00
+;   86	#endif
+;   87	
+;   88	
+;   89	/*! Control Register access codes used in Address registers */
+;   90	#define PORTADDR_NOFUNC			0x00
+;   91	#define PORTADDR_DATADIR		0x01
+;   92	#define PORTADDR_ALTFUNC		0x02
+;   93	#if defined(_Z8FMC16) || defined(__ZSLBUILD)
+;   94	#define PORTADDR_ALTFUNC0		0x02
+;   95	#endif
+;   96	#define PORTADDR_OPENDRAIN		0x03
+;   97	#define PORTADDR_HIGHDRIVE		0x04
+;   98	#define PORTADDR_STPMDREC		0x05
+;   99	#if defined (_Z8F1680)||defined(_Z8F04) || defined(_Z8F04A) || defined(_Z8F04A_8PIN) || defined(_Z8F04_8PIN) || defined(_Z8F08) || defined(_Z8F0823_8PIN) || defined(_Z8F08A) || defined(_Z8FMC16) || defined(__ZSLBUILD)
+;  100	#define PORTADDR_PULLUP		0x06
+;  101	#endif
+;  102	#if defined (_Z8F1680)||defined(_Z8F04) || defined(_Z8F04A) || defined(_Z8F04A_8PIN) || defined(_Z8F04_8PIN) || defined(_Z8F0823_8PIN) || defined(_Z8F08A) || defined(__ZSLBUILD)
+;  103	#define PORTADDR_ALTFUNCSET1	0x07
+;  104	#define PORTADDR_ALTFUNCSET2	0x08
+;  105	#endif
+;  106	#if defined(_Z8FMC16) || defined(__ZSLBUILD)
+;  107	#define PORTADDR_ALTFUNC1		0x07
+;  108	#define PORTADDR_IRQES			0x08
+;  109	#define PORTADDR_IRQPS			0x09
+;  110	#endif
+;  111	
+;  112	
+;  113	/*! Definitions for Current Drive Levels used in LED Drive Mode */
+;  114	#if defined(_Z8F04A) ||defined (_Z8F1680)|| defined(__ZSLBUILD)
+;  115	#define DRIVELEVEL_3MA			0
+;  116	#define DRIVELEVEL_7MA			1
+;  117	#define DRIVELEVEL_13MA			2
+;  118	#define DRIVELEVEL_20MA			3
+;  119	#endif
+;  120	
+;  121	/*! Definitions for trigger edges */
+;  122	#define EDGE_FALLING			0
+;  123	#define EDGE_RISING				1
+;  124	
+;  125	/*! GPIO pin patterns */
+;  126	#define PORTPIN_ZERO		(BYTE)0x01			//!< The bit mask for Port bit 0.
+;  127	#define PORTPIN_ONE			(BYTE)0x02			//!< The bit mask for Port bit 1.
+;  128	#define PORTPIN_TWO			(BYTE)0x04			//!< The bit mask for Port bit 2.
+;  129	#define PORTPIN_THREE		(BYTE)0x08			//!< The bit mask for Port bit 3.
+;  130	#define PORTPIN_FOUR		(BYTE)0x10			//!< The bit mask for Port bit 4.
+;  131	#define PORTPIN_FIVE 		(BYTE)0x20			//!< The bit mask for Port bit 5.
+;  132	#define PORTPIN_SIX			(BYTE)0x40			//!< The bit mask for Port bit 6.
+;  133	#define PORTPIN_SEVEN		(BYTE)0x80			//!< The bit mask for Port bit 7.
+;  134	#define PORTPIN_FOURPINS_L	(BYTE)0x0F			//!< The bit mask for lower four Port bits.
+;  135	#define PORTPIN_FOURPINS_U	(BYTE)0xF0			//!< The bit mask for upper four Port bits.
+;  136	#define PORTPIN_PATTERN_AA	(BYTE)0xAA			//!< The bit mask for alternate bits (odd numbered pins).
+;  137	#define PORTPIN_PATTERN_55	(BYTE)0x55			//!< The bit mask for alternate bits (even numbered pins).
+;  138	#define PORTPIN_ALL			(BYTE)0xFF			//!< The bit mask for all Port bits.
+;  139	
+;  140	/*! Port mask index used for validating the port pins */
+;  141	#define MSKINDEX_PORTB		(BYTE)0
+;  142	#define MSKINDEX_PORTC		(BYTE)1
+;  143	#define MSKINDEX_PORTD		(BYTE)2
+;  144	#define MSKINDEX_PORTE		(BYTE)3
+;  145	#define MSKINDEX_PORTF		(BYTE)4
+;  146	#define MSKINDEX_PORTG		(BYTE)5
+;  147	#define MSKINDEX_PORTH		(BYTE)6
+;  148	
+;  149	/*!
+;  150	 * \brief The settings required to configure the GPIO Port.
+;  151	 */
+;  152	typedef struct
+;  153	{
+;  154		BYTE addr ;					//!< The address register.
+;  155		BYTE ctl ;					//!< The control register.
+;  156		BYTE out ;					//!< The output register (write-only).
+;  157		BYTE in ;					//!< The input register (read-only).
+;  158	
+;  159	} PORT ;
+.begrec "NONAME0",4
+.define "addr"
+.value 0
+.class 8
+.type 12
+.endef
+.define "ctl"
+.value 1
+.class 8
+.type 12
+.endef
+.define "out"
+.value 2
+.class 8
+.type 12
+.endef
+.define "in"
+.value 3
+.class 8
+.type 12
+.endef
+.endrec "NONAME0"
+;    1	/*************************************************
+;    2	 *  Copyright (C) 1999-2012 by  ZiLOG, Inc.
+;    3	 *  All Rights Reserved
+;    4	 *************************************************
+;    5	 *
+;    6	 * This header is for internal use only. It is NOT
+;    7	 * an ANSI standard header file.						
+;    8	 *
+;    9	 *************************************************/
+;   10	
+;   11	#pragma once // Include this file only once
+;   12	#ifndef FORMAT_H
+;   13	#define FORMAT_H
+;   14	
+;   15	#include <zconst.h>
+;   16	#include <stdarg.h>
+;   17	
+;   18	/* Note: 24 bits times log(2) is 7.224 decimal digits.
+;   19	   We only need 14 if and when we support doubles. */
+;   20	#define MAXDIGITS 10
+;   21	#define MINEXP -4
+;   22	#define DEFAULT_PRECISION 6
+;   23	
+;   24	
+;   25	/*  Sizes allowed for various data */
+;   26	/*  For small model, we must restrict the allowed input */
+;   27	#if (defined(__MODEL__) && (__MODEL__ == 0)) && !defined(__ACCLAIM__)
+;   28	#define FLT_CHARS 20  // Only need FLT_DIG+7, but allow for extra data
+;   29	#define PTR_CHARS 11
+;   30	#define INT_CHARS 9
+;   31	#else
+;   32	#define FLT_CHARS 127
+;   33	#define PTR_CHARS 127
+;   34	#define INT_CHARS 127
+;   35	#endif
+;   36	
+;   37	/*	structures and defines for format routines	                 */
+;   38	/*      NOTE: Some fields in this structure, and the bits in flags, are  */
+;   39	/*            known to the optimizer,  If you change this, check out the */
+;   40	/*            code in optimizer/genprintfs.c                             */
+;   41	struct fmt_type {
+;   42	  char flags;		/* flags bit mask */
+;   43	  char size;		/* size character h,l or L */
+;   44	  char space;		/* space character N,F or R */
+;   45	  char type;		/* type of argument d,i,o,u,x ... */
+;   46	  char field_width;	/* field width */
+;   47	  char precision;	/* precision */
+;   48	  char print_leading_char;  // Initial +, -, or space for number
+;   49	     /* several print helper functions end by clearing the above fields. 
+;   50	      * The following need to be preserved across calls to the print
+;   51	      * utilities.
+;   52	      */
+;   53	  far char* dest;       /* Destination for sprintf, NULL for printf */
+;   54	  unsigned char print_len;
+;   55	};
+.begrec "fmt_type",10
+.define "flags"
+.value 0
+.class 8
+.type 2
+.endef
+.define "size"
+.value 1
+.class 8
+.type 2
+.endef
+.define "space"
+.value 2
+.class 8
+.type 2
+.endef
+.define "type"
+.value 3
+.class 8
+.type 2
+.endef
+.define "field_width"
+.value 4
+.class 8
+.type 2
+.endef
+.define "precision"
+.value 5
+.class 8
+.type 2
+.endef
+.define "print_leading_char"
+.value 6
+.class 8
+.type 2
+.endef
+.define "dest"
+.value 7
+.class 8
+.type 162
+.endef
+.define "print_len"
+.value 9
+.class 8
+.type 12
+.endef
+.endrec "fmt_type"
+;   56	
+;   57	/* Some additional data for formatting of floating point values: */
+;   58	
+;   59	struct flt_fmt_data
+;   60	{
+;   61	  unsigned char pad_whole;
+;   62	  unsigned char pad_pre_fract;
+;   63	  unsigned char pad_post_fract;
+;   64	  char * pad_at;
+;   65	};
+.begrec "flt_fmt_data",4
+.define "pad_whole"
+.value 0
+.class 8
+.type 12
+.endef
+.define "pad_pre_fract"
+.value 1
+.class 8
+.type 12
+.endef
+.define "pad_post_fract"
+.value 2
+.class 8
+.type 12
+.endef
+.define "pad_at"
+.value 3
+.class 8
+.type 130
+.endef
+.endrec "flt_fmt_data"
+;   66	
+;   67	/* Data passed between top level driver and scanning routines, not needed
+;   68	 * when printf's are generated inline */
+;   69	struct fmt_control_data
+;   70	{
+;   71	  char status;		/* status, OK, ERR, or PASS_THRU */
+;   72	  char chr;		/* pass thru character */
+;   73	};
+.begrec "fmt_control_data",2
+.define "status"
+.value 0
+.class 8
+.type 2
+.endef
+.define "chr"
+.value 1
+.class 8
+.type 2
+.endef
+.endrec "fmt_control_data"
+;   74	
+;   75	
+;   76	struct _set_type{ char * begin; char *end; };
+.begrec "_set_type",2
+.define "begin"
+.value 0
+.class 8
+.type 130
+.endef
+.define "end"
+.value 1
+.class 8
+.type 130
+.endef
+.endrec "_set_type"
+;   77	struct near_set_type{ char near * begin; char near *end; };
+.begrec "near_set_type",2
+.define "begin"
+.value 0
+.class 8
+.type 130
+.endef
+.define "end"
+.value 1
+.class 8
+.type 130
+.endef
+.endrec "near_set_type"
+;   78	struct far_set_type{ char far * begin; char far *end; };
+.begrec "far_set_type",4
+.define "begin"
+.value 0
+.class 8
+.type 162
+.endef
+.define "end"
+.value 2
+.class 8
+.type 162
+.endef
+.endrec "far_set_type"
+;   79	struct rom_set_type{ char rom * begin; char rom *end; };
+.begrec "rom_set_type",4
+.define "begin"
+.value 0
+.class 8
+.type 194
+.endef
+.define "end"
+.value 2
+.class 8
+.type 194
+.endef
+.endrec "rom_set_type"
+;   80	
+;   81	/* info flags */
+;   82	#define FLT_INFO_SIGN	(1<<0)
+;   83	#define FLT_INFO_INF	(1<<1)
+;   84	#define FLT_INFO_NAN	(1<<2)
+;   85	
+;   86	
+;   87	struct flt_info {
+;   88	  unsigned char flags;			/* 1=sign, 2=inf, 4=nan        */
+;   89	  char exp;				/* (signed) exponent (base 10) */
+;   90	  unsigned char digits[MAXDIGITS];	/* max significant digits      */
+;   91	};
+.begrec "flt_info",12
+.define "flags"
+.value 0
+.class 8
+.type 12
+.endef
+.define "exp"
+.value 1
+.class 8
+.type 2
+.endef
+.define "digits"
+.value 2
+.class 8
+.dim 10
+.type 108
+.endef
+.endrec "flt_info"
+	SEGMENT NEAR_BSS
+_i2c_flag:
+	DS	1
+.define "i2c_flag"
+.alias "_i2c_flag"
+.class 147
+.value _i2c_flag
+.type 12
+.endef
+_bit_counter:
+	DS	1
+.define "bit_counter"
+.alias "_bit_counter"
+.class 147
+.value _bit_counter
+.type 12
+.endef
+_data_receive_byte:
+	DS	1
+.define "data_receive_byte"
+.alias "_data_receive_byte"
+.class 147
+.value _data_receive_byte
+.type 12
+.endef
+_data_transmit_byte:
+	DS	1
+.define "data_transmit_byte"
+.alias "_data_transmit_byte"
+.class 147
+.value _data_transmit_byte
+.type 12
+.endef
+_sda_bit:
+	DS	1
+.define "sda_bit"
+.alias "_sda_bit"
+.class 147
+.value _sda_bit
+.type 12
+.endef
+_bus_status:
+	DS	1
+.define "bus_status"
+.alias "_bus_status"
+.class 147
+.value _bus_status
+.type 12
+.endef
+_rising_edge_counter:
+	DS	1
+.define "rising_edge_counter"
+.alias "_rising_edge_counter"
+.class 147
+.value _rising_edge_counter
+.type 12
+.endef
+_address_received:
+	DS	1
+.define "address_received"
+.alias "_address_received"
+.class 147
+.value _address_received
+.type 12
+.endef
+_data_byte:
+	DS	1
+.define "data_byte"
+.alias "_data_byte"
+.class 147
+.value _data_byte
+.type 12
+.endef
+_edge:
+	DS	1
+.define "edge"
+.alias "_edge"
+.class 147
+.value _edge
+.type 12
+.endef
+_temp1:
+	DS	1
+.define "temp1"
+.alias "_temp1"
+.class 147
+.value _temp1
+.type 12
+.endef
+_send_bit:
+	DS	1
+.define "send_bit"
+.alias "_send_bit"
+.class 147
+.value _send_bit
+.type 12
+.endef
+_byte_count:
+	DS	1
+.define "byte_count"
+.alias "_byte_count"
+.class 147
+.value _byte_count
+.type 12
+.endef
+__lightControl:
+	DS	64
+.define "_lightControl"
+.alias "__lightControl"
+.class 147
+.value __lightControl
+.dim 64
+.type 108
+.endef
+__slowBlink:
+	DS	1
+.define "_slowBlink"
+.alias "__slowBlink"
+.class 147
+.value __slowBlink
+.type 12
+.endef
+__fastBlink:
+	DS	1
+.define "_fastBlink"
+.alias "__fastBlink"
+.class 147
+.value __fastBlink
+.type 12
+.endef
+	SEGMENT NEAR_DATA
+__strobe:
+	DB	0
+.define "_strobe"
+.alias "__strobe"
+.class 133
+.value __strobe
+.type 12
+.endef
+__lmp:
+	DB	0
+.define "_lmp"
+.alias "__lmp"
+.class 133
+.value __lmp
+.type 12
+.endef
+__diagMode:
+	DB	0
+.define "_diagMode"
+.alias "__diagMode"
+.class 133
+.value __diagMode
+.type 12
+.endef
+	SEGMENT NEAR_BSS
+__timerControl:
+	DS	2*1
+.define "_timerControl"
+.alias "__timerControl"
+.class 147
+.value __timerControl
+.type 3
+.endef
+	SEGMENT NEAR_DATA
+__lampCounter:
+	DW	0
+.define "_lampCounter"
+.alias "__lampCounter"
+.class 133
+.value __lampCounter
+.type 3
+.endef
+	SEGMENT ROM_DATA
+_BLINKON:
+	DB	63
+.define "BLINKON"
+.alias "_BLINKON"
+.class 52
+.value _BLINKON
+.type 12
+.endef
+_BLINKOFF:
+	DB	0
+.define "BLINKOFF"
+.alias "_BLINKOFF"
+.class 52
+.value _BLINKOFF
+.type 12
+.endef
+	SEGMENT NEAR_BSS
+_ledIsOn:
+	DS	2*1
+.define "ledIsOn"
+.alias "_ledIsOn"
+.class 147
+.value _ledIsOn
+.type 3
+.endef
+	SEGMENT NEAR_DATA
+_function_ptr:
+	DW	_slave_address_receive
+	DW	_slave_data_receive
+	DW	_slave_transmitter
+	DW	_address_mismatch
+.define "function_ptr"
+.alias "_function_ptr"
+.class 133
+.value _function_ptr
+.dim 4
+.type 5217
+.endef
+	SEGMENT ROM_DATA
+
+
+;**************************** _main ***************************
+;Name                         Addr/Register   Size   Type
+;_LampLoop                           IMPORT  -----   function
+;_Initialize                         IMPORT  -----   function
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+	.FRAME _n_main,?_n_main,RDATA
+	.FCALL _n_Initialize
+	.FCALL _n_LampLoop
+;    1	/*
+;    2	********************************************************
+;    3	* File : lampDriver.c
+;    4	* Based on scl_interrupt.c (from AN0139-SC02)
+;    5	* Description : Drives a lamp Driver board using i2c
+;    6	*  PC0 and PC1 have to be used for the i2c pins, as these have interrupt triggering
+;    7	**************************************************************
+;    8	*/
+;    9	
+;   10	#include <ez8.h>
+;   11	#include <stdio.h>
+;   12	#include "lampDriver.h"
+;   13	#include "timer.h"
+;   14	#include "sysclk.h"
+;   15	
+;   16	unsigned char const _ldu_map[64]= {0x10,0x11,0x12,0x13,0x14,0x15,0x16,0x17,0x18,0x19,
+;   17	0x1A,0x1B,0x1C,0x1D,0x1E,0x1F,0x20,0x21,0x22,0x23,0x24,0x25,0x26,0x27,0x28,0x29,
+;   18	0x2A,0x2B,0x2C,0x2D,0x2E,0x2F,0x40,0x41,0x42,0x43,0x44,0x45,0x46,0x47,0x48,0x49,
+;   19	0x4A,0x4B,0x4C,0x4D,0x4E,0x4F,0x80,0x81,0x82,0x83,0x84,0x85,0x86,0x87,0x88,0x89,
+;   20	0x8A,0x8B,0x8C,0x8D,0x8E,0x8F};
+;   21	/*
+;   22	unsigned char const NOOUTPUT = 0x00;
+;   23	
+;   24	*/
+;   25	
+;   26	/*i2c variables*/ 
+;   27	
+;   28	unsigned char  i2c_flag;		// To hold the Different status of I2C
+;   29	
+;   30	unsigned char bit_counter;	// To keep count of no of bits received 
+;   31								// This counter will reset when the count ==9
+;   32	unsigned char data_receive_byte; // To store the data byte received.
+;   33	
+;   34	unsigned char data_transmit_byte; // To store the data to be transmitted
+;   35	
+;   36	unsigned char volatile sda_bit;	 //Read the SDA bit
+;   37	unsigned char bus_status; // To set bus busy or free flag
+;   38	unsigned char rising_edge_counter;  // Keeps counts of no of SCL rising edges 
+;   39										// in a byte.
+;   40	unsigned char volatile address_received;		//Store the address received
+;   41	unsigned char volatile data_byte;        	// Store the data received.
+;   42	unsigned char volatile edge;
+;   43	unsigned char volatile temp1;
+;   44	unsigned char volatile send_bit;  // Stores the MSB to be transmitted
+;   45	unsigned char byte_count; // Count no of bytes received.
+;   46	
+;   47	
+;   48	/*Lamp Specific Variables*/
+;   49	unsigned char _lightControl[64];
+;   50	unsigned char _slowBlink;
+;   51	unsigned char _fastBlink;
+;   52	unsigned char _strobe = 0;
+;   53	unsigned char _lmp = 0;
+;   54	unsigned char _diagMode = 0;
+;   55	
+;   56	int  _timerControl;
+;   57	
+;   58	int _lampCounter = 0;
+;   59	
+;   60	unsigned char const BLINKON = 0x3f;
+;   61	unsigned char const BLINKOFF =0x00;
+;   62	
+;   63	void Initialize(void);
+;   64	void LampLoop(void);
+;   65	void SetLampAll(int value);
+;   66	void SetLamp(int , unsigned char );
+;   67	
+;   68	int ledIsOn;
+;   69	
+;   70	//Initialization of  the function pointer
+;   71	void (*function_ptr[4])(void) = { 
+	SEGMENT pdriver_TEXT
+;   72		slave_address_receive,
+;   73		slave_data_receive,
+;   74		slave_transmitter,
+;   75		address_mismatch }; 
+;   76	
+;   77	/* *******************************************************************************
+;   78	The main routine ,sets the Port pins PC0 and PC1 to work as either input or output
+;   79	with open drain.The I2C bus status is set to free(No Transaction on the I2C bus).
+;   80	Sets the interrupt PC0 and PC1 to highist priority.Enables the interrupt.
+;   81	/*********************************************************************************/ 
+;   82	
+;   83	
+;   84	void main()
+;   85	{
+_main:
+.define "_main"
+.value _main
+.class 2
+.type 65
+.endef
+.begfunc "main",85,"_main"
+;   86	  Initialize();
+.line 86
+	CALL	_Initialize
+;   87		
+;   88		/*
+;   89	unsigned char timer_control = enable_disable|polarity|prescale|timer_mode;
+;   90	// this information will go to
+;   91	// timer control register
+;   92	init_timer(timer_no, timer_control, start_high, start_low, reload_high,
+;   93	reload_low, pwm_high, pwm_low);	
+;   94		*/
+;   95		
+;   96	  PBOUT |= 0xF8; //set to zero
+.line 96
+	ORX	4055,#248
+;   97	  LampLoop();
+.line 97
+	CALL	_LampLoop
+;   98	 }
+.line 98
+	RET	
+.endfunc "main",98,"_main"
+	SEGMENT ROM_DATA
+
+
+;**************************** _Initialize ***************************
+;Name                         Addr/Register   Size   Type
+;_EI                                 IMPORT  -----   function
+;_SetLampAll                         IMPORT  -----   function
+;__fastBlink                         STATIC      1   variable
+;__slowBlink                         STATIC      1   variable
+;_bus_status                         STATIC      1   variable
+;_i2c_flag                           STATIC      1   variable
+;_timer_init                         IMPORT  -----   function
+;_sysclk_init                        IMPORT  -----   function
+;_DI                                 IMPORT  -----   function
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+	.FRAME _n_Initialize,?_n_Initialize,RDATA
+	.FCALL _n_sysclk_init
+	.FCALL _n_timer_init
+	.FCALL _n_SetLampAll
+	SEGMENT pdriver_TEXT
+;   99	
+;  100	void Initialize(void){
+_Initialize:
+.define "_Initialize"
+.value _Initialize
+.class 2
+.type 65
+.endef
+.begfunc "Initialize",100,"_Initialize"
+;  101	    DI();				// Globally disable all interrupts    
+.line 101
+	DI
+;  102	    sysclk_init();		// Initialize system clock per the selected clock source/frequency from project
+.line 102
+	CALL	_sysclk_init
+;  103		                    // setting and in the sysclk.c	
+;  104	    timer_init();		// Intialize timer
+.line 104
+	CALL	_timer_init
+;  105	
+;  106		
+;  107	  //PB0-3 are open drain for LED control
+;  108	  PBADDR = 0x01; // Direction
+.line 108
+	LDX	4052,#1
+;  109	  PBCTL = 0xE8; //1110 - 1000 all putputs are zeros
+.line 109
+	LDX	4053,#232
+;  110	  PBADDR = 0x03; //output control
+.line 110
+	LDX	4052,#3
+;  111	  PBCTL = 0x07;     //0000-0111 (open drain on PB0-PB3)
+.line 111
+	LDX	4053,#7
+;  112	  PBADDR = 0x00;
+.line 112
+	LDX	4052,#-0
+;  113		
+;  114	  //PA0-7 should be TTL output
+;  115	  PAADDR = 0x01; //Data Direction
+.line 115
+	LDX	4048,#1
+;  116	  PACTL = 0x00; //0000 - 0000 all putputs are zeros
+.line 116
+	LDX	4049,#-0
+;  117	  PAADDR = 0x03;
+.line 117
+	LDX	4048,#3
+;  118	  PACTL = 0x00; //TTL Output
+.line 118
+	LDX	4049,#-0
+;  119	  PAADDR = 0x00;
+.line 119
+	LDX	4048,#-0
+;  120	  
+;  121	  PCADDR = 0x03 ; //For open drain mode.
+.line 121
+	LDX	4056,#3
+;  122	  PCCTL |= 0x03; // Port pin PC0 to open drain mode.
+.line 122
+	ORX	4057,#3
+;  123	
+;  124	  i2c_flag = I2C_ADDRESS_RECEIVE;	
+.line 124
+	CLR	_i2c_flag
+;  125	  PCADDR = 0x01;				//Set the  Value to select DATA direction
+.line 125
+	LDX	4056,#1
+;  126	  PCCTL  |= SDA_DIRECTION_IN;   // Change SDA to INPUT
+.line 126
+	ORX	4057,#1
+;  127	  PCCTL  |=	SCL_DIRECTION_IN;   //OR with PC1
+.line 127
+	ORX	4057,#2
+;  128	  //PC2-3 are input
+;  129	  PCCTL |= 0x0C;
+.line 129
+	ORX	4057,#12
+;  130	
+;  131	  bus_status = I2C_BUS_FREE;	// Indicates bus status is "FREE"
+.line 131
+	CLR	_bus_status
+;  132	  IRQ2ENL = 0x03;
+.line 132
+	LDX	4040,#3
+;  133	  IRQ2ENH = 0x03;    // Set SDA and SCL for Highist priority
+.line 133
+	LDX	4039,#3
+;  134	
+;  135	  _slowBlink = BLINKOFF;
+.line 135
+	CLR	__slowBlink
+;  136	  _fastBlink = BLINKOFF;
+.line 136
+	CLR	__fastBlink
+;  137	
+;  138	  SetLampAll(0);
+.line 138
+	CLR	_0_SetLampAll
+	CLR	_0_SetLampAll+1
+	CALL	_SetLampAll
+;  139	EI();				//Enable all interrupts
+.line 139
+	EI
+;  140	  
+;  141	}
+.line 141
+	RET	
+.endfunc "Initialize",141,"_Initialize"
+	SEGMENT ROM_DATA
+
+
+;**************************** _SCL_interrupt ***************************
+;Name                         Addr/Register   Size   Type
+;_i2c_flag                           STATIC      1   variable
+;_function_ptr                       STATIC      8   variable
+;_data_receive_byte                  STATIC      1   variable
+;_sda_bit                            STATIC      1   variable
+;_rising_edge_counter                STATIC      1   variable
+;_SET_VECTOR                         IMPORT  -----   function
+;_edge                               STATIC      1   variable
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+	.FRAME _n_SCL_interrupt,?_n_SCL_interrupt,RDATA
+	SEGMENT pdriver_TEXT
+;  142	 
+;  143	 
+;  144	/* ******************************************************************************************
+;  145	This is an interrupt service routine. The program jumps to this routine during both the 
+;  146	rising and falling edges of SCL(on I2C bus). During the rising edge of the clock,a counter
+;  147	"rising_edge_counter" is incremented to keep track the number of SCL and to take appropriate
+;  148	decisions. This routine reads the data on the SDA line during the High level of SCL. This 
+;  149	data is shifted(MSB is received or transmitted first) and a byte of data is formed after all
+;  150	8 bits are received.During the low edge of SCL, this function invoke calls to different 
+;  151	functions based on the I2C flag status.
+;  152	******************************************************************************************* */
+;  153	
+;  154	#pragma interrupt
+;  155	 void SCL_interrupt(void)
+;  156	 {	 
+_SCL_interrupt:
+.define "_SCL_interrupt"
+.value _SCL_interrupt
+.class 2
+.type 65
+.endef
+.begfunc "SCL_interrupt",156,"_SCL_interrupt"
+	PUSHX	4093
+	LDX	4093,__intrp
+	ADDX	__intrp,#16
+;  157	    edge = PCIN & SCL_READ;
+.line 157
+	LDX	R0,4058
+	AND	R0,#2
+	LD	_edge,R0
+;  158	 	SET_VECTOR(C1 ,SCL_interrupt);
+;  159		 if (edge == 0x02)  		// Rising edge detected.
+.line 159
+	CP	_edge,#2
+	JR	NE,_3_L_10
+;  160			{	
+;  161			
+;  162				rising_edge_counter++;
+.line 162
+	INC	_rising_edge_counter
+;  163			    if(rising_edge_counter == 0x0A)  
+.line 163
+	CP	_rising_edge_counter,#10
+	JR	NE,_3_L_4
+;  164				 {
+;  165					rising_edge_counter = 0x01;
+.line 165
+	LD	_rising_edge_counter,#1
+;  166					IRQ2 = IRQ2 & 0XFE;				//Disable pending interrupt requests of SDA
+.line 166
+	ANDX	4038,#254
+;  167					IRQ2ENH |= SDA_INTR_ENABLE;    // Enable SDA interrupt
+.line 167
+	ORX	4039,#1
+;  168	  				IRQ2ENL |= SDA_INTR_ENABLE;    // Enable SDA interrupt
+.line 168
+	ORX	4040,#1
+;  169						
+;  170			   }
+;  171	
+;  172				else
+.line 172
+	JR	_3_L_6
+_3_L_4:
+;  173				 {
+;  174					IRQ2ENH &= SDA_INTR_DISABLE;    // Disable SDA interrupt
+.line 174
+	ANDX	4039,#254
+;  175	  				IRQ2ENL &= SDA_INTR_DISABLE;    // Disable SDA interrupt
+.line 175
+	ANDX	4040,#254
+;  176					
+;  177				 }
+_3_L_6:
+.line 177
+;  178	
+;  179			    if(rising_edge_counter <= 0x07)
+.line 179
+	CP	_rising_edge_counter,#7
+	JR	UGT,_3_L_8
+;  180				{
+;  181					sda_bit = PCIN & SDA_READ;	
+.line 181
+	LDX	R0,4058
+	AND	R0,#1
+	LD	_sda_bit,R0
+;  182	   				data_receive_byte |= sda_bit;	//Store the received data in 
+.line 182
+	OR	_data_receive_byte,_sda_bit
+;  183	   				data_receive_byte <<= 0x01;		//"receive_byte" register.
+.line 183
+	ADD	_data_receive_byte,_data_receive_byte
+;  184					
+;  185				}
+_3_L_8:
+.line 185
+;  186				if(rising_edge_counter == 0x08)
+.line 186
+	CP	_rising_edge_counter,#8
+	JR	NE,_3_L_11
+;  187				{
+;  188					sda_bit = PCIN & SDA_READ;		// Read the last bit of data and
+.line 188
+	LDX	R0,4058
+	AND	R0,#1
+	LD	_sda_bit,R0
+;  189	   				data_receive_byte |= sda_bit;	// store as LSB without shifting. 
+.line 189
+	OR	_data_receive_byte,_sda_bit
+;  190					
+;  191				}
+;  192			}
+;  193		else		// Falling edge detected
+.line 193
+	JR	_3_L_11
+_3_L_10:
+;  194		{
+;  195		IRQ2ENH &= SDA_INTR_DISABLE;    // Disable SDA interrupt
+.line 195
+	ANDX	4039,#254
+;  196	  	IRQ2ENL &= SDA_INTR_DISABLE;    // Disable SDA interrupt
+.line 196
+	ANDX	4040,#254
+;  197					
+;  198		PCCTL  &= SCL_DIRECTION_OUT; 	// Change SDA to OUTPUT
+.line 198
+	ANDX	4057,#253
+;  199	  	PCOUT  &= HOLD_SCL_LOW;		 	// Hold	SCL low	to add wait states
+.line 199
+	ANDX	4059,#253
+;  200		(*function_ptr[i2c_flag])(); 	//Call the relevent functions using Function Pointer.
+.line 200
+	LD	R2,_i2c_flag
+	LD	R3,#2
+	MULT	RR2
+	LD	R0,#_function_ptr
+	ADD	R0,R3
+	LD	R2,@R0
+	LD	R3,1(R0)
+	CALL	@RR2
+;  201		PCCTL |= SCL_DIRECTION_IN;   	// Change SDA to INPUT
+.line 201
+	ORX	4057,#2
+;  202	
+;  203		}	 
+;  204	}
+_3_L_11:
+.line 204
+	SUBX	__intrp,#16
+	POPX	4093
+	IRET	
+.endfunc "SCL_interrupt",204,"_SCL_interrupt"
+	SEGMENT ROM_DATA
+
+
+;**************************** _slave_address_receive ***************************
+;Name                         Addr/Register   Size   Type
+;_send_bit                           STATIC      1   variable
+;_data_byte                          STATIC      1   variable
+;_i2c_flag                           STATIC      1   variable
+;_temp1                              STATIC      1   variable
+;_address_received                   STATIC      1   variable
+;_data_receive_byte                  STATIC      1   variable
+;_bit_counter                        STATIC      1   variable
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+	.FRAME _n_slave_address_receive,?_n_slave_address_receive,RDATA
+	SEGMENT pdriver_TEXT
+;  205	/* ******************************************************************************************
+;  206	This fuction, after receiving the address on the I2C bus , compares with the device address.
+;  207	Sends Acknowledge if the Address received matches with the device address(AE in this example)
+;  208	otherwise it sets the address mismatch flag. This function also checks if the  master wants to read from the 
+;  209	slave or write to slave and accordingly sets the slave to either read or write mode.
+;  210	******************************************************************************************* */
+;  211	
+;  212	
+;  213	void slave_address_receive(void)
+;  214	
+;  215	{
+_slave_address_receive:
+.define "_slave_address_receive"
+.value _slave_address_receive
+.class 2
+.type 65
+.endef
+.begfunc "slave_address_receive",215,"_slave_address_receive"
+;  216	 
+;  217	
+;  218			bit_counter++; 
+.line 218
+	INC	_bit_counter
+;  219			if(bit_counter <= 0x08)					//The data of SDA is read in the rising edge 
+.line 219
+	CP	_bit_counter,#8
+	JR	ULE,_4_L_22
+;  220				{									// of SCL.In the low level of clock data
+;  221					return;							//data is not read.
+.line 221
+;  222				}								
+.line 222
+;  223			if(bit_counter == 0x09)
+.line 223
+	CP	_bit_counter,#9
+	JR	NE,_4_L_21
+;  224				{
+;  225					address_received = data_receive_byte;   // Store the address received 
+.line 225
+	LD	_address_received,_data_receive_byte
+;  226					temp1 = (data_receive_byte & 0xFE);		//Extaract only 7 bit address information.
+.line 226
+	LD	R0,_data_receive_byte
+	BCLR	0,R0
+	LD	_temp1,R0
+;  227					if(temp1 == DEVICE_ADDRESS) 
+.line 227
+	CP	_temp1,#174
+	JR	NE,_4_L_15
+;  228						{
+;  229	 	 				   	PCCTL  &= SDA_DIRECTION_OUT;   // Change SDA to OUTPUT
+.line 229
+	ANDX	4057,#254
+;  230							PCOUT &= SEND_ACK;			   //Send Acknowledgement 
+.line 230
+	ANDX	4059,#254
+;  231		    				return;
+.line 231
+	JR	_4_L_22
+;  232					   	}
+;  233	  				else 
+_4_L_15:
+.line 233
+;  234	   				 {
+;  235						i2c_flag = I2C_ADDR_MISMATCH;	// Set the address mismatch condition.
+.line 235
+	LD	_i2c_flag,#3
+;  236						return; 
+.line 236
+	JR	_4_L_22
+;  237					}	
+;  238				}
+_4_L_21:
+.line 238
+;  239	          if(bit_counter == 0x0A)
+.line 239
+	CP	_bit_counter,#10
+	JR	NE,_4_L_22
+;  240				{
+;  241					bit_counter = 0x01;		//Initialise the bit counter.
+.line 241
+	LD	_bit_counter,#1
+;  242					temp1 = data_receive_byte;
+.line 242
+	LD	_temp1,_data_receive_byte
+;  243					temp1 &= 0x01;
+.line 243
+	AND	_temp1,#1
+;  244			    	if(temp1 == 0x01) 			// Check if slave in read
+.line 244
+	CP	_temp1,#1
+	JR	NE,_4_L_19
+;  245	    		     	{						// OR Slave Transmit mode.
+;  246				 	//	send_bit = 	data_transmit_byte;
+;  247						send_bit = data_byte;
+.line 247
+	LD	_send_bit,_data_byte
+;  248						send_bit &= 0x80;
+.line 248
+	AND	_send_bit,#128
+;  249						send_bit = send_bit >> 0x07;	// Extract MSB of data_transmit_byte
+.line 249
+	LD	R0,_send_bit
+	CLR	R1
+	LD	R2,#7
+L__15:
+	SRA	R1
+	RRC	R0
+	DJNZ	R2,L__15
+	LD	_send_bit,R0
+;  250						PCCTL  &= SDA_DIRECTION_OUT; // Change SDA to OUTPUT
+.line 250
+	ANDX	4057,#254
+;  251						PCOUT |= send_bit;		// Send the MSB of data byte on SDA 	
+.line 251
+	ORX	4059,_send_bit
+;  252						i2c_flag = I2C_DATA_TRANSMITTER;  // Set the slave to slave transmit mode
+.line 252
+	LD	_i2c_flag,#2
+;  253						return;
+.line 253
+	JR	_4_L_22
+;  254						}
+;  255	       			else
+_4_L_19:
+.line 255
+;  256						{
+;  257	  	      			i2c_flag = I2C_DATA_RECEIVE;  // Set the flag to data receive mode.
+.line 257
+	LD	_i2c_flag,#1
+;  258	            		PCCTL  |= SDA_DIRECTION_IN;		 //Chanege SDA to INPUT
+.line 258
+	ORX	4057,#1
+;  259					 	}							      
+;  260		
+;  261	   		
+;  262			
+;  263				}	
+;  264		}
+_4_L_22:
+.line 264
+	RET	
+.endfunc "slave_address_receive",264,"_slave_address_receive"
+	SEGMENT ROM_DATA
+
+
+;**************************** _slave_data_receive ***************************
+;Name                         Addr/Register   Size   Type
+;_SetLamp                            IMPORT  -----   function
+;_data_byte                          STATIC      1   variable
+;_data_receive_byte                  STATIC      1   variable
+;_bit_counter                        STATIC      1   variable
+;lamp                                   RR0      2   variable
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+	.FRAME _n_slave_data_receive,?_n_slave_data_receive,RDATA
+	.FCALL _n_SetLamp
+	SEGMENT pdriver_TEXT
+;  265	
+;  266	/* ****************************************************************************************
+;  267	This function is  sends an acknowledge after a complete data byte is received.
+;  268	Stores the received byte in a buffer.
+;  269	*******************************************************************************************/
+;  270	
+;  271	void slave_data_receive(void)
+;  272	{	
+_slave_data_receive:
+.define "_slave_data_receive"
+.value _slave_data_receive
+.class 2
+.type 65
+.endef
+.begfunc "slave_data_receive",272,"_slave_data_receive"
+.define "lamp"
+.class 4
+.reg 17
+.type 3
+.endef
+;  273		int lamp = 0;
+;  274		int value = 0;
+;  275		
+;  276			
+;  277	  	  bit_counter++;  //Keep the count of no of bits received.
+.line 277
+	INC	_bit_counter
+;  278	 	  if(bit_counter <=0x08)
+.line 278
+	CP	_bit_counter,#8
+	JR	ULE,_5_L_34
+;  279			{
+;  280				return;
+.line 280
+;  281			}
+.line 281
+;  282	
+;  283		  if(bit_counter == 0x09)
+.line 283
+	CP	_bit_counter,#9
+	JR	NE,_5_L_32
+;  284			{
+;  285			data_byte = data_receive_byte;	// Store the data received.
+.line 285
+	LD	_data_byte,_data_receive_byte
+;  286			
+;  287			lamp = data_byte >>2 | 0x3f;
+.line 287
+	LD	R1,_data_byte
+	CLR	R2
+	SRA	R2
+	RRC	R1
+	SRA	R2
+	RRC	R1
+	LD	R0,R2
+	OR	R1,#63
+;  288			value = data_byte || 0x03;
+.line 288
+	CP	_data_byte,#0
+;  289			
+;  290			SetLamp(lamp,value);
+.line 290
+	LD	_0_SetLamp,R0
+	LD	_0_SetLamp+1,R1
+	LD	_1_SetLamp,#1
+	CALL	_SetLamp
+;  291				
+;  292			PCCTL  &= SDA_DIRECTION_OUT; // Change SDA to OUTPUT
+.line 292
+	ANDX	4057,#254
+;  293			PCOUT &= SEND_ACK;			 //Send Ack or Nack 
+.line 293
+	ANDX	4059,#254
+;  294			return;
+.line 294
+	JR	_5_L_34
+;  295			}
+;  296		 else if(bit_counter ==0x0A)
+_5_L_32:
+.line 296
+	CP	_bit_counter,#10
+	JR	NE,_5_L_34
+;  297		   {
+;  298		   bit_counter = 0x01;			     // Reset the bit counter.
+.line 298
+	LD	_bit_counter,#1
+;  299	       PCCTL  |= SDA_DIRECTION_IN;		 //Chanege SDA to INPUT
+.line 299
+	ORX	4057,#1
+;  300		   }
+;  301	  }
+_5_L_34:
+.line 301
+	RET	
+.endfunc "slave_data_receive",301,"_slave_data_receive"
+	SEGMENT ROM_DATA
+
+
+;**************************** _slave_transmitter ***************************
+;Name                         Addr/Register   Size   Type
+;_sda_bit                            STATIC      1   variable
+;_send_bit                           STATIC      1   variable
+;_data_byte                          STATIC      1   variable
+;_bit_counter                        STATIC      1   variable
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+	.FRAME _n_slave_transmitter,?_n_slave_transmitter,RDATA
+	SEGMENT pdriver_TEXT
+;  302	
+;  303	/*****************************************************************************************
+;  304	This function shifts the data in the transmit_data_byte and shifts the appropriate bit
+;  305	on SDA line during the low period of SCL. After sending a byte of data it checks for 
+;  306	acknowledge from the master. If master sends NACK(No-Acknowledgement), then slave stops
+;  307	sending another byte of data. If it receives acknowledgement from the master ,it stars
+;  308	sending the next data byte.However in this case the implementation is done for one byte
+;  309	transfer and hence no code is written for transmitting multiple byts.
+;  310	****************************************************************************************** */
+;  311	
+;  312	
+;  313	void slave_transmitter(void)
+;  314	{
+_slave_transmitter:
+.define "_slave_transmitter"
+.value _slave_transmitter
+.class 2
+.type 65
+.endef
+.begfunc "slave_transmitter",314,"_slave_transmitter"
+;  315				bit_counter++;  //Keep the count of no of bits transmitted.
+.line 315
+	INC	_bit_counter
+;  316				if(bit_counter <= 0x08)
+.line 316
+	CP	_bit_counter,#8
+	JR	UGT,_6_L_41
+;  317			    {
+;  318				//	send_bit=data_transmit_byte;
+;  319					send_bit = data_byte;
+.line 319
+	LD	_send_bit,_data_byte
+;  320					send_bit = (send_bit >>(8-bit_counter));
+.line 320
+	LD	R1,_send_bit
+	LD	R0,#8
+	SUB	R0,_bit_counter
+	CLR	R2
+	OR	R0,R0
+	JR	Z,L__29
+L__30:
+	SRA	R2
+	RRC	R1
+	DJNZ	R0,L__30
+L__29:
+	LD	_send_bit,R1
+;  321					send_bit &= 0x01;
+.line 321
+	AND	_send_bit,#1
+;  322					if(send_bit == 0x01)
+.line 322
+	CP	_send_bit,#1
+	JR	NE,_6_L_37
+;  323					{
+;  324					PCOUT |= send_bit; 			//Send data on SDA line.
+.line 324
+	ORX	4059,_send_bit
+;  325					
+;  326					}
+;  327					else
+.line 327
+	JR	_6_L_46
+_6_L_37:
+;  328					{
+;  329					PCOUT &= 0xFE;
+.line 329
+	ANDX	4059,#254
+;  330					
+;  331					}
+.line 331
+;  332		
+;  333					return; 
+.line 333
+	JR	_6_L_46
+;  334				}
+_6_L_41:
+.line 334
+;  335			 	if(bit_counter == 0x09)
+.line 335
+	CP	_bit_counter,#9
+	JR	NE,_6_L_45
+;  336				{
+;  337					PCCTL  |= SDA_DIRECTION_IN;  // Change SDA to INPUT
+.line 337
+	ORX	4057,#1
+;  338					return;
+.line 338
+	JR	_6_L_46
+;  339				}
+_6_L_45:
+.line 339
+;  340	
+;  341	    	    if(bit_counter == 0X0A)
+.line 341
+	CP	_bit_counter,#10
+	JR	NE,_6_L_46
+;  342	    		{
+;  343					if(sda_bit ==0x01)
+.line 343
+	CP	_sda_bit,#1
+	JR	Z,_6_L_46
+;  344		 				{
+;  345						  return; //Do not send next byte.
+.line 345
+;  346					   }
+;  347					else  
+.line 347
+;  348						{
+;  349							bit_counter = 0x01;
+.line 349
+	LD	_bit_counter,#1
+;  350							//Prepare to  send the next byte; // Not implemented
+;  351					
+;  352					}
+;  353				}
+;  354	
+;  355		 }
+_6_L_46:
+.line 355
+	RET	
+.endfunc "slave_transmitter",355,"_slave_transmitter"
+	SEGMENT ROM_DATA
+
+
+;**************************** _address_mismatch ***************************
+;Name                         Addr/Register   Size   Type
+;_bit_counter                        STATIC      1   variable
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+	.FRAME _n_address_mismatch,?_n_address_mismatch,RDATA
+	SEGMENT pdriver_TEXT
+;  356	
+;  357	
+;  358	/*************************************************************************************
+;  359	This function is called when the received address do not match with the slave address.
+;  360	Resets the bit counter to "0".
+;  361	***************************************************************************************/
+;  362	
+;  363	 void  address_mismatch(void)
+;  364	 {
+_address_mismatch:
+.define "_address_mismatch"
+.value _address_mismatch
+.class 2
+.type 65
+.endef
+.begfunc "address_mismatch",364,"_address_mismatch"
+;  365		
+;  366		bit_counter++;
+.line 366
+	INC	_bit_counter
+;  367		if(bit_counter == 0x0A)
+.line 367
+	CP	_bit_counter,#10
+	JR	NE,_7_L_49
+;  368			{
+;  369			 bit_counter = 0x00;
+.line 369
+	CLR	_bit_counter
+;  370			}
+;  371	 }
+_7_L_49:
+.line 371
+	RET	
+.endfunc "address_mismatch",371,"_address_mismatch"
+	SEGMENT ROM_DATA
+
+
+;**************************** _SetLampAll ***************************
+;Name                         Addr/Register   Size   Type
+;__lightControl                      STATIC     64   variable
+;i                                      RR0      2   variable
+;value                         _0_SetLampAll      2   parameter
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+	.FRAME _n_SetLampAll,?_n_SetLampAll,RDATA
+_0_SetLampAll:
+	DS	2*1
+	SEGMENT pdriver_TEXT
+;  372	
+;  373		
+;  374	
+;  375	void SetLampAll(int value){
+_SetLampAll:
+.define "_SetLampAll"
+.value _SetLampAll
+.class 2
+.type 65
+.endef
+.begfunc "SetLampAll",375,"_SetLampAll"
+.define "value"
+.class 23
+.value _0_SetLampAll
+.alias "_0_SetLampAll"
+.type 3
+.endef
+.define "i"
+.class 4
+.reg 17
+.type 3
+.endef
+;  376		int i;
+;  377		for(i=0;i<64;i++){
+.line 377
+	CLR	R0
+	CLR	R1
+	JR	_8_L_53
+_8_L_51:
+;  378			_lightControl[i]=value;
+.line 378
+	LD	R3,_0_SetLampAll+1
+	LD	R2,#__lightControl
+	ADD	R2,R1
+	LD	@R2,R3
+.line 377
+	INCW	RR0
+;  379			}
+_8_L_53:
+.line 379
+.line 377
+	CP	R1,#64
+	CPC	R0,#-0
+	JR	LT,_8_L_51
+;  380		}
+.line 380
+	RET	
+.endfunc "SetLampAll",380,"_SetLampAll"
+	SEGMENT ROM_DATA
+
+
+;**************************** _SetLamp ***************************
+;Name                         Addr/Register   Size   Type
+;__lightControl                      STATIC     64   variable
+;data                            _1_SetLamp      1   parameter
+;lmp                             _0_SetLamp      2   parameter
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+	.FRAME _n_SetLamp,?_n_SetLamp,RDATA
+_0_SetLamp:
+	DS	2*1
+_1_SetLamp:
+	DS	1
+	SEGMENT pdriver_TEXT
+;  381		
+;  382	void SetLamp(int lmp, unsigned char data){
+_SetLamp:
+.define "_SetLamp"
+.value _SetLamp
+.class 2
+.type 65
+.endef
+.begfunc "SetLamp",382,"_SetLamp"
+.define "lmp"
+.class 23
+.value _0_SetLamp
+.alias "_0_SetLamp"
+.type 3
+.endef
+.define "data"
+.class 23
+.value _1_SetLamp
+.alias "_1_SetLamp"
+.type 12
+.endef
+;  383		//00=off, 01=on, 10=slow blink, 11=fast blink
+;  384		_lightControl[lmp]=data;
+.line 384
+	LD	R0,#__lightControl
+	ADD	R0,_0_SetLamp+1
+	LD	@R0,_1_SetLamp
+;  385	}
+.line 385
+	RET	
+.endfunc "SetLamp",385,"_SetLamp"
+	SEGMENT ROM_DATA
+;	Jump Table for Switch Statement at line 409
+L__41:
+	DW	3
+	DW	1
+	DW	_10_L_57
+	DW	2
+	DW	_10_L_58
+	DW	3
+	DW	_10_L_62
+	DW	_10_L_66
+;	Jump Table for Switch Statement at line 435
+L__45:
+	DW	3
+	DW	1
+	DW	_10_L_69
+	DW	2
+	DW	_10_L_70
+	DW	3
+	DW	_10_L_74
+	DW	_10_L_78
+
+
+;**************************** _LampLoop ***************************
+;Name                         Addr/Register   Size   Type
+;__diagMode                          STATIC      1   variable
+;__fastBlink                         STATIC      1   variable
+;__slowBlink                         STATIC      1   variable
+;__ldu_map                           STATIC     64   variable
+;__lightControl                      STATIC     64   variable
+;count                              _0count      4   variable
+;i                                      RR4      2   variable
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+	.FRAME _n_LampLoop,?_n_LampLoop,RDATA
+_0count:
+	DS	4*1
+	SEGMENT pdriver_TEXT
+;  386	
+;  387	
+;  388	void LampLoop(void){
+_LampLoop:
+.define "_LampLoop"
+.value _LampLoop
+.class 2
+.type 65
+.endef
+.begfunc "LampLoop",388,"_LampLoop"
+.define "i"
+.class 4
+.reg 19
+.type 3
+.endef
+.define "count"
+.class 22
+.value _0count
+.alias "_0count"
+.type 15
+.endef
+;  389		int i;
+;  390		unsigned long int count = 60;  //about 86 clock cycles per while loop, so this should be 260 usec?  
+.line 390
+	CLR	_0count
+	CLR	_0count+1
+	CLR	_0count+2
+	LD	_0count+3,#60
+;  391	
+;  392		/*
+;  393	porta bit:
+;  394	0=lamp0
+;  395	1=lamp1
+;  396	2=lamp2
+;  397	3=lamp3
+;  398	4=str0
+;  399	5=str1
+;  400	6=str2
+;  401	7=str3
+;  402	*/	
+;  403	
+;  404	//PB4 is lamp enable (active low)
+;  405	
+;  406		while(1){
+_10_L_84:
+.line 406
+;  407			//just loop through each lamp value...
+;  408			for(i=0;i<64;i++){
+.line 408
+	CLR	R4
+	CLR	R5
+	JR	_10_L_82
+_10_L_80:
+;  409				switch(_lightControl[i]){
+.line 409
+	LD	R0,#__lightControl
+	ADD	R0,R5
+	LD	R1,@R0
+	CLR	R0
+	LD	R2,#high(L__41)
+	LD	R3,#low(L__41)
+	CALL	__b_ucase
+	JP	@RR0
+;  410					case 1: //on
+_10_L_57:
+.line 410
+;  411						PAOUT = _ldu_map[i];
+.line 411
+	LD	R0,#high(__ldu_map)
+	LD	R1,#low(__ldu_map)
+	ADD	R1,R5
+	ADC	R0,R4
+	LDC	R2,@RR0
+	LDX	4051,R2
+;  412						break;
+.line 412
+	JR	_10_L_66
+;  413					case 2: //slow blink
+_10_L_58:
+.line 413
+;  414						if(_slowBlink==0x01){
+.line 414
+	CP	__slowBlink,#1
+	JR	NE,_10_L_60
+;  415							PAOUT = _ldu_map[i];
+.line 415
+	LD	R0,#high(__ldu_map)
+	LD	R1,#low(__ldu_map)
+	ADD	R1,R5
+	ADC	R0,R4
+	LDC	R2,@RR0
+	LDX	4051,R2
+;  416						}
+;  417						else{
+.line 417
+	JR	_10_L_66
+_10_L_60:
+;  418							PAOUT = 0x00;
+.line 418
+	LDX	4051,#-0
+;  419						}
+;  420						break;
+.line 420
+	JR	_10_L_66
+;  421					case 3: //fast blink
+_10_L_62:
+.line 421
+;  422						if(_fastBlink==0x01){
+.line 422
+	CP	__fastBlink,#1
+	JR	NE,_10_L_64
+;  423							PAOUT = _ldu_map[i];
+.line 423
+	LD	R0,#high(__ldu_map)
+	LD	R1,#low(__ldu_map)
+	ADD	R1,R5
+	ADC	R0,R4
+	LDC	R2,@RR0
+	LDX	4051,R2
+;  424						}
+;  425						else{
+.line 425
+	JR	_10_L_66
+_10_L_64:
+;  426							PAOUT = 0x00;
+.line 426
+	LDX	4051,#-0
+;  427						}
+;  428						break;
+.line 428
+	JR	_10_L_66
+;  429				}
+;  430				
+;  431				//pause here for some time.
+;  432				   while ( count > 0 )
+_10_L_67:
+.line 432
+;  433					  count -= 1;
+.line 433
+	SUB	_0count+3,#1
+	SBC	_0count+2,#0
+	SBC	_0count+1,#0
+	SBC	_0count,#0
+_10_L_66:
+.line 432
+	CP	_0count+3,#0
+	CPC	_0count+2,#-0
+	CPC	_0count+1,#-0
+	CPC	_0count,#-0
+	JR	UGT,_10_L_67
+;  434				
+;  435				switch(_diagMode){
+.line 435
+	LD	R1,__diagMode
+	CLR	R0
+	LD	R2,#high(L__45)
+	LD	R3,#low(L__45)
+	CALL	__b_ucase
+	JP	@RR0
+;  436					case 1:
+_10_L_69:
+.line 436
+;  437						PBOUT &= 0xED; //on  (JAF changed to E from F so that PB4 is off(active low)
+.line 437
+	ANDX	4055,#237
+;  438						break;
+.line 438
+	JR	_10_L_81
+;  439					case 2:
+_10_L_70:
+.line 439
+;  440						if(_slowBlink==0x01){
+.line 440
+	CP	__slowBlink,#1
+	JR	NE,_10_L_72
+;  441							PBOUT &= 0xED;
+.line 441
+	ANDX	4055,#237
+;  442							}
+;  443							else{
+.line 443
+	JR	_10_L_81
+_10_L_72:
+;  444								PBOUT |= ~0xED;
+.line 444
+	ORX	4055,#18
+;  445								}
+;  446						break;
+.line 446
+	JR	_10_L_81
+;  447					case 3:
+_10_L_74:
+.line 447
+;  448						if(_fastBlink==0x01){
+.line 448
+	CP	__fastBlink,#1
+	JR	NE,_10_L_76
+;  449							PBOUT &= 0xED;
+.line 449
+	ANDX	4055,#237
+;  450							}
+;  451							else{
+.line 451
+	JR	_10_L_81
+_10_L_76:
+;  452								PBOUT |= ~0xED;
+.line 452
+	ORX	4055,#18
+;  453								}
+;  454						break;
+.line 454
+	JR	_10_L_81
+;  455					default:
+_10_L_78:
+.line 455
+;  456						PBOUT |= ~0xED; //off
+.line 456
+	ORX	4055,#18
+;  457					}
+;  458				   
+;  459			}
+_10_L_81:
+.line 459
+.line 408
+	INCW	RR4
+_10_L_82:
+.line 459
+.line 408
+	CP	R5,#64
+	CPC	R4,#-0
+	JR	LT,_10_L_80
+.line 406
+	JR	_10_L_84
+;  460		}	
+;  461	}
+.line 461
+	RET	
+.endfunc "LampLoop",461,"_LampLoop"
+	SEGMENT ROM_DATA
+
+
+;**************************** _RawUpSwitch ***************************
+;Name                         Addr/Register   Size   Type
+;temp                                    R0      1   variable
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+	.FRAME _n_RawUpSwitch,?_n_RawUpSwitch,RDATA
+	SEGMENT pdriver_TEXT
+;  462	
+;  463		/*
+;  464		bool_t DebounceSwitch2()
+;  465	{
+;  466	    static uint16_t State = 0; // Current debounce status
+;  467	    State=(State<<1) | !RawKeyPressed() | 0xe000;
+;  468	    if(State==0xf000)return TRUE;
+;  469	    return FALSE; 
+;  470	}
+;  471	*/
+;  472	BOOL RawUpSwitch(){
+_RawUpSwitch:
+.define "_RawUpSwitch"
+.value _RawUpSwitch
+.class 2
+.type 76
+.endef
+.begfunc "RawUpSwitch",472,"_RawUpSwitch"
+.define "temp"
+.class 4
+.reg 1
+.type 2
+.endef
+;  473		char temp;
+;  474		temp = PCIN;
+.line 474
+;  475		return ((temp & 0x08) == 0x00);
+.line 475
+	TMX	4058,#8
+	JR	NE,L__52
+	LD	R1,#1
+	JR	L__53
+L__52:
+	CLR	R1
+L__53:
+	LD	R0,R1
+;  476	}
+.line 476
+	RET	
+.endfunc "RawUpSwitch",476,"_RawUpSwitch"
+	SEGMENT ROM_DATA
+
+
+;**************************** _DebounceUpSwitch ***************************
+;Name                         Addr/Register   Size   Type
+;_1upState                           STATIC      2   variable
+;temp90                                  R0      2   variable
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+	.FRAME _n_DebounceUpSwitch,?_n_DebounceUpSwitch,RDATA
+	.FCALL _n_RawUpSwitch
+	SEGMENT NEAR_DATA
+_1upState:
+	DW	0
+	SEGMENT pdriver_TEXT
+;  477	
+;  478	BOOL DebounceUpSwitch(){
+_DebounceUpSwitch:
+.define "_DebounceUpSwitch"
+.value _DebounceUpSwitch
+.class 2
+.type 76
+.endef
+.begfunc "DebounceUpSwitch",478,"_DebounceUpSwitch"
+;  479		static UINT16 upState = 0; //current debounce status
+.define "upState"
+.alias "_1upState"
+.class 133
+.value _1upState
+.type 13
+.endef
+;  480		upState=(upState<<1) | !RawUpSwitch() | 0xe000;
+.line 480
+	CALL	_RawUpSwitch
+	OR	R0,R0
+	JR	NE,_12_L_88
+	CLR	R0
+	LD	R1,#1
+	JR	_12_L_89
+_12_L_88:
+	CLR	R0
+	CLR	R1
+_12_L_89:
+	ADD	_1upState+1,_1upState+1
+	ADC	_1upState,_1upState
+	OR	_1upState+1,R1
+	OR	_1upState,R0
+	OR	_1upState,#224
+;  481		if(upState==0xf000) return TRUE;
+.line 481
+	CP	_1upState+1,#0
+	CPC	_1upState,#240
+	JR	NE,_12_L_92
+	LD	R0,#1
+	JR	_12_L_93
+_12_L_92:
+;  482		return FALSE;
+.line 482
+	CLR	R0
+;  483	}
+_12_L_93:
+.line 483
+	RET	
+.endfunc "DebounceUpSwitch",483,"_DebounceUpSwitch"
+	SEGMENT ROM_DATA
+;	Jump Table for Switch Statement at line 495
+L__62:
+	DW	3
+	DW	1
+	DW	_13_L_97
+	DW	2
+	DW	_13_L_98
+	DW	3
+	DW	_13_L_99
+	DW	_13_L_100
+
+
+;**************************** _lampISR ***************************
+;Name                         Addr/Register   Size   Type
+;_SetLampAll                         IMPORT  -----   function
+;__diagMode                          STATIC      1   variable
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+	.FRAME _n_lampISR,?_n_lampISR,RDATA
+	.FCALL _n_DebounceUpSwitch
+	.FCALL _n_SetLampAll
+	SEGMENT pdriver_TEXT
+;  484	
+;  485	void lampISR()
+;  486	{
+_lampISR:
+.define "_lampISR"
+.value _lampISR
+.class 2
+.type 65
+.endef
+.begfunc "lampISR",486,"_lampISR"
+;  487		
+;  488		if(DebounceUpSwitch()){
+.line 488
+	CALL	_DebounceUpSwitch
+	OR	R0,R0
+	JR	Z,_13_L_103
+;  489			//pressed, so increment where we are in the diagnosis
+;  490			if(_diagMode>4)
+.line 490
+	CP	__diagMode,#4
+	JR	ULE,_13_L_96
+;  491				_diagMode = 0;
+.line 491
+	CLR	__diagMode
+;  492			else
+.line 492
+	JR	_13_L_101
+_13_L_96:
+;  493				_diagMode++;
+.line 493
+	INC	__diagMode
+_13_L_101:
+;  494			
+;  495			switch(_diagMode){
+.line 495
+	LD	R1,__diagMode
+	CLR	R0
+	LD	R2,#high(L__62)
+	LD	R3,#low(L__62)
+	CALL	__b_ucase
+	JP	@RR0
+;  496				case 1:
+_13_L_97:
+.line 496
+;  497					SetLampAll(1);
+.line 497
+	CLR	_0_SetLampAll
+	LD	_0_SetLampAll+1,#1
+	CALL	_SetLampAll
+;  498					break;
+.line 498
+	JR	_13_L_103
+;  499				case 2:
+_13_L_98:
+.line 499
+;  500					SetLampAll(2);
+.line 500
+	CLR	_0_SetLampAll
+	LD	_0_SetLampAll+1,#2
+	CALL	_SetLampAll
+;  501					break;
+.line 501
+	JR	_13_L_103
+;  502				case 3:
+_13_L_99:
+.line 502
+;  503					SetLampAll(3);
+.line 503
+	CLR	_0_SetLampAll
+	LD	_0_SetLampAll+1,#3
+	CALL	_SetLampAll
+;  504					break;
+.line 504
+	JR	_13_L_103
+;  505				default:
+_13_L_100:
+.line 505
+;  506					SetLampAll(0);
+.line 506
+	CLR	_0_SetLampAll
+	CLR	_0_SetLampAll+1
+	CALL	_SetLampAll
+;  507				}
+;  508		}
+;  509	}
+_13_L_103:
+.line 509
+	RET	
+.endfunc "lampISR",509,"_lampISR"
+	SEGMENT ROM_DATA
+;	Jump Table for Switch Statement at line 519
+L__66:
+	DW	4
+	DW	0
+	DW	_14_L_105
+	DW	1
+	DW	_14_L_106
+	DW	2
+	DW	_14_L_107
+	DW	3
+	DW	_14_L_108
+	DW	_14_L_111
+
+
+;**************************** _blinkISR ***************************
+;Name                         Addr/Register   Size   Type
+;__fastBlink                         STATIC      1   variable
+;__slowBlink                         STATIC      1   variable
+;__timerControl                      STATIC      2   variable
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+	.FRAME _n_blinkISR,?_n_blinkISR,RDATA
+	SEGMENT pdriver_TEXT
+;  510		
+;  511		
+;  512	
+;  513	
+;  514	void blinkISR(){
+_blinkISR:
+.define "_blinkISR"
+.value _blinkISR
+.class 2
+.type 65
+.endef
+.begfunc "blinkISR",514,"_blinkISR"
+;  515		if(_timerControl>3){
+.line 515
+	CP	__timerControl+1,#3
+	CPC	__timerControl,#-0
+	JR	LE,_14_L_109
+;  516			_timerControl = 0;
+.line 516
+	CLR	__timerControl
+	CLR	__timerControl+1
+;  517		}
+_14_L_109:
+.line 517
+;  518		
+;  519		switch(_timerControl){
+.line 519
+	LD	R0,__timerControl
+	LD	R1,__timerControl+1
+	LD	R2,#high(L__66)
+	LD	R3,#low(L__66)
+	CALL	__b_ucase
+	JP	@RR0
+;  520			case 0:
+_14_L_105:
+.line 520
+;  521				_slowBlink=0x00;
+.line 521
+	CLR	__slowBlink
+;  522				_fastBlink =0x00;
+.line 522
+	CLR	__fastBlink
+;  523				break;
+.line 523
+	JR	_14_L_111
+;  524			case 1:
+_14_L_106:
+.line 524
+;  525				_slowBlink = 0x00;
+.line 525
+	CLR	__slowBlink
+;  526				_fastBlink=0x01;
+.line 526
+	LD	__fastBlink,#1
+;  527				break;
+.line 527
+	JR	_14_L_111
+;  528			case 2:
+_14_L_107:
+.line 528
+;  529				_slowBlink = 0x01;
+.line 529
+	LD	__slowBlink,#1
+;  530				_fastBlink = 0x00;
+.line 530
+	CLR	__fastBlink
+;  531				break;
+.line 531
+	JR	_14_L_111
+;  532			case 3:
+_14_L_108:
+.line 532
+;  533				_slowBlink = 0x01;
+.line 533
+	LD	__slowBlink,#1
+;  534				_fastBlink = 0x01;
+.line 534
+	LD	__fastBlink,#1
+;  535				break;
+;  536			}
+_14_L_111:
+.line 536
+;  537			
+;  538			_timerControl++;
+.line 538
+	ADD	__timerControl+1,#1
+	ADC	__timerControl,#0
+.line 539
+	RET	
+.endfunc "blinkISR",539,"_blinkISR"
+	VECTOR	C1=_SCL_interrupt
+	XREF _sysclk_init:ROM
+	XREF _timer_init:ROM
+	XREF __b_ucase:ROM
+	XREF __intrp:RDATA
+	XDEF _blinkISR
+	XDEF _lampISR
+	XDEF _DebounceUpSwitch
+	XDEF _RawUpSwitch
+	XDEF _LampLoop
+	XDEF _1_SetLamp
+	XDEF _0_SetLamp
+	XDEF _SetLamp
+	XDEF _0_SetLampAll
+	XDEF _SetLampAll
+	XDEF _address_mismatch
+	XDEF _slave_transmitter
+	XDEF _slave_data_receive
+	XDEF _slave_address_receive
+	XDEF _SCL_interrupt
+	XDEF _Initialize
+	XDEF _main
+	XDEF _function_ptr
+	XDEF _ledIsOn
+	XDEF _BLINKOFF
+	XDEF _BLINKON
+	XDEF __lampCounter
+	XDEF __timerControl
+	XDEF __diagMode
+	XDEF __lmp
+	XDEF __strobe
+	XDEF __fastBlink
+	XDEF __slowBlink
+	XDEF __lightControl
+	XDEF _byte_count
+	XDEF _send_bit
+	XDEF _temp1
+	XDEF _edge
+	XDEF _data_byte
+	XDEF _address_received
+	XDEF _rising_edge_counter
+	XDEF _bus_status
+	XDEF _sda_bit
+	XDEF _data_transmit_byte
+	XDEF _data_receive_byte
+	XDEF _bit_counter
+	XDEF _i2c_flag
+	XDEF __ldu_map
+	END

@@ -1,0 +1,1566 @@
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:37     page:   1
+
+
+PC     Object              I  Line    Source 
+                           A     1    ; Z8 Encore! ANSI C Compiler Release 3.64
+                           A     2    ; -nofastcall -const=ROM -listinc -model=S -opt
+                           A     3    ; -noreduceopt -debug -norevaa -peephole -local
+                           A     4    ; -alias 
+                           A     5    	DEFINE i2cbase_TEXT,SPACE=ROM
+                           A     6    	FILE	"X:\ePin\source\LampDriver\i2cbase.
+                           A     7    .debug "C"
+                           A     8    	SEGMENT NEAR_BSS
+0000                       A     9    _i2c_flag:
+0000                       A    10    	DS	1
+                           A    11    .define "i2c_flag"
+                           A    12    .alias "_i2c_flag"
+                           A    13    .class 147
+                           A    14    .value _i2c_flag
+                           A    15    .type 12
+                           A    16    .endef
+                           A    17    	SEGMENT i2cbase_TEXT
+                           A    18    ;    1	/*!\file gpio.h
+                           A    19    ;    2	 * \brief Definition file for the Z8 En
+                           A    20    ;    3	 *
+                           A    21    ;    4	 *  This file contains header informati
+                           A    22    ;    5	 *  driver implementations for Z8 Encor
+                           A    23    ;    6	 *
+                           A    24    ;    7	 *  This source file uses Doxygen-style
+                           A    25    ;    8	 *  automatically.
+                           A    26    ;    9	 *
+                           A    27    ;   10	 *  Copyright (C) 1999-2004 by  ZiLOG, 
+                           A    28    ;   11	 *  All Rights Reserved.
+                           A    29    ;   12	 */
+                           A    30    ;   13	
+                           A    31    ;   14	#pragma once // Include this file only 
+                           A    32    ;   15	#ifndef _GPIO_H_
+                           A    33    ;   16	#define _GPIO_H_
+                           A    34    ;   17	
+                           A    35    ;   18	#include <defines.h>
+                           A    36    ;   19	
+                           A    37    ;   20	
+                           A    38    ;   21	#ifdef _DEBUG
+                           A    39    ;   22	#define GPIOPARAMETER_CHECKING			                           A    40    ;   23	#endif
+                           A    41    ;   24	
+                           A    42    ;   25	
+                           A    43    ;   26	/*! The GPIO ports available for partic
+                           A    44    ;   27	#if (defined(EZ8_PORT4) && !defined(_Z8
+                           A    45    ;   28	#define PORTD
+                           A    46    ;   29	#endif
+                           A    47    ;   30	
+                           A    48    ;   31	#if defined(EZ8_PORT8)||defined(EZ8_POR
+                           A    49    ;   32	#define PORTE
+                           A    50    ;   33	#endif
+                           A    51    ;   34	#if defined(EZ8_PORT8)
+                           A    52    ;   35	#define PORTF
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:37     page:   2
+
+
+PC     Object              I  Line    Source i2cbase.src
+                           A    53    ;   36	#define PORTG
+                           A    54    ;   37	#define PORTH
+                           A    55    ;   38	#endif
+                           A    56    ;   39	
+                           A    57    ;   40	#define GPIOERR_SUCCESS		(CHAR)0		                           A    58    ;   41	#define GPIOERR_INVALIDPINS	(CHAR)1		                           A    59    ;   42	#define GPIOERR_FAILURE		(CHAR)(-1)	                           A    60    ;   43	
+                           A    61    ;   44	
+                           A    62    ;   45	/*! all the ports bits are set to input
+                           A    63    ;   46	#define PORTA_ADDRVAL_DEF   0x01
+                           A    64    ;   47	#define PORTA_CTLVAL_DEF    0xFF
+                           A    65    ;   48	#define PORTA_OUTVAL_DEF    0x00
+                           A    66    ;   49	
+                           A    67    ;   50	#define PORTB_ADDRVAL_DEF   0x01
+                           A    68    ;   51	#define PORTB_CTLVAL_DEF    0xFF
+                           A    69    ;   52	#define PORTB_OUTVAL_DEF    0x00
+                           A    70    ;   53	
+                           A    71    ;   54	#define PORTC_ADDRVAL_DEF   0x01
+                           A    72    ;   55	#define PORTC_CTLVAL_DEF    0xFF
+                           A    73    ;   56	#define PORTC_OUTVAL_DEF    0x00
+                           A    74    ;   57	
+                           A    75    ;   58	#ifdef PORTD
+                           A    76    ;   59	#define PORTD_ADDRVAL_DEF   0x01
+                           A    77    ;   60	#define PORTD_CTLVAL_DEF    0xFF
+                           A    78    ;   61	#define PORTD_OUTVAL_DEF    0x00
+                           A    79    ;   62	#endif
+                           A    80    ;   63	
+                           A    81    ;   64	#ifdef PORTE
+                           A    82    ;   65	#define PORTE_ADDRVAL_DEF   0x01
+                           A    83    ;   66	#define PORTE_CTLVAL_DEF    0xFF
+                           A    84    ;   67	#define PORTE_OUTVAL_DEF    0x00
+                           A    85    ;   68	#endif
+                           A    86    ;   69	
+                           A    87    ;   70	#ifdef PORTF
+                           A    88    ;   71	#define PORTF_ADDRVAL_DEF   0x01
+                           A    89    ;   72	#define PORTF_CTLVAL_DEF    0xFF
+                           A    90    ;   73	#define PORTF_OUTVAL_DEF    0x00
+                           A    91    ;   74	#endif
+                           A    92    ;   75	
+                           A    93    ;   76	#ifdef PORTG
+                           A    94    ;   77	#define PORTG_ADDRVAL_DEF   0x01
+                           A    95    ;   78	#define PORTG_CTLVAL_DEF    0xFF
+                           A    96    ;   79	#define PORTG_OUTVAL_DEF    0x00
+                           A    97    ;   80	#endif
+                           A    98    ;   81	
+                           A    99    ;   82	#ifdef PORTH
+                           A   100    ;   83	#define PORTH_ADDRVAL_DEF   0x01
+                           A   101    ;   84	#define PORTH_CTLVAL_DEF    0xFF
+                           A   102    ;   85	#define PORTH_OUTVAL_DEF    0x00
+                           A   103    ;   86	#endif
+                           A   104    ;   87	
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:37     page:   3
+
+
+PC     Object              I  Line    Source i2cbase.src
+                           A   105    ;   88	
+                           A   106    ;   89	/*! Control Register access codes used 
+                           A   107    ;   90	#define PORTADDR_NOFUNC			0x00
+                           A   108    ;   91	#define PORTADDR_DATADIR		0x01
+                           A   109    ;   92	#define PORTADDR_ALTFUNC		0x02
+                           A   110    ;   93	#if defined(_Z8FMC16) || defined(__ZSLB
+                           A   111    ;   94	#define PORTADDR_ALTFUNC0		0x02
+                           A   112    ;   95	#endif
+                           A   113    ;   96	#define PORTADDR_OPENDRAIN		0x03
+                           A   114    ;   97	#define PORTADDR_HIGHDRIVE		0x04
+                           A   115    ;   98	#define PORTADDR_STPMDREC		0x05
+                           A   116    ;   99	#if defined (_Z8F1680)||defined(_Z8F04)
+                           A   117    ;  100	#define PORTADDR_PULLUP		0x06
+                           A   118    ;  101	#endif
+                           A   119    ;  102	#if defined (_Z8F1680)||defined(_Z8F04)
+                           A   120    ;  103	#define PORTADDR_ALTFUNCSET1	0x07
+                           A   121    ;  104	#define PORTADDR_ALTFUNCSET2	0x08
+                           A   122    ;  105	#endif
+                           A   123    ;  106	#if defined(_Z8FMC16) || defined(__ZSLB
+                           A   124    ;  107	#define PORTADDR_ALTFUNC1		0x07
+                           A   125    ;  108	#define PORTADDR_IRQES			0x08
+                           A   126    ;  109	#define PORTADDR_IRQPS			0x09
+                           A   127    ;  110	#endif
+                           A   128    ;  111	
+                           A   129    ;  112	
+                           A   130    ;  113	/*! Definitions for Current Drive Level
+                           A   131    ;  114	#if defined(_Z8F04A) ||defined (_Z8F168
+                           A   132    ;  115	#define DRIVELEVEL_3MA			0
+                           A   133    ;  116	#define DRIVELEVEL_7MA			1
+                           A   134    ;  117	#define DRIVELEVEL_13MA			2
+                           A   135    ;  118	#define DRIVELEVEL_20MA			3
+                           A   136    ;  119	#endif
+                           A   137    ;  120	
+                           A   138    ;  121	/*! Definitions for trigger edges */
+                           A   139    ;  122	#define EDGE_FALLING			0
+                           A   140    ;  123	#define EDGE_RISING				1
+                           A   141    ;  124	
+                           A   142    ;  125	/*! GPIO pin patterns */
+                           A   143    ;  126	#define PORTPIN_ZERO		(BYTE)0x01	                           A   144    ;  127	#define PORTPIN_ONE			(BYTE)0x02	                           A   145    ;  128	#define PORTPIN_TWO			(BYTE)0x04	                           A   146    ;  129	#define PORTPIN_THREE		(BYTE)0x08	                           A   147    ;  130	#define PORTPIN_FOUR		(BYTE)0x10	                           A   148    ;  131	#define PORTPIN_FIVE 		(BYTE)0x20	                           A   149    ;  132	#define PORTPIN_SIX			(BYTE)0x40	                           A   150    ;  133	#define PORTPIN_SEVEN		(BYTE)0x80	                           A   151    ;  134	#define PORTPIN_FOURPINS_L	(BYTE)0x0F	                           A   152    ;  135	#define PORTPIN_FOURPINS_U	(BYTE)0xF0	                           A   153    ;  136	#define PORTPIN_PATTERN_AA	(BYTE)0xAA	                           A   154    ;  137	#define PORTPIN_PATTERN_55	(BYTE)0x55	                           A   155    ;  138	#define PORTPIN_ALL			(BYTE)0xFF	                           A   156    ;  139	
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:37     page:   4
+
+
+PC     Object              I  Line    Source i2cbase.src
+                           A   157    ;  140	/*! Port mask index used for validating
+                           A   158    ;  141	#define MSKINDEX_PORTB		(BYTE)0
+                           A   159    ;  142	#define MSKINDEX_PORTC		(BYTE)1
+                           A   160    ;  143	#define MSKINDEX_PORTD		(BYTE)2
+                           A   161    ;  144	#define MSKINDEX_PORTE		(BYTE)3
+                           A   162    ;  145	#define MSKINDEX_PORTF		(BYTE)4
+                           A   163    ;  146	#define MSKINDEX_PORTG		(BYTE)5
+                           A   164    ;  147	#define MSKINDEX_PORTH		(BYTE)6
+                           A   165    ;  148	
+                           A   166    ;  149	/*!
+                           A   167    ;  150	 * \brief The settings required to conf
+                           A   168    ;  151	 */
+                           A   169    ;  152	typedef struct
+                           A   170    ;  153	{
+                           A   171    ;  154		BYTE addr ;					//!< Th
+                           A   172    ;  155		BYTE ctl ;					//!< Th
+                           A   173    ;  156		BYTE out ;					//!< Th
+                           A   174    ;  157		BYTE in ;					//!< Th
+                           A   175    ;  158	
+                           A   176    ;  159	} PORT ;
+                           A   177    .begrec "NONAME0",4
+                           A   178    .define "addr"
+                           A   179    .value 0
+                           A   180    .class 8
+                           A   181    .type 12
+                           A   182    .endef
+                           A   183    .define "ctl"
+                           A   184    .value 1
+                           A   185    .class 8
+                           A   186    .type 12
+                           A   187    .endef
+                           A   188    .define "out"
+                           A   189    .value 2
+                           A   190    .class 8
+                           A   191    .type 12
+                           A   192    .endef
+                           A   193    .define "in"
+                           A   194    .value 3
+                           A   195    .class 8
+                           A   196    .type 12
+                           A   197    .endef
+                           A   198    .endrec "NONAME0"
+                           A   199    ;    1	/**************************************
+                           A   200    ;    2	 *  Copyright (C) 1999-2012 by  ZiLOG, 
+                           A   201    ;    3	 *  All Rights Reserved
+                           A   202    ;    4	 **************************************
+                           A   203    ;    5	 *
+                           A   204    ;    6	 * This header is for internal use only
+                           A   205    ;    7	 * an ANSI standard header file.		                           A   206    ;    8	 *
+                           A   207    ;    9	 **************************************
+                           A   208    ;   10	
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:37     page:   5
+
+
+PC     Object              I  Line    Source i2cbase.src
+                           A   209    ;   11	#pragma once // Include this file only 
+                           A   210    ;   12	#ifndef FORMAT_H
+                           A   211    ;   13	#define FORMAT_H
+                           A   212    ;   14	
+                           A   213    ;   15	#include <zconst.h>
+                           A   214    ;   16	#include <stdarg.h>
+                           A   215    ;   17	
+                           A   216    ;   18	/* Note: 24 bits times log(2) is 7.224 
+                           A   217    ;   19	   We only need 14 if and when we suppo
+                           A   218    ;   20	#define MAXDIGITS 10
+                           A   219    ;   21	#define MINEXP -4
+                           A   220    ;   22	#define DEFAULT_PRECISION 6
+                           A   221    ;   23	
+                           A   222    ;   24	
+                           A   223    ;   25	/*  Sizes allowed for various data */
+                           A   224    ;   26	/*  For small model, we must restrict t
+                           A   225    ;   27	#if (defined(__MODEL__) && (__MODEL__ =
+                           A   226    ;   28	#define FLT_CHARS 20  // Only need FLT_
+                           A   227    ;   29	#define PTR_CHARS 11
+                           A   228    ;   30	#define INT_CHARS 9
+                           A   229    ;   31	#else
+                           A   230    ;   32	#define FLT_CHARS 127
+                           A   231    ;   33	#define PTR_CHARS 127
+                           A   232    ;   34	#define INT_CHARS 127
+                           A   233    ;   35	#endif
+                           A   234    ;   36	
+                           A   235    ;   37	/*	structures and defines for format r
+                           A   236    ;   38	/*      NOTE: Some fields in this struc
+                           A   237    ;   39	/*            known to the optimizer,  
+                           A   238    ;   40	/*            code in optimizer/genprin
+                           A   239    ;   41	struct fmt_type {
+                           A   240    ;   42	  char flags;		/* flags bit mask *
+                           A   241    ;   43	  char size;		/* size character h
+                           A   242    ;   44	  char space;		/* space character 
+                           A   243    ;   45	  char type;		/* type of argument
+                           A   244    ;   46	  char field_width;	/* field width */
+                           A   245    ;   47	  char precision;	/* precision */
+                           A   246    ;   48	  char print_leading_char;  // Initial 
+                           A   247    ;   49	     /* several print helper functions 
+                           A   248    ;   50	      * The following need to be preser
+                           A   249    ;   51	      * utilities.
+                           A   250    ;   52	      */
+                           A   251    ;   53	  far char* dest;       /* Destination 
+                           A   252    ;   54	  unsigned char print_len;
+                           A   253    ;   55	};
+                           A   254    .begrec "fmt_type",10
+                           A   255    .define "flags"
+                           A   256    .value 0
+                           A   257    .class 8
+                           A   258    .type 2
+                           A   259    .endef
+                           A   260    .define "size"
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:37     page:   6
+
+
+PC     Object              I  Line    Source i2cbase.src
+                           A   261    .value 1
+                           A   262    .class 8
+                           A   263    .type 2
+                           A   264    .endef
+                           A   265    .define "space"
+                           A   266    .value 2
+                           A   267    .class 8
+                           A   268    .type 2
+                           A   269    .endef
+                           A   270    .define "type"
+                           A   271    .value 3
+                           A   272    .class 8
+                           A   273    .type 2
+                           A   274    .endef
+                           A   275    .define "field_width"
+                           A   276    .value 4
+                           A   277    .class 8
+                           A   278    .type 2
+                           A   279    .endef
+                           A   280    .define "precision"
+                           A   281    .value 5
+                           A   282    .class 8
+                           A   283    .type 2
+                           A   284    .endef
+                           A   285    .define "print_leading_char"
+                           A   286    .value 6
+                           A   287    .class 8
+                           A   288    .type 2
+                           A   289    .endef
+                           A   290    .define "dest"
+                           A   291    .value 7
+                           A   292    .class 8
+                           A   293    .type 162
+                           A   294    .endef
+                           A   295    .define "print_len"
+                           A   296    .value 9
+                           A   297    .class 8
+                           A   298    .type 12
+                           A   299    .endef
+                           A   300    .endrec "fmt_type"
+                           A   301    ;   56	
+                           A   302    ;   57	/* Some additional data for formatting 
+                           A   303    ;   58	
+                           A   304    ;   59	struct flt_fmt_data
+                           A   305    ;   60	{
+                           A   306    ;   61	  unsigned char pad_whole;
+                           A   307    ;   62	  unsigned char pad_pre_fract;
+                           A   308    ;   63	  unsigned char pad_post_fract;
+                           A   309    ;   64	  char * pad_at;
+                           A   310    ;   65	};
+                           A   311    .begrec "flt_fmt_data",4
+                           A   312    .define "pad_whole"
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:37     page:   7
+
+
+PC     Object              I  Line    Source i2cbase.src
+                           A   313    .value 0
+                           A   314    .class 8
+                           A   315    .type 12
+                           A   316    .endef
+                           A   317    .define "pad_pre_fract"
+                           A   318    .value 1
+                           A   319    .class 8
+                           A   320    .type 12
+                           A   321    .endef
+                           A   322    .define "pad_post_fract"
+                           A   323    .value 2
+                           A   324    .class 8
+                           A   325    .type 12
+                           A   326    .endef
+                           A   327    .define "pad_at"
+                           A   328    .value 3
+                           A   329    .class 8
+                           A   330    .type 130
+                           A   331    .endef
+                           A   332    .endrec "flt_fmt_data"
+                           A   333    ;   66	
+                           A   334    ;   67	/* Data passed between top level driver
+                           A   335    ;   68	 * when printf's are generated inline *
+                           A   336    ;   69	struct fmt_control_data
+                           A   337    ;   70	{
+                           A   338    ;   71	  char status;		/* status, OK, ERR,
+                           A   339    ;   72	  char chr;		/* pass thru character 
+                           A   340    ;   73	};
+                           A   341    .begrec "fmt_control_data",2
+                           A   342    .define "status"
+                           A   343    .value 0
+                           A   344    .class 8
+                           A   345    .type 2
+                           A   346    .endef
+                           A   347    .define "chr"
+                           A   348    .value 1
+                           A   349    .class 8
+                           A   350    .type 2
+                           A   351    .endef
+                           A   352    .endrec "fmt_control_data"
+                           A   353    ;   74	
+                           A   354    ;   75	
+                           A   355    ;   76	struct _set_type{ char * begin; char *e
+                           A   356    .begrec "_set_type",2
+                           A   357    .define "begin"
+                           A   358    .value 0
+                           A   359    .class 8
+                           A   360    .type 130
+                           A   361    .endef
+                           A   362    .define "end"
+                           A   363    .value 1
+                           A   364    .class 8
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:37     page:   8
+
+
+PC     Object              I  Line    Source i2cbase.src
+                           A   365    .type 130
+                           A   366    .endef
+                           A   367    .endrec "_set_type"
+                           A   368    ;   77	struct near_set_type{ char near * begin
+                           A   369    .begrec "near_set_type",2
+                           A   370    .define "begin"
+                           A   371    .value 0
+                           A   372    .class 8
+                           A   373    .type 130
+                           A   374    .endef
+                           A   375    .define "end"
+                           A   376    .value 1
+                           A   377    .class 8
+                           A   378    .type 130
+                           A   379    .endef
+                           A   380    .endrec "near_set_type"
+                           A   381    ;   78	struct far_set_type{ char far * begin; 
+                           A   382    .begrec "far_set_type",4
+                           A   383    .define "begin"
+                           A   384    .value 0
+                           A   385    .class 8
+                           A   386    .type 162
+                           A   387    .endef
+                           A   388    .define "end"
+                           A   389    .value 2
+                           A   390    .class 8
+                           A   391    .type 162
+                           A   392    .endef
+                           A   393    .endrec "far_set_type"
+                           A   394    ;   79	struct rom_set_type{ char rom * begin; 
+                           A   395    .begrec "rom_set_type",4
+                           A   396    .define "begin"
+                           A   397    .value 0
+                           A   398    .class 8
+                           A   399    .type 194
+                           A   400    .endef
+                           A   401    .define "end"
+                           A   402    .value 2
+                           A   403    .class 8
+                           A   404    .type 194
+                           A   405    .endef
+                           A   406    .endrec "rom_set_type"
+                           A   407    ;   80	
+                           A   408    ;   81	/* info flags */
+                           A   409    ;   82	#define FLT_INFO_SIGN	(1<<0)
+                           A   410    ;   83	#define FLT_INFO_INF	(1<<1)
+                           A   411    ;   84	#define FLT_INFO_NAN	(1<<2)
+                           A   412    ;   85	
+                           A   413    ;   86	
+                           A   414    ;   87	struct flt_info {
+                           A   415    ;   88	  unsigned char flags;			/* 1=si
+                           A   416    ;   89	  char exp;				/* (signed) exp
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:37     page:   9
+
+
+PC     Object              I  Line    Source i2cbase.src
+                           A   417    ;   90	  unsigned char digits[MAXDIGITS];	/* 
+                           A   418    ;   91	};
+                           A   419    .begrec "flt_info",12
+                           A   420    .define "flags"
+                           A   421    .value 0
+                           A   422    .class 8
+                           A   423    .type 12
+                           A   424    .endef
+                           A   425    .define "exp"
+                           A   426    .value 1
+                           A   427    .class 8
+                           A   428    .type 2
+                           A   429    .endef
+                           A   430    .define "digits"
+                           A   431    .value 2
+                           A   432    .class 8
+                           A   433    .dim 10
+                           A   434    .type 108
+                           A   435    .endef
+                           A   436    .endrec "flt_info"
+                           A   437    	SEGMENT NEAR_BSS
+0001                       A   438    _bit_counter:
+0001                       A   439    	DS	1
+                           A   440    .define "bit_counter"
+                           A   441    .alias "_bit_counter"
+                           A   442    .class 147
+                           A   443    .value _bit_counter
+                           A   444    .type 12
+                           A   445    .endef
+0002                       A   446    _data_receive_byte:
+0002                       A   447    	DS	1
+                           A   448    .define "data_receive_byte"
+                           A   449    .alias "_data_receive_byte"
+                           A   450    .class 147
+                           A   451    .value _data_receive_byte
+                           A   452    .type 12
+                           A   453    .endef
+0003                       A   454    _data_transmit_byte:
+0003                       A   455    	DS	1
+                           A   456    .define "data_transmit_byte"
+                           A   457    .alias "_data_transmit_byte"
+                           A   458    .class 147
+                           A   459    .value _data_transmit_byte
+                           A   460    .type 12
+                           A   461    .endef
+0004                       A   462    _sda_bit:
+0004                       A   463    	DS	1
+                           A   464    .define "sda_bit"
+                           A   465    .alias "_sda_bit"
+                           A   466    .class 147
+                           A   467    .value _sda_bit
+                           A   468    .type 12
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:37     page:  10
+
+
+PC     Object              I  Line    Source i2cbase.src
+                           A   469    .endef
+0005                       A   470    _bus_status:
+0005                       A   471    	DS	1
+                           A   472    .define "bus_status"
+                           A   473    .alias "_bus_status"
+                           A   474    .class 147
+                           A   475    .value _bus_status
+                           A   476    .type 12
+                           A   477    .endef
+0006                       A   478    _rising_edge_counter:
+0006                       A   479    	DS	1
+                           A   480    .define "rising_edge_counter"
+                           A   481    .alias "_rising_edge_counter"
+                           A   482    .class 147
+                           A   483    .value _rising_edge_counter
+                           A   484    .type 12
+                           A   485    .endef
+0007                       A   486    _address_received:
+0007                       A   487    	DS	1
+                           A   488    .define "address_received"
+                           A   489    .alias "_address_received"
+                           A   490    .class 147
+                           A   491    .value _address_received
+                           A   492    .type 12
+                           A   493    .endef
+0008                       A   494    _data_byte:
+0008                       A   495    	DS	1
+                           A   496    .define "data_byte"
+                           A   497    .alias "_data_byte"
+                           A   498    .class 147
+                           A   499    .value _data_byte
+                           A   500    .type 12
+                           A   501    .endef
+0009                       A   502    _edge:
+0009                       A   503    	DS	1
+                           A   504    .define "edge"
+                           A   505    .alias "_edge"
+                           A   506    .class 147
+                           A   507    .value _edge
+                           A   508    .type 12
+                           A   509    .endef
+000A                       A   510    _temp1:
+000A                       A   511    	DS	1
+                           A   512    .define "temp1"
+                           A   513    .alias "_temp1"
+                           A   514    .class 147
+                           A   515    .value _temp1
+                           A   516    .type 12
+                           A   517    .endef
+000B                       A   518    _send_bit:
+000B                       A   519    	DS	1
+                           A   520    .define "send_bit"
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:37     page:  11
+
+
+PC     Object              I  Line    Source i2cbase.src
+                           A   521    .alias "_send_bit"
+                           A   522    .class 147
+                           A   523    .value _send_bit
+                           A   524    .type 12
+                           A   525    .endef
+000C                       A   526    _byte_count:
+000C                       A   527    	DS	1
+                           A   528    .define "byte_count"
+                           A   529    .alias "_byte_count"
+                           A   530    .class 147
+                           A   531    .value _byte_count
+                           A   532    .type 12
+                           A   533    .endef
+000D                       A   534    _edge_scl:
+000D                       A   535    	DS	1
+                           A   536    .define "edge_scl"
+                           A   537    .alias "_edge_scl"
+                           A   538    .class 147
+                           A   539    .value _edge_scl
+                           A   540    .type 12
+                           A   541    .endef
+000E                       A   542    _edge1:
+000E                       A   543    	DS	1
+                           A   544    .define "edge1"
+                           A   545    .alias "_edge1"
+                           A   546    .class 147
+                           A   547    .value _edge1
+                           A   548    .type 12
+                           A   549    .endef
+000F                       A   550    _dataIn:
+000F                       A   551    	DS	4*1
+                           A   552    .define "dataIn"
+                           A   553    .alias "_dataIn"
+                           A   554    .class 147
+                           A   555    .value _dataIn
+                           A   556    .type 5
+                           A   557    .endef
+                           A   558    	SEGMENT NEAR_DATA
+0000                       A   559    _function_ptr:
+0000 0132                  A   560    	DW	_slave_address_receive
+0002 019D                  A   561    	DW	_slave_data_receive
+0004 01D4                  A   562    	DW	_slave_transmitter
+0006 0222                  A   563    	DW	_address_mismatch
+                           A   564    .define "function_ptr"
+                           A   565    .alias "_function_ptr"
+                           A   566    .class 133
+                           A   567    .value _function_ptr
+                           A   568    .dim 4
+                           A   569    .type 5217
+                           A   570    .endef
+                           A   571    	SEGMENT ROM_DATA
+                           A   572    
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:37     page:  12
+
+
+PC     Object              I  Line    Source i2cbase.src
+                           A   573    
+                           A   574    ;**************************** _InitializeI2C **
+                           A   575    ;Name                         Addr/Register   S
+                           A   576    ;_timer_init                         IMPORT  --
+                           A   577    ;_sysclk_init                        IMPORT  --
+                           A   578    ;_bus_status                         STATIC    
+                           A   579    ;_i2c_flag                           STATIC    
+                           A   580    ;_dataIn                             STATIC    
+                           A   581    
+                           A   582    
+                           A   583    ; Aggregate Stack Size: 0 (words)
+                           A   584    
+                           A   585    
+                           A   586    	.FRAME _n_InitializeI2C,?_n_InitializeI2C,R
+                           A   587    	.FCALL _n_sysclk_init
+                           A   588    	.FCALL _n_timer_init
+                           A   589    ;    1	#include <ez8.h>
+                           A   590    ;    2	#include <stdio.h>
+                           A   591    ;    3	#include "i2cbase.h"
+                           A   592    ;    4	#include "sysclk.h"
+                           A   593    ;    5	#include "timer.h"
+                           A   594    ;    6	#include "lampdriver.h"
+                           A   595    ;    7	/*i2cBase.c - Written by Jeremy Fleitz
+                           A   596    ;    8	Based on Application Note 0139 from ZiL
+                           A   597    ;    9	Also based on the documentation found a
+                           A   598    ;   10	http://www.best-microcontroller-project
+                           A   599    ;   11	
+                           A   600    ;   12	The original application note lacks som
+                           A   601    ;   13	*/
+                           A   602    ;   14	
+                           A   603    ;   15	
+                           A   604    ;   16	/* JAF 05/24 - curious to see if we res
+                           A   605    ;   17	
+                           A   606    ;   18	
+                           A   607    ;   19	/*i2c variables*/ 
+                           A   608    ;   20	
+                           A   609    ;   21	unsigned char  i2c_flag;		// To h
+                           A   610    ;   22	
+                           A   611    ;   23	unsigned char bit_counter;	// To keep 
+                           A   612    ;   24								// This cou
+                           A   613    ;   25	unsigned char data_receive_byte; // To 
+                           A   614    ;   26	
+                           A   615    ;   27	unsigned char data_transmit_byte; // To
+                           A   616    ;   28	
+                           A   617    ;   29	unsigned char volatile sda_bit;	 //Read
+                           A   618    ;   30	unsigned char bus_status; // To set bus
+                           A   619    ;   31	unsigned char rising_edge_counter;  // 
+                           A   620    ;   32										// 
+                           A   621    ;   33	unsigned char volatile address_received
+                           A   622    ;   34	unsigned char volatile data_byte;      
+                           A   623    ;   35	unsigned char volatile edge;
+                           A   624    ;   36	unsigned char volatile temp1;
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:37     page:  13
+
+
+PC     Object              I  Line    Source i2cbase.src
+                           A   625    ;   37	unsigned char volatile send_bit;  // St
+                           A   626    ;   38	unsigned char byte_count; // Count no o
+                           A   627    ;   39	
+                           A   628    ;   40	//For the SDA interrupt
+                           A   629    ;   41	unsigned char volatile edge_scl;	// 
+                           A   630    ;   42	unsigned char  volatile edge1;		//T
+                           A   631    ;   43	
+                           A   632    ;   44	long dataIn;
+                           A   633    ;   45	
+                           A   634    ;   46	
+                           A   635    ;   47	//Initialization of  the function point
+                           A   636    ;   48	void (*function_ptr[4])(void) = { 
+                           A   637    	SEGMENT i2cbase_TEXT
+                           A   638    ;   49		slave_address_receive,
+                           A   639    ;   50		slave_data_receive,
+                           A   640    ;   51		slave_transmitter,
+                           A   641    ;   52		address_mismatch }; 
+                           A   642    ;   53	
+                           A   643    ;   54	void InitializeI2C(void){
+0000                       A   644    _InitializeI2C:
+                           A   645    .define "_InitializeI2C"
+                           A   646    .value _InitializeI2C
+                           A   647    .class 2
+                           A   648    .type 65
+                           A   649    .endef
+                           A   650    .begfunc "InitializeI2C",54,"_InitializeI2C"
+                           A   651    ;   55		dataIn = 0;
+                           A   652    .line 55
+0000 B0 0F                 A   653    	CLR	_dataIn
+0002 B0 10                 A   654    	CLR	_dataIn+1
+0004 B0 11                 A   655    	CLR	_dataIn+2
+0006 B0 12                 A   656    	CLR	_dataIn+3
+                           A   657    ;   56		PCADDR = 0x03 ; //For open drain mo
+                           A   658    .line 56
+0008 E9030FD8              A   659    	LDX	4056,#3
+                           A   660    ;   57		PCCTL |= 0x03; // Port pin PC0 to o
+                           A   661    .line 57
+000C 49030FD9              A   662    	ORX	4057,#3
+                           A   663    ;   58	
+                           A   664    ;   59		i2c_flag = I2C_ADDRESS_RECEIVE;	
+                           A   665    .line 59
+0010 B0 00                 A   666    	CLR	_i2c_flag
+                           A   667    ;   60		PCADDR = 0x01;				//Set t
+                           A   668    .line 60
+0012 E9010FD8              A   669    	LDX	4056,#1
+                           A   670    ;   61		PCCTL  |= SDA_DIRECTION_IN;   // Ch
+                           A   671    .line 61
+0016 49010FD9              A   672    	ORX	4057,#1
+                           A   673    ;   62		PCCTL  |=	SCL_DIRECTION_IN;   //O
+                           A   674    .line 62
+001A 49020FD9              A   675    	ORX	4057,#2
+                           A   676    ;   63	
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:37     page:  14
+
+
+PC     Object              I  Line    Source i2cbase.src
+                           A   677    ;   64		bus_status = I2C_BUS_FREE;	// Indi
+                           A   678    .line 64
+001E B0 05                 A   679    	CLR	_bus_status
+                           A   680    ;   65		IRQ2ENL = 0x03;
+                           A   681    .line 65
+0020 E9030FC8              A   682    	LDX	4040,#3
+                           A   683    ;   66		IRQ2ENH = 0x03;    // Set SDA and S
+                           A   684    .line 66
+0024 E9030FC7              A   685    	LDX	4039,#3
+                           A   686    ;   67		
+                           A   687    ;   68	    sysclk_init();		// Initialize s
+                           A   688    .line 68
+0028 D6 0000               A   689    	CALL	_sysclk_init
+                           A   690    ;   69		                    // setting and 
+                           A   691    ;   70	    timer_init();		// Intialize ti
+                           A   692    .line 70
+002B D6 0000               A   693    	CALL	_timer_init
+                           A   694    ;   71	}
+                           A   695    .line 71
+002E AF                    A   696    	RET	
+                           A   697    .endfunc "InitializeI2C",71,"_InitializeI2C"
+                           A   698    	SEGMENT ROM_DATA
+                           A   699    
+                           A   700    
+                           A   701    ;**************************** _SDA_interrupt **
+                           A   702    ;Name                         Addr/Register   S
+                           A   703    ;_rising_edge_counter                STATIC    
+                           A   704    ;_data_receive_byte                  STATIC    
+                           A   705    ;_bit_counter                        STATIC    
+                           A   706    ;_i2c_flag                           STATIC    
+                           A   707    ;_bus_status                         STATIC    
+                           A   708    ;_edge1                              STATIC    
+                           A   709    ;_edge_scl                           STATIC    
+                           A   710    ;_SET_VECTOR                         IMPORT  --
+                           A   711    
+                           A   712    
+                           A   713    ; Aggregate Stack Size: 0 (words)
+                           A   714    
+                           A   715    
+                           A   716    	.FRAME _n_SDA_interrupt,?_n_SDA_interrupt,R
+                           A   717    	SEGMENT i2cbase_TEXT
+                           A   718    ;   72	
+                           A   719    ;   73	
+                           A   720    ;   74	#pragma interrupt
+                           A   721    ;   75	 void SDA_interrupt(void)
+                           A   722    ;   76	 {	
+002F                       A   723    _SDA_interrupt:
+                           A   724    .define "_SDA_interrupt"
+                           A   725    .value _SDA_interrupt
+                           A   726    .class 2
+                           A   727    .type 65
+                           A   728    .endef
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:37     page:  15
+
+
+PC     Object              I  Line    Source i2cbase.src
+                           A   729    .begfunc "SDA_interrupt",76,"_SDA_interrupt"
+002F C8FFD0                A   730    	PUSHX	4093
+0032 E8 000FFD             A   731    	LDX	4093,__intrp
+0036 09100000              A   732    	ADDX	__intrp,#16
+                           A   733    ;   77		SET_VECTOR(C0 ,SDA_interrupt);	
+                           A   734    ;   78	 	edge_scl = PCIN & SCL_READ;
+                           A   735    .line 78
+003A 840FDA                A   736    	LDX	R0,4058
+003D 56E002                A   737    	AND	R0,#2
+0040 E4E0 0D               A   738    	LD	_edge_scl,R0
+                           A   739    ;   79		if (edge_scl != 0x02)  	// SCL/Cloc
+                           A   740    .line 79
+0043 A6 0D 02              A   741    	CP	_edge_scl,#2
+0046 6B 0E                 A   742    	JR	Z,_2_L_6
+                           A   743    ;   80		{	
+                           A   744    ;   81			//Disabling since we don't care
+                           A   745    ;   82			IRQ2 &= 0XFE; // DISABLE ANY IN
+                           A   746    .line 82
+0048 59FE0FC6              A   747    	ANDX	4038,#254
+                           A   748    ;   83			IRQ2ENH &= SDA_INTR_DISABLE;   
+                           A   749    .line 83
+004C 59FE0FC7              A   750    	ANDX	4039,#254
+                           A   751    ;   84	  		IRQ2ENL &= SDA_INTR_DISABLE;   
+                           A   752    .line 84
+0050 59FE0FC8              A   753    	ANDX	4040,#254
+                           A   754    ;   85			return;	
+                           A   755    .line 85
+0054 8B 3D                 A   756    	JR	_2_L_7
+                           A   757    ;   86		
+                           A   758    ;   87		}
+                           A   759    ;   88		else if (edge_scl == 0x02)			0056                       A   760    _2_L_6:
+                           A   761    .line 88
+0056 A6 0D 02              A   762    	CP	_edge_scl,#2
+0059 EB 38                 A   763    	JR	NE,_2_L_7
+                           A   764    ;   89		{
+                           A   765    ;   90			edge1 = PCIN & SDA_READ;	//R
+                           A   766    .line 90
+005B 840FDA                A   767    	LDX	R0,4058
+005E 56E001                A   768    	AND	R0,#1
+0061 E4E0 0E               A   769    	LD	_edge1,R0
+                           A   770    ;   91			if(edge1 == 0x01)			//I
+                           A   771    .line 91
+0064 A6 0E 01              A   772    	CP	_edge1,#1
+0067 EB 12                 A   773    	JR	NE,_2_L_3
+                           A   774    ;   92			  { 
+                           A   775    ;   93			     bus_status = I2C_BUS_FREE;
+                           A   776    .line 93
+0069 B0 05                 A   777    	CLR	_bus_status
+                           A   778    ;   94			     i2c_flag = I2C_ADDRESS_REC
+                           A   779    .line 94
+006B B0 00                 A   780    	CLR	_i2c_flag
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:37     page:  16
+
+
+PC     Object              I  Line    Source i2cbase.src
+                           A   781    ;   95				 IRQ2 &= 0XFE; // DISABLE A
+                           A   782    .line 95
+006D 59FE0FC6              A   783    	ANDX	4038,#254
+                           A   784    ;   96			     IRQ2ENH |= SDA_INTR_ENABLE
+                           A   785    .line 96
+0071 49010FC7              A   786    	ORX	4039,#1
+                           A   787    ;   97	  			 IRQ2ENL |= SDA_INTR_ENABLE
+                           A   788    .line 97
+0075 49010FC8              A   789    	ORX	4040,#1
+                           A   790    ;   98				 return;
+                           A   791    .line 98
+0079 8B 18                 A   792    	JR	_2_L_7
+                           A   793    ;   99		 	  }
+                           A   794    ;  100			 else if(edge1 == 0x00)		// 
+007B                       A   795    _2_L_3:
+                           A   796    .line 100
+007B A6 0E 00              A   797    	CP	_edge1,#0
+007E EB 13                 A   798    	JR	NE,_2_L_7
+                           A   799    ;  101			  {							// 
+                           A   800    ;  102			        bus_status = I2C_BUS_BU
+                           A   801    .line 102
+0080 E6 05 01              A   802    	LD	_bus_status,#1
+                           A   803    ;  103	  			i2c_flag = I2C_ADDRESS_RECE
+                           A   804    .line 103
+0083 B0 00                 A   805    	CLR	_i2c_flag
+                           A   806    ;  104					IRQ2ENH &= SDA_INTR_DIS
+                           A   807    .line 104
+0085 59FE0FC7              A   808    	ANDX	4039,#254
+                           A   809    ;  105	  				IRQ2ENL &= SDA_INTR_DIS
+                           A   810    .line 105
+0089 59FE0FC8              A   811    	ANDX	4040,#254
+                           A   812    ;  106				    bit_counter =0x00;
+                           A   813    .line 106
+008D B0 01                 A   814    	CLR	_bit_counter
+                           A   815    ;  107					data_receive_byte = 0x0
+                           A   816    .line 107
+008F B0 02                 A   817    	CLR	_data_receive_byte
+                           A   818    ;  108					rising_edge_counter =0x
+                           A   819    .line 108
+0091 B0 06                 A   820    	CLR	_rising_edge_counter
+                           A   821    ;  109											                           A   822    ;  110											                           A   823    ;  111			  }
+                           A   824    ;  112		   
+                           A   825    ;  113	    }
+                           A   826    ;  114	
+                           A   827    ;  115	 }
+0093                       A   828    _2_L_7:
+                           A   829    .line 115
+0093 29100000              A   830    	SUBX	__intrp,#16
+0097 D8FFD0                A   831    	POPX	4093
+009A BF                    A   832    	IRET	
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:37     page:  17
+
+
+PC     Object              I  Line    Source i2cbase.src
+                           A   833    .endfunc "SDA_interrupt",115,"_SDA_interrupt"
+                           A   834    	SEGMENT ROM_DATA
+                           A   835    
+                           A   836    
+                           A   837    ;**************************** _SCL_interrupt **
+                           A   838    ;Name                         Addr/Register   S
+                           A   839    ;_i2c_flag                           STATIC    
+                           A   840    ;_function_ptr                       STATIC    
+                           A   841    ;_data_receive_byte                  STATIC    
+                           A   842    ;_sda_bit                            STATIC    
+                           A   843    ;_dataIn                             STATIC    
+                           A   844    ;_rising_edge_counter                STATIC    
+                           A   845    ;_SET_VECTOR                         IMPORT  --
+                           A   846    ;_edge                               STATIC    
+                           A   847    
+                           A   848    
+                           A   849    ; Aggregate Stack Size: 0 (words)
+                           A   850    
+                           A   851    
+                           A   852    	.FRAME _n_SCL_interrupt,?_n_SCL_interrupt,R
+                           A   853    	SEGMENT i2cbase_TEXT
+                           A   854    ;  116	
+                           A   855    ;  117	/* ************************************
+                           A   856    ;  118	This is an interrupt service routine. T
+                           A   857    ;  119	rising and falling edges of SCL(on I2C 
+                           A   858    ;  120	"rising_edge_counter" is incremented to
+                           A   859    ;  121	decisions. This routine reads the data 
+                           A   860    ;  122	data is shifted(MSB is received or tran
+                           A   861    ;  123	8 bits are received.During the low edge
+                           A   862    ;  124	functions based on the I2C flag status.
+                           A   863    ;  125	***************************************
+                           A   864    ;  126	
+                           A   865    ;  127	#pragma interrupt
+                           A   866    ;  128	 void SCL_interrupt(void)
+                           A   867    ;  129	 {
+009B                       A   868    _SCL_interrupt:
+                           A   869    .define "_SCL_interrupt"
+                           A   870    .value _SCL_interrupt
+                           A   871    .class 2
+                           A   872    .type 65
+                           A   873    .endef
+                           A   874    .begfunc "SCL_interrupt",129,"_SCL_interrupt"
+009B C8FFD0                A   875    	PUSHX	4093
+009E E8 000FFD             A   876    	LDX	4093,__intrp
+00A2 09100000              A   877    	ADDX	__intrp,#16
+                           A   878    ;  130	    edge = PCIN & SCL_READ;
+                           A   879    .line 130
+00A6 840FDA                A   880    	LDX	R0,4058
+00A9 56E002                A   881    	AND	R0,#2
+00AC E4E0 09               A   882    	LD	_edge,R0
+                           A   883    ;  131	 	SET_VECTOR(C1 ,SCL_interrupt);
+                           A   884    ;  132		 if (edge == 0x02)  		// Risi
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:37     page:  18
+
+
+PC     Object              I  Line    Source i2cbase.src
+                           A   885    .line 132
+00AF A6 09 02              A   886    	CP	_edge,#2
+00B2 EB 50                 A   887    	JR	NE,_3_L_13
+                           A   888    ;  133			{	
+                           A   889    ;  134				rising_edge_counter++;
+                           A   890    .line 134
+00B4 20 06                 A   891    	INC	_rising_edge_counter
+                           A   892    ;  135	
+                           A   893    ;  136				//always re-enabling if we 
+                           A   894    ;  137				IRQ2 = IRQ2 & 0XFE;			                           A   895    .line 137
+00B6 59FE0FC6              A   896    	ANDX	4038,#254
+                           A   897    ;  138				IRQ2ENH |= SDA_INTR_ENABLE;
+                           A   898    .line 138
+00BA 49010FC7              A   899    	ORX	4039,#1
+                           A   900    ;  139				IRQ2ENL |= SDA_INTR_ENABLE;
+                           A   901    .line 139
+00BE 49010FC8              A   902    	ORX	4040,#1
+                           A   903    ;  140	
+                           A   904    ;  141				dataIn |= sda_bit;
+                           A   905    .line 141
+00C2 E4 04 E0              A   906    	LD	R0,_sda_bit
+00C5 44E0 12               A   907    	OR	_dataIn+3,R0
+00C8 46 11 00              A   908    	OR	_dataIn+2,#0
+00CB 46 10 00              A   909    	OR	_dataIn+1,#0
+00CE 46 0F 00              A   910    	OR	_dataIn,#0
+                           A   911    ;  142				dataIn <<= 1;
+                           A   912    .line 142
+00D1 04 12 12              A   913    	ADD	_dataIn+3,_dataIn+3
+00D4 14 11 11              A   914    	ADC	_dataIn+2,_dataIn+2
+00D7 14 10 10              A   915    	ADC	_dataIn+1,_dataIn+1
+00DA 14 0F 0F              A   916    	ADC	_dataIn,_dataIn
+                           A   917    ;  143				
+                           A   918    ;  144			    if(rising_edge_counter <= 0
+                           A   919    .line 144
+00DD A6 06 07              A   920    	CP	_rising_edge_counter,#7
+00E0 BB 0F                 A   921    	JR	UGT,_3_L_11
+                           A   922    ;  145				{
+                           A   923    ;  146					sda_bit = PCIN & SDA_RE
+                           A   924    .line 146
+00E2 840FDA                A   925    	LDX	R0,4058
+00E5 56E001                A   926    	AND	R0,#1
+00E8 E4E0 04               A   927    	LD	_sda_bit,R0
+                           A   928    ;  147	   				data_receive_byte |= sd
+                           A   929    .line 147
+00EB 44 04 02              A   930    	OR	_data_receive_byte,_sda_bit
+                           A   931    ;  148	   				data_receive_byte <<= 0
+                           A   932    .line 148
+00EE 04 02 02              A   933    	ADD	_data_receive_byte,_data_receive_byte
+                           A   934    ;  149					
+                           A   935    ;  150				}
+00F1                       A   936    _3_L_11:
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:37     page:  19
+
+
+PC     Object              I  Line    Source i2cbase.src
+                           A   937    .line 150
+                           A   938    ;  151				if(rising_edge_counter == 0
+                           A   939    .line 151
+00F1 A6 06 08              A   940    	CP	_rising_edge_counter,#8
+00F4 EB 34                 A   941    	JR	NE,_3_L_14
+                           A   942    ;  152				{
+                           A   943    ;  153					sda_bit = PCIN & SDA_RE
+                           A   944    .line 153
+00F6 840FDA                A   945    	LDX	R0,4058
+00F9 56E001                A   946    	AND	R0,#1
+00FC E4E0 04               A   947    	LD	_sda_bit,R0
+                           A   948    ;  154	   				data_receive_byte |= sd
+                           A   949    .line 154
+00FF 44 04 02              A   950    	OR	_data_receive_byte,_sda_bit
+                           A   951    ;  155				}
+                           A   952    ;  156			}
+                           A   953    ;  157		else		// Falling edge detecte
+                           A   954    .line 157
+0102 8B 26                 A   955    	JR	_3_L_14
+0104                       A   956    _3_L_13:
+                           A   957    ;  158		{
+                           A   958    ;  159			IRQ2ENH &= SDA_INTR_DISABLE;   
+                           A   959    .line 159
+0104 59FE0FC7              A   960    	ANDX	4039,#254
+                           A   961    ;  160		  	IRQ2ENL &= SDA_INTR_DISABLE;   
+                           A   962    .line 160
+0108 59FE0FC8              A   963    	ANDX	4040,#254
+                           A   964    ;  161					
+                           A   965    ;  162			PCCTL  &= SCL_DIRECTION_OUT; 	                           A   966    .line 162
+010C 59FD0FD9              A   967    	ANDX	4057,#253
+                           A   968    ;  163		  	PCOUT  &= HOLD_SCL_LOW;		 	                           A   969    .line 163
+0110 59FD0FDB              A   970    	ANDX	4059,#253
+                           A   971    ;  164			(*function_ptr[i2c_flag])(); 	                           A   972    .line 164
+0114 E4 00 E2              A   973    	LD	R2,_i2c_flag
+0117 3C02                  A   974    	LD	R3,#2
+0119 F4E2                  A   975    	MULT	RR2
+011B 0C 00                 A   976    	LD	R0,#_function_ptr
+011D 0203                  A   977    	ADD	R0,R3
+011F E320                  A   978    	LD	R2,@R0
+0121 C73001                A   979    	LD	R3,1(R0)
+0124 D4E2                  A   980    	CALL	@RR2
+                           A   981    ;  165			PCCTL |= SCL_DIRECTION_IN;   	                           A   982    .line 165
+0126 49020FD9              A   983    	ORX	4057,#2
+                           A   984    ;  166	
+                           A   985    ;  167		}	 
+                           A   986    ;  168	}
+012A                       A   987    _3_L_14:
+                           A   988    .line 168
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:37     page:  20
+
+
+PC     Object              I  Line    Source i2cbase.src
+012A 29100000              A   989    	SUBX	__intrp,#16
+012E D8FFD0                A   990    	POPX	4093
+0131 BF                    A   991    	IRET	
+                           A   992    .endfunc "SCL_interrupt",168,"_SCL_interrupt"
+                           A   993    	SEGMENT ROM_DATA
+                           A   994    
+                           A   995    
+                           A   996    ;**************************** _slave_address_re
+                           A   997    ;Name                         Addr/Register   S
+                           A   998    ;_send_bit                           STATIC    
+                           A   999    ;_data_byte                          STATIC    
+                           A  1000    ;_rising_edge_counter                STATIC    
+                           A  1001    ;_i2c_flag                           STATIC    
+                           A  1002    ;_temp1                              STATIC    
+                           A  1003    ;_address_received                   STATIC    
+                           A  1004    ;_data_receive_byte                  STATIC    
+                           A  1005    ;_bit_counter                        STATIC    
+                           A  1006    
+                           A  1007    
+                           A  1008    ; Aggregate Stack Size: 0 (words)
+                           A  1009    
+                           A  1010    
+                           A  1011    	.FRAME _n_slave_address_receive,?_n_slave_a
+                           A  1012    	SEGMENT i2cbase_TEXT
+                           A  1013    ;  169	/* ************************************
+                           A  1014    ;  170	This fuction, after receiving the addre
+                           A  1015    ;  171	Sends Acknowledge if the Address receiv
+                           A  1016    ;  172	otherwise it sets the address mismatch 
+                           A  1017    ;  173	slave or write to slave and accordingly
+                           A  1018    ;  174	***************************************
+                           A  1019    ;  175	
+                           A  1020    ;  176	
+                           A  1021    ;  177	void slave_address_receive(void)
+                           A  1022    ;  178	
+                           A  1023    ;  179	{
+0132                       A  1024    _slave_address_receive:
+                           A  1025    .define "_slave_address_receive"
+                           A  1026    .value _slave_address_receive
+                           A  1027    .class 2
+                           A  1028    .type 65
+                           A  1029    .endef
+                           A  1030    .begfunc "slave_address_receive",179,"_slave_ad
+                           A  1031    ;  180	 
+                           A  1032    ;  181	
+                           A  1033    ;  182			bit_counter++; 
+                           A  1034    .line 182
+0132 20 01                 A  1035    	INC	_bit_counter
+                           A  1036    ;  183			if(bit_counter <= 0x08)			                           A  1037    .line 183
+0134 A6 01 08              A  1038    	CP	_bit_counter,#8
+0137 3B 63                 A  1039    	JR	ULE,_4_L_25
+                           A  1040    ;  184				{							Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:37     page:  21
+
+
+PC     Object              I  Line    Source i2cbase.src
+                           A  1041    ;  185					return;					                           A  1042    .line 185
+                           A  1043    ;  186				}							                           A  1044    .line 186
+                           A  1045    ;  187			if(bit_counter == 0x09)
+                           A  1046    .line 187
+0139 A6 01 09              A  1047    	CP	_bit_counter,#9
+013C EB 1F                 A  1048    	JR	NE,_4_L_24
+                           A  1049    ;  188				{
+                           A  1050    ;  189					address_received = data
+                           A  1051    .line 189
+013E E4 02 07              A  1052    	LD	_address_received,_data_receive_byte
+                           A  1053    ;  190					temp1 = (data_receive_b
+                           A  1054    .line 190
+0141 E4 02 E0              A  1055    	LD	R0,_data_receive_byte
+0144 E200                  A  1056    	BCLR	0,R0
+0146 E4E0 0A               A  1057    	LD	_temp1,R0
+                           A  1058    ;  191					if(temp1 == DEVICE_ADDR
+                           A  1059    .line 191
+0149 A6 0A 0C              A  1060    	CP	_temp1,#12
+014C EB 0A                 A  1061    	JR	NE,_4_L_18
+                           A  1062    ;  192						{
+                           A  1063    ;  193	 	 				   	PCCTL  &= SDA_D
+                           A  1064    .line 193
+014E 59FE0FD9              A  1065    	ANDX	4057,#254
+                           A  1066    ;  194							PCOUT &= SEND_A
+                           A  1067    .line 194
+0152 59FE0FDB              A  1068    	ANDX	4059,#254
+                           A  1069    ;  195		    				return;
+                           A  1070    .line 195
+0156 8B 44                 A  1071    	JR	_4_L_25
+                           A  1072    ;  196					   	}
+                           A  1073    ;  197	  				else 
+0158                       A  1074    _4_L_18:
+                           A  1075    .line 197
+                           A  1076    ;  198	   				 {
+                           A  1077    ;  199						i2c_flag = I2C_ADDR
+                           A  1078    .line 199
+0158 E6 00 03              A  1079    	LD	_i2c_flag,#3
+                           A  1080    ;  200						return; 
+                           A  1081    .line 200
+015B 8B 3F                 A  1082    	JR	_4_L_25
+                           A  1083    ;  201					}	
+                           A  1084    ;  202				}
+015D                       A  1085    _4_L_24:
+                           A  1086    .line 202
+                           A  1087    ;  203	          if(bit_counter == 0x0A)
+                           A  1088    .line 203
+015D A6 01 0A              A  1089    	CP	_bit_counter,#10
+0160 EB 3A                 A  1090    	JR	NE,_4_L_25
+                           A  1091    ;  204				{
+                           A  1092    ;  205					bit_counter = 0x01;		Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:37     page:  22
+
+
+PC     Object              I  Line    Source i2cbase.src
+                           A  1093    .line 205
+0162 E6 01 01              A  1094    	LD	_bit_counter,#1
+                           A  1095    ;  206					rising_edge_counter = 0
+                           A  1096    .line 206
+0165 B0 06                 A  1097    	CLR	_rising_edge_counter
+                           A  1098    ;  207					temp1 = data_receive_by
+                           A  1099    .line 207
+0167 E4 02 0A              A  1100    	LD	_temp1,_data_receive_byte
+                           A  1101    ;  208					temp1 &= 0x01;
+                           A  1102    .line 208
+016A 56 0A 01              A  1103    	AND	_temp1,#1
+                           A  1104    ;  209			    	if(temp1 == 0x01) 		                           A  1105    .line 209
+016D A6 0A 01              A  1106    	CP	_temp1,#1
+0170 EB 23                 A  1107    	JR	NE,_4_L_22
+                           A  1108    ;  210	    		     	{					                           A  1109    ;  211						//	send_bit = 	dat
+                           A  1110    ;  212							send_bit = data
+                           A  1111    .line 212
+0172 E4 08 0B              A  1112    	LD	_send_bit,_data_byte
+                           A  1113    ;  213							send_bit &= 0x8
+                           A  1114    .line 213
+0175 56 0B 80              A  1115    	AND	_send_bit,#128
+                           A  1116    ;  214							send_bit = send
+                           A  1117    .line 214
+0178 E4 0B E0              A  1118    	LD	R0,_send_bit
+017B B0E1                  A  1119    	CLR	R1
+017D 2C07                  A  1120    	LD	R2,#7
+017F                       A  1121    L__18:
+017F D0E1                  A  1122    	SRA	R1
+0181 C0E0                  A  1123    	RRC	R0
+0183 2A FA                 A  1124    	DJNZ	R2,L__18
+0185 E4E0 0B               A  1125    	LD	_send_bit,R0
+                           A  1126    ;  215							PCCTL  &= SDA_D
+                           A  1127    .line 215
+0188 59FE0FD9              A  1128    	ANDX	4057,#254
+                           A  1129    ;  216							PCOUT |= send_b
+                           A  1130    .line 216
+018C 48 00BFDB             A  1131    	ORX	4059,_send_bit
+                           A  1132    ;  217							i2c_flag = I2C_
+                           A  1133    .line 217
+0190 E6 00 02              A  1134    	LD	_i2c_flag,#2
+                           A  1135    ;  218							return;
+                           A  1136    .line 218
+0193 8B 07                 A  1137    	JR	_4_L_25
+                           A  1138    ;  219						}
+                           A  1139    ;  220	       			else
+0195                       A  1140    _4_L_22:
+                           A  1141    .line 220
+                           A  1142    ;  221						{
+                           A  1143    ;  222							i2c_flag = I2C_
+                           A  1144    .line 222
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:37     page:  23
+
+
+PC     Object              I  Line    Source i2cbase.src
+0195 E6 00 01              A  1145    	LD	_i2c_flag,#1
+                           A  1146    ;  223							PCCTL  |= SDA_D
+                           A  1147    .line 223
+0198 49010FD9              A  1148    	ORX	4057,#1
+                           A  1149    ;  224					 	}					                           A  1150    ;  225				}	
+                           A  1151    ;  226		}
+019C                       A  1152    _4_L_25:
+                           A  1153    .line 226
+019C AF                    A  1154    	RET	
+                           A  1155    .endfunc "slave_address_receive",226,"_slave_ad
+                           A  1156    	SEGMENT ROM_DATA
+                           A  1157    
+                           A  1158    
+                           A  1159    ;**************************** _slave_data_recei
+                           A  1160    ;Name                         Addr/Register   S
+                           A  1161    ;_dataIn                             STATIC    
+                           A  1162    ;_processMessage                     IMPORT  --
+                           A  1163    ;_data_byte                          STATIC    
+                           A  1164    ;_data_receive_byte                  STATIC    
+                           A  1165    ;_bit_counter                        STATIC    
+                           A  1166    
+                           A  1167    
+                           A  1168    ; Aggregate Stack Size: 0 (words)
+                           A  1169    
+                           A  1170    
+                           A  1171    	.FRAME _n_slave_data_receive,?_n_slave_data
+                           A  1172    	.FCALL _n_processMessage
+                           A  1173    	SEGMENT i2cbase_TEXT
+                           A  1174    ;  227	/* ************************************
+                           A  1175    ;  228	This function is  sends an acknowledge 
+                           A  1176    ;  229	Stores the received byte in a buffer.
+                           A  1177    ;  230	***************************************
+                           A  1178    ;  231	
+                           A  1179    ;  232	void slave_data_receive(void)
+                           A  1180    ;  233	{	
+019D                       A  1181    _slave_data_receive:
+                           A  1182    .define "_slave_data_receive"
+                           A  1183    .value _slave_data_receive
+                           A  1184    .class 2
+                           A  1185    .type 65
+                           A  1186    .endef
+                           A  1187    .begfunc "slave_data_receive",233,"_slave_data_
+                           A  1188    ;  234		int lamp = 0;
+                           A  1189    ;  235		int value = 0;
+                           A  1190    ;  236		
+                           A  1191    ;  237			
+                           A  1192    ;  238	  	  bit_counter++;  //Keep the count 
+                           A  1193    .line 238
+019D 20 01                 A  1194    	INC	_bit_counter
+                           A  1195    ;  239	 	  if(bit_counter <=0x08)
+                           A  1196    .line 239
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:37     page:  24
+
+
+PC     Object              I  Line    Source i2cbase.src
+019F A6 01 08              A  1197    	CP	_bit_counter,#8
+01A2 3B 2F                 A  1198    	JR	ULE,_5_L_32
+                           A  1199    ;  240			{
+                           A  1200    ;  241				return;
+                           A  1201    .line 241
+                           A  1202    ;  242			}
+                           A  1203    .line 242
+                           A  1204    ;  243	
+                           A  1205    ;  244		  if(bit_counter == 0x09)
+                           A  1206    .line 244
+01A4 A6 01 09              A  1207    	CP	_bit_counter,#9
+01A7 EB 1F                 A  1208    	JR	NE,_5_L_30
+                           A  1209    ;  245			{
+                           A  1210    ;  246			data_byte = data_receive_byte;	                           A  1211    .line 246
+01A9 E4 02 08              A  1212    	LD	_data_byte,_data_receive_byte
+                           A  1213    ;  247	
+                           A  1214    ;  248	/*Call the function for processing I2C 
+                           A  1215    ;  249			switch(data_byte){
+                           A  1216    ;  250				case 0x13:
+                           A  1217    ;  251					_diagMode = 2;
+                           A  1218    ;  252					break;
+                           A  1219    ;  253				case 0x38:
+                           A  1220    ;  254					_diagMode = 3;
+                           A  1221    ;  255					break;
+                           A  1222    ;  256				case 0x22:
+                           A  1223    ;  257					_diagMode = 0;
+                           A  1224    ;  258					break;
+                           A  1225    ;  259				default:
+                           A  1226    ;  260					_diagMode = 1;
+                           A  1227    ;  261				}
+                           A  1228    ;  262				*/
+                           A  1229    ;  263			processMessage(data_byte, dataI
+                           A  1230    .line 263
+01AC E4 08 00              A  1231    	LD	_0_processMessage,_data_byte
+01AF E4 0F 00              A  1232    	LD	_1_processMessage,_dataIn
+01B2 E4 10 01              A  1233    	LD	_1_processMessage+1,_dataIn+1
+01B5 E4 11 02              A  1234    	LD	_1_processMessage+2,_dataIn+2
+01B8 E4 12 03              A  1235    	LD	_1_processMessage+3,_dataIn+3
+01BB D6 0000               A  1236    	CALL	_processMessage
+                           A  1237    ;  264	
+                           A  1238    ;  265			PCCTL  &= SDA_DIRECTION_OUT; //
+                           A  1239    .line 265
+01BE 59FE0FD9              A  1240    	ANDX	4057,#254
+                           A  1241    ;  266			PCOUT &= SEND_ACK;			 //
+                           A  1242    .line 266
+01C2 59FE0FDB              A  1243    	ANDX	4059,#254
+                           A  1244    ;  267			return;
+                           A  1245    .line 267
+01C6 8B 0B                 A  1246    	JR	_5_L_32
+                           A  1247    ;  268			}
+                           A  1248    ;  269		 else if(bit_counter ==0x0A)
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:37     page:  25
+
+
+PC     Object              I  Line    Source i2cbase.src
+01C8                       A  1249    _5_L_30:
+                           A  1250    .line 269
+01C8 A6 01 0A              A  1251    	CP	_bit_counter,#10
+01CB EB 06                 A  1252    	JR	NE,_5_L_32
+                           A  1253    ;  270		   {
+                           A  1254    ;  271		   bit_counter = 0x00;			   
+                           A  1255    .line 271
+01CD B0 01                 A  1256    	CLR	_bit_counter
+                           A  1257    ;  272	       PCCTL  |= SDA_DIRECTION_IN;		                           A  1258    .line 272
+01CF 49010FD9              A  1259    	ORX	4057,#1
+                           A  1260    ;  273		   }
+                           A  1261    ;  274	  }
+01D3                       A  1262    _5_L_32:
+                           A  1263    .line 274
+01D3 AF                    A  1264    	RET	
+                           A  1265    .endfunc "slave_data_receive",274,"_slave_data_
+                           A  1266    	SEGMENT ROM_DATA
+                           A  1267    
+                           A  1268    
+                           A  1269    ;**************************** _slave_transmitte
+                           A  1270    ;Name                         Addr/Register   S
+                           A  1271    ;_sda_bit                            STATIC    
+                           A  1272    ;_send_bit                           STATIC    
+                           A  1273    ;_data_byte                          STATIC    
+                           A  1274    ;_bit_counter                        STATIC    
+                           A  1275    
+                           A  1276    
+                           A  1277    ; Aggregate Stack Size: 0 (words)
+                           A  1278    
+                           A  1279    
+                           A  1280    	.FRAME _n_slave_transmitter,?_n_slave_trans
+                           A  1281    	SEGMENT i2cbase_TEXT
+                           A  1282    ;  275	
+                           A  1283    ;  276	/**************************************
+                           A  1284    ;  277	This function shifts the data in the tr
+                           A  1285    ;  278	on SDA line during the low period of SC
+                           A  1286    ;  279	acknowledge from the master. If master 
+                           A  1287    ;  280	sending another byte of data. If it rec
+                           A  1288    ;  281	sending the next data byte.However in t
+                           A  1289    ;  282	transfer and hence no code is written f
+                           A  1290    ;  283	***************************************
+                           A  1291    ;  284	
+                           A  1292    ;  285	
+                           A  1293    ;  286	void slave_transmitter(void)
+                           A  1294    ;  287	{
+01D4                       A  1295    _slave_transmitter:
+                           A  1296    .define "_slave_transmitter"
+                           A  1297    .value _slave_transmitter
+                           A  1298    .class 2
+                           A  1299    .type 65
+                           A  1300    .endef
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:37     page:  26
+
+
+PC     Object              I  Line    Source i2cbase.src
+                           A  1301    .begfunc "slave_transmitter",287,"_slave_transm
+                           A  1302    ;  288				bit_counter++;  //Keep the 
+                           A  1303    .line 288
+01D4 20 01                 A  1304    	INC	_bit_counter
+                           A  1305    ;  289				if(bit_counter <= 0x08)
+                           A  1306    .line 289
+01D6 A6 01 08              A  1307    	CP	_bit_counter,#8
+01D9 BB 2E                 A  1308    	JR	UGT,_6_L_39
+                           A  1309    ;  290			    {
+                           A  1310    ;  291				//	send_bit=data_transmit_
+                           A  1311    ;  292					send_bit = data_byte;
+                           A  1312    .line 292
+01DB E4 08 0B              A  1313    	LD	_send_bit,_data_byte
+                           A  1314    ;  293					send_bit = (send_bit >>
+                           A  1315    .line 293
+01DE E4 0B E1              A  1316    	LD	R1,_send_bit
+01E1 0C08                  A  1317    	LD	R0,#8
+01E3 24 01 E0              A  1318    	SUB	R0,_bit_counter
+01E6 B0E2                  A  1319    	CLR	R2
+01E8 4200                  A  1320    	OR	R0,R0
+01EA 6B 06                 A  1321    	JR	Z,L__31
+01EC                       A  1322    L__32:
+01EC D0E2                  A  1323    	SRA	R2
+01EE C0E1                  A  1324    	RRC	R1
+01F0 0A FA                 A  1325    	DJNZ	R0,L__32
+01F2                       A  1326    L__31:
+01F2 E4E1 0B               A  1327    	LD	_send_bit,R1
+                           A  1328    ;  294					send_bit &= 0x01;
+                           A  1329    .line 294
+01F5 56 0B 01              A  1330    	AND	_send_bit,#1
+                           A  1331    ;  295					if(send_bit == 0x01)
+                           A  1332    .line 295
+01F8 A6 0B 01              A  1333    	CP	_send_bit,#1
+01FB EB 06                 A  1334    	JR	NE,_6_L_35
+                           A  1335    ;  296					{
+                           A  1336    ;  297					PCOUT |= send_bit; 		                           A  1337    .line 297
+01FD 48 00BFDB             A  1338    	ORX	4059,_send_bit
+                           A  1339    ;  298					
+                           A  1340    ;  299					}
+                           A  1341    ;  300					else
+                           A  1342    .line 300
+0201 8B 1E                 A  1343    	JR	_6_L_44
+0203                       A  1344    _6_L_35:
+                           A  1345    ;  301					{
+                           A  1346    ;  302					PCOUT &= 0xFE;
+                           A  1347    .line 302
+0203 59FE0FDB              A  1348    	ANDX	4059,#254
+                           A  1349    ;  303					
+                           A  1350    ;  304					}
+                           A  1351    .line 304
+                           A  1352    ;  305		
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:37     page:  27
+
+
+PC     Object              I  Line    Source i2cbase.src
+                           A  1353    ;  306					return; 
+                           A  1354    .line 306
+0207 8B 18                 A  1355    	JR	_6_L_44
+                           A  1356    ;  307				}
+0209                       A  1357    _6_L_39:
+                           A  1358    .line 307
+                           A  1359    ;  308			 	if(bit_counter == 0x09)
+                           A  1360    .line 308
+0209 A6 01 09              A  1361    	CP	_bit_counter,#9
+020C EB 06                 A  1362    	JR	NE,_6_L_43
+                           A  1363    ;  309				{
+                           A  1364    ;  310					PCCTL  |= SDA_DIRECTION
+                           A  1365    .line 310
+020E 49010FD9              A  1366    	ORX	4057,#1
+                           A  1367    ;  311					return;
+                           A  1368    .line 311
+0212 8B 0D                 A  1369    	JR	_6_L_44
+                           A  1370    ;  312				}
+0214                       A  1371    _6_L_43:
+                           A  1372    .line 312
+                           A  1373    ;  313	
+                           A  1374    ;  314	    	    if(bit_counter == 0X0A)
+                           A  1375    .line 314
+0214 A6 01 0A              A  1376    	CP	_bit_counter,#10
+0217 EB 08                 A  1377    	JR	NE,_6_L_44
+                           A  1378    ;  315	    		{
+                           A  1379    ;  316					if(sda_bit ==0x01)
+                           A  1380    .line 316
+0219 A6 04 01              A  1381    	CP	_sda_bit,#1
+021C 6B 03                 A  1382    	JR	Z,_6_L_44
+                           A  1383    ;  317		 				{
+                           A  1384    ;  318						  return; //Do not 
+                           A  1385    .line 318
+                           A  1386    ;  319					   }
+                           A  1387    ;  320					else  
+                           A  1388    .line 320
+                           A  1389    ;  321						{
+                           A  1390    ;  322							bit_counter = 0
+                           A  1391    .line 322
+021E E6 01 01              A  1392    	LD	_bit_counter,#1
+                           A  1393    ;  323							//Prepare to  s
+                           A  1394    ;  324					
+                           A  1395    ;  325					}
+                           A  1396    ;  326				}
+                           A  1397    ;  327	
+                           A  1398    ;  328		 }
+0221                       A  1399    _6_L_44:
+                           A  1400    .line 328
+0221 AF                    A  1401    	RET	
+                           A  1402    .endfunc "slave_transmitter",328,"_slave_transm
+                           A  1403    	SEGMENT ROM_DATA
+                           A  1404    
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:37     page:  28
+
+
+PC     Object              I  Line    Source i2cbase.src
+                           A  1405    
+                           A  1406    ;**************************** _address_mismatch
+                           A  1407    ;Name                         Addr/Register   S
+                           A  1408    ;_bit_counter                        STATIC    
+                           A  1409    
+                           A  1410    
+                           A  1411    ; Aggregate Stack Size: 0 (words)
+                           A  1412    
+                           A  1413    
+                           A  1414    	.FRAME _n_address_mismatch,?_n_address_mism
+                           A  1415    	SEGMENT i2cbase_TEXT
+                           A  1416    ;  329	
+                           A  1417    ;  330	
+                           A  1418    ;  331	/**************************************
+                           A  1419    ;  332	This function is called when the receiv
+                           A  1420    ;  333	Resets the bit counter to "0".
+                           A  1421    ;  334	***************************************
+                           A  1422    ;  335	
+                           A  1423    ;  336	 void  address_mismatch(void)
+                           A  1424    ;  337	 {
+0222                       A  1425    _address_mismatch:
+                           A  1426    .define "_address_mismatch"
+                           A  1427    .value _address_mismatch
+                           A  1428    .class 2
+                           A  1429    .type 65
+                           A  1430    .endef
+                           A  1431    .begfunc "address_mismatch",337,"_address_misma
+                           A  1432    ;  338		
+                           A  1433    ;  339		bit_counter++;
+                           A  1434    .line 339
+0222 20 01                 A  1435    	INC	_bit_counter
+                           A  1436    ;  340		if(bit_counter == 0x0A)
+                           A  1437    .line 340
+0224 A6 01 0A              A  1438    	CP	_bit_counter,#10
+0227 EB 02                 A  1439    	JR	NE,_7_L_47
+                           A  1440    ;  341			{
+                           A  1441    ;  342			 bit_counter = 0x00; 
+                           A  1442    .line 342
+0229 B0 01                 A  1443    	CLR	_bit_counter
+                           A  1444    ;  343			}
+                           A  1445    ;  344	 }
+022B                       A  1446    _7_L_47:
+                           A  1447    .line 344
+022B AF                    A  1448    	RET	
+                           A  1449    .endfunc "address_mismatch",344,"_address_misma
+0034 009B                  A  1450    	VECTOR	C1=_SCL_interrupt
+0036 002F                  A  1451    	VECTOR	C0=_SDA_interrupt
+                           A  1452    	XREF _1_processMessage:RDATA
+                           A  1453    	XREF _0_processMessage:RDATA
+                           A  1454    	XREF _processMessage:ROM
+                           A  1455    	XREF _timer_init:ROM
+                           A  1456    	XREF _sysclk_init:ROM
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:37     page:  29
+
+
+PC     Object              I  Line    Source i2cbase.src
+                           A  1457    	XREF __intrp:RDATA
+                           A  1458    	XDEF _address_mismatch
+                           A  1459    	XDEF _slave_transmitter
+                           A  1460    	XDEF _slave_data_receive
+                           A  1461    	XDEF _slave_address_receive
+                           A  1462    	XDEF _SCL_interrupt
+                           A  1463    	XDEF _SDA_interrupt
+                           A  1464    	XDEF _InitializeI2C
+                           A  1465    	XDEF _function_ptr
+                           A  1466    	XDEF _dataIn
+                           A  1467    	XDEF _edge1
+                           A  1468    	XDEF _edge_scl
+                           A  1469    	XDEF _byte_count
+                           A  1470    	XDEF _send_bit
+                           A  1471    	XDEF _temp1
+                           A  1472    	XDEF _edge
+                           A  1473    	XDEF _data_byte
+                           A  1474    	XDEF _address_received
+                           A  1475    	XDEF _rising_edge_counter
+                           A  1476    	XDEF _bus_status
+                           A  1477    	XDEF _sda_bit
+                           A  1478    	XDEF _data_transmit_byte
+                           A  1479    	XDEF _data_receive_byte
+                           A  1480    	XDEF _bit_counter
+                           A  1481    	XDEF _i2c_flag
+                           A  1482    	END
+
+
+Errors: 0
+Warnings: 0
+Lines Assembled: 1483

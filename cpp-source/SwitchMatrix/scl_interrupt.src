@@ -1,0 +1,868 @@
+; Z8 Encore! ANSI C Compiler Release 3.64
+; -nofastcall -const=ROM -listinc -model=S -optlink -regvar
+; -noreduceopt -debug -norevaa -peephole -localcse -optsize
+; -alias 
+	DEFINE terrupt_TEXT,SPACE=ROM
+	FILE	".\scl_interrupt.c"
+.debug "C"
+	SEGMENT NEAR_BSS
+_i2c_flag:
+	DS	1
+.define "i2c_flag"
+.alias "_i2c_flag"
+.class 147
+.value _i2c_flag
+.type 12
+.endef
+_bit_counter:
+	DS	1
+.define "bit_counter"
+.alias "_bit_counter"
+.class 147
+.value _bit_counter
+.type 12
+.endef
+_data_receive_byte:
+	DS	1
+.define "data_receive_byte"
+.alias "_data_receive_byte"
+.class 147
+.value _data_receive_byte
+.type 12
+.endef
+_data_transmit_byte:
+	DS	1
+.define "data_transmit_byte"
+.alias "_data_transmit_byte"
+.class 147
+.value _data_transmit_byte
+.type 12
+.endef
+_sda_bit:
+	DS	1
+.define "sda_bit"
+.alias "_sda_bit"
+.class 147
+.value _sda_bit
+.type 12
+.endef
+_bus_status:
+	DS	1
+.define "bus_status"
+.alias "_bus_status"
+.class 147
+.value _bus_status
+.type 12
+.endef
+_rising_edge_counter:
+	DS	1
+.define "rising_edge_counter"
+.alias "_rising_edge_counter"
+.class 147
+.value _rising_edge_counter
+.type 12
+.endef
+_address_received:
+	DS	1
+.define "address_received"
+.alias "_address_received"
+.class 147
+.value _address_received
+.type 12
+.endef
+_data_byte:
+	DS	1
+.define "data_byte"
+.alias "_data_byte"
+.class 147
+.value _data_byte
+.type 12
+.endef
+_edge:
+	DS	1
+.define "edge"
+.alias "_edge"
+.class 147
+.value _edge
+.type 12
+.endef
+_temp1:
+	DS	1
+.define "temp1"
+.alias "_temp1"
+.class 147
+.value _temp1
+.type 12
+.endef
+_send_bit:
+	DS	1
+.define "send_bit"
+.alias "_send_bit"
+.class 147
+.value _send_bit
+.type 12
+.endef
+_byte_count:
+	DS	1
+.define "byte_count"
+.alias "_byte_count"
+.class 147
+.value _byte_count
+.type 12
+.endef
+	SEGMENT NEAR_DATA
+_function_ptr:
+	DW	_slave_address_receive
+	DW	_slave_data_receive
+	DW	_slave_transmitter
+	DW	_address_mismatch
+.define "function_ptr"
+.alias "_function_ptr"
+.class 133
+.value _function_ptr
+.dim 4
+.type 5217
+.endef
+	SEGMENT ROM_DATA
+
+
+;**************************** _main ***************************
+;Name                         Addr/Register   Size   Type
+;_EI                                 IMPORT  -----   function
+;_bus_status                         STATIC      1   variable
+;_i2c_flag                           STATIC      1   variable
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+	.FRAME _n_main,?_n_main,RDATA
+;    1	/*
+;    2	********************************************************
+;    3	* File : scl_interrupt.c
+;    4	* Description : Codes for I2C slave functionality.  
+;    5	* 
+;    6	* Copyright 2004 ZiLOG Inc. ALL RIGHTS RESERVED.
+;    7	*
+;    8	* The source code in this file was written by an
+;    9	* authorized ZiLOG employee or a licensed consultant.
+;   10	* The source code has been verified to the fullest
+;   11	* extent possible.
+;   12	*
+;   13	* Permission to use this code is granted on a royalty-free
+;   14	* basis. However users are cautioned to authenticate the
+;   15	* code contained herein.
+;   16	*
+;   17	* ZiLOG DOES NOT GUARANTEE THE VERACITY OF THE SOFTWARE.
+;   18	*************************************************************
+;   19	*/
+;   20	
+;   21	#include <ez8.h>
+;   22	#include "scl_interrupt.h"
+;   23	
+;   24	 
+;   25	
+;   26	unsigned char  i2c_flag;		// To hold the Different status of I2C
+;   27	
+;   28	unsigned char bit_counter;	// To keep count of no of bits received 
+;   29								// This counter will reset when the count ==9
+;   30	unsigned char data_receive_byte; // To store the data byte received.
+;   31	
+;   32	unsigned char data_transmit_byte; // To store the data to be transmitted
+;   33	
+;   34	unsigned char volatile sda_bit;	 //Read the SDA bit
+;   35	unsigned char bus_status; // To set bus busy or free flag
+;   36	unsigned char rising_edge_counter;  // Keeps counts of no of SCL rising edges 
+;   37										// in a byte.
+;   38	unsigned char volatile address_received;		//Store the address received
+;   39	unsigned char volatile data_byte;        	// Store the data received.
+;   40	unsigned char volatile edge;
+;   41	unsigned char volatile temp1;
+;   42	unsigned char volatile send_bit;  // Stores the MSB to be transmitted
+;   43	unsigned char byte_count; // Count no of bytes received.
+;   44	
+;   45	
+;   46	//Initialization of  the function pointer
+;   47	void (*function_ptr[4])(void) = { 
+	SEGMENT terrupt_TEXT
+;   48		slave_address_receive,
+;   49		slave_data_receive,
+;   50		slave_transmitter,
+;   51		address_mismatch }; 
+;   52	
+;   53	/* *******************************************************************************
+;   54	The main routine ,sets the Port pins PC0 and PC1 to work as either input or output
+;   55	with open drain.The I2C bus status is set to free(No Transaction on the I2C bus).
+;   56	Sets the interrupt PC0 and PC1 to highist priority.Enables the interrupt. User can 
+;   57	add his code in this main OR can call some function from main. 
+;   58	/*********************************************************************************/ 
+;   59	
+;   60	
+;   61	void main()
+;   62	{
+_main:
+.define "_main"
+.value _main
+.class 2
+.type 65
+.endef
+.begfunc "main",62,"_main"
+;   63	  PCADDR = 0x03 ; //For open drain mode.
+.line 63
+	LDX	4056,#3
+;   64	  PCCTL |= 0x03; // Port pin PC0 to open drain mode.
+.line 64
+	ORX	4057,#3
+;   65	
+;   66	  i2c_flag = I2C_ADDRESS_RECEIVE;	
+.line 66
+	CLR	_i2c_flag
+;   67	  PCADDR = 0x01;				//Set the  Value to select DATA direction
+.line 67
+	LDX	4056,#1
+;   68	  PCCTL  |= SDA_DIRECTION_IN;   // Change SDA to INPUT
+.line 68
+	ORX	4057,#1
+;   69	  PCCTL  |=	SCL_DIRECTION_IN;   //OR with PC1
+.line 69
+	ORX	4057,#2
+;   70	  bus_status = I2C_BUS_FREE;	// Indicates bus status is "FREE"
+.line 70
+	CLR	_bus_status
+;   71	  IRQ2ENL = 0x03;
+.line 71
+	LDX	4040,#3
+;   72	  IRQ2ENH = 0x03;    // Set SDA and SCL for Highist priority
+.line 72
+	LDX	4039,#3
+;   73	
+;   74	  EI();				//Enable all interrupts
+.line 74
+	EI
+;   75	  while(1){;}		// Wait in infinite loop
+_1_L_1:
+.line 75
+	JR	_1_L_1
+;   76	 }
+.line 76
+	RET	
+.endfunc "main",76,"_main"
+	SEGMENT ROM_DATA
+
+
+;**************************** _SCL_interrupt ***************************
+;Name                         Addr/Register   Size   Type
+;_i2c_flag                           STATIC      1   variable
+;_function_ptr                       STATIC      8   variable
+;_data_receive_byte                  STATIC      1   variable
+;_sda_bit                            STATIC      1   variable
+;_rising_edge_counter                STATIC      1   variable
+;_SET_VECTOR                         IMPORT  -----   function
+;_edge                               STATIC      1   variable
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+	.FRAME _n_SCL_interrupt,?_n_SCL_interrupt,RDATA
+	SEGMENT terrupt_TEXT
+;   77	
+;   78	
+;   79	/* ******************************************************************************************
+;   80	This is an interrupt service routine. The program jumps to this routine during both the 
+;   81	rising and falling edges of SCL(on I2C bus). During the rising edge of the clock,a counter
+;   82	"rising_edge_counter" is incremented to keep track the number of SCL and to take appropriate
+;   83	decisions. This routine reads the data on the SDA line during the High level of SCL. This 
+;   84	data is shifted(MSB is received or transmitted first) and a byte of data is formed after all
+;   85	8 bits are received.During the low edge of SCL, this function invoke calls to different 
+;   86	functions based on the I2C flag status.
+;   87	******************************************************************************************* */
+;   88	
+;   89	#pragma interrupt
+;   90	 void SCL_interrupt(void)
+;   91	 {	 
+_SCL_interrupt:
+.define "_SCL_interrupt"
+.value _SCL_interrupt
+.class 2
+.type 65
+.endef
+.begfunc "SCL_interrupt",91,"_SCL_interrupt"
+	PUSHX	4093
+	LDX	4093,__intrp
+	ADDX	__intrp,#16
+;   92	    edge = PCIN & SCL_READ;
+.line 92
+	LDX	R0,4058
+	AND	R0,#2
+	LD	_edge,R0
+;   93	 	SET_VECTOR(C1 ,SCL_interrupt);
+;   94		 if (edge == 0x02)  		// Rising edge detected.
+.line 94
+	CP	_edge,#2
+	JR	NE,_2_L_11
+;   95			{	
+;   96			
+;   97				rising_edge_counter++;
+.line 97
+	INC	_rising_edge_counter
+;   98			    if(rising_edge_counter == 0x0A)  
+.line 98
+	CP	_rising_edge_counter,#10
+	JR	NE,_2_L_5
+;   99				 {
+;  100					rising_edge_counter = 0x01;
+.line 100
+	LD	_rising_edge_counter,#1
+;  101					IRQ2 = IRQ2 & 0XFE;				//Disable pending interrupt requests of SDA
+.line 101
+	ANDX	4038,#254
+;  102					IRQ2ENH |= SDA_INTR_ENABLE;    // Enable SDA interrupt
+.line 102
+	ORX	4039,#1
+;  103	  				IRQ2ENL |= SDA_INTR_ENABLE;    // Enable SDA interrupt
+.line 103
+	ORX	4040,#1
+;  104						
+;  105			   }
+;  106	
+;  107				else
+.line 107
+	JR	_2_L_7
+_2_L_5:
+;  108				 {
+;  109					IRQ2ENH &= SDA_INTR_DISABLE;    // Disable SDA interrupt
+.line 109
+	ANDX	4039,#254
+;  110	  				IRQ2ENL &= SDA_INTR_DISABLE;    // Disable SDA interrupt
+.line 110
+	ANDX	4040,#254
+;  111					
+;  112				 }
+_2_L_7:
+.line 112
+;  113	
+;  114			    if(rising_edge_counter <= 0x07)
+.line 114
+	CP	_rising_edge_counter,#7
+	JR	UGT,_2_L_9
+;  115				{
+;  116					sda_bit = PCIN & SDA_READ;	
+.line 116
+	LDX	R0,4058
+	AND	R0,#1
+	LD	_sda_bit,R0
+;  117	   				data_receive_byte |= sda_bit;	//Store the received data in 
+.line 117
+	OR	_data_receive_byte,_sda_bit
+;  118	   				data_receive_byte <<= 0x01;		//"receive_byte" register.
+.line 118
+	ADD	_data_receive_byte,_data_receive_byte
+;  119					
+;  120				}
+_2_L_9:
+.line 120
+;  121				if(rising_edge_counter == 0x08)
+.line 121
+	CP	_rising_edge_counter,#8
+	JR	NE,_2_L_12
+;  122				{
+;  123					sda_bit = PCIN & SDA_READ;		// Read the last bit of data and
+.line 123
+	LDX	R0,4058
+	AND	R0,#1
+	LD	_sda_bit,R0
+;  124	   				data_receive_byte |= sda_bit;	// store as LSB without shifting. 
+.line 124
+	OR	_data_receive_byte,_sda_bit
+;  125					
+;  126				}
+;  127			}
+;  128		else		// Falling edge detected
+.line 128
+	JR	_2_L_12
+_2_L_11:
+;  129		{
+;  130		IRQ2ENH &= SDA_INTR_DISABLE;    // Disable SDA interrupt
+.line 130
+	ANDX	4039,#254
+;  131	  	IRQ2ENL &= SDA_INTR_DISABLE;    // Disable SDA interrupt
+.line 131
+	ANDX	4040,#254
+;  132					
+;  133		PCCTL  &= SCL_DIRECTION_OUT; 	// Change SDA to OUTPUT
+.line 133
+	ANDX	4057,#253
+;  134	  	PCOUT  &= HOLD_SCL_LOW;		 	// Hold	SCL low	to add wait states
+.line 134
+	ANDX	4059,#253
+;  135		(*function_ptr[i2c_flag])(); 	//Call the relevent functions using Function Pointer.
+.line 135
+	LD	R2,_i2c_flag
+	LD	R3,#2
+	MULT	RR2
+	LD	R0,#_function_ptr
+	ADD	R0,R3
+	LD	R2,@R0
+	LD	R3,1(R0)
+	CALL	@RR2
+;  136		PCCTL |= SCL_DIRECTION_IN;   	// Change SDA to INPUT
+.line 136
+	ORX	4057,#2
+;  137	
+;  138		}	 
+;  139	}
+_2_L_12:
+.line 139
+	SUBX	__intrp,#16
+	POPX	4093
+	IRET	
+.endfunc "SCL_interrupt",139,"_SCL_interrupt"
+	SEGMENT ROM_DATA
+
+
+;**************************** _slave_address_receive ***************************
+;Name                         Addr/Register   Size   Type
+;_send_bit                           STATIC      1   variable
+;_data_byte                          STATIC      1   variable
+;_i2c_flag                           STATIC      1   variable
+;_temp1                              STATIC      1   variable
+;_address_received                   STATIC      1   variable
+;_data_receive_byte                  STATIC      1   variable
+;_bit_counter                        STATIC      1   variable
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+	.FRAME _n_slave_address_receive,?_n_slave_address_receive,RDATA
+	SEGMENT terrupt_TEXT
+;  140	/* ******************************************************************************************
+;  141	This fuction, after receiving the address on the I2C bus , compares with the device address.
+;  142	Sends Acknowledge if the Address received matches with the device address(AE in this example)
+;  143	otherwise it sets the address mismatch flag. This function also checks if the  master wants to read from the 
+;  144	slave or write to slave and accordingly sets the slave to either read or write mode.
+;  145	******************************************************************************************* */
+;  146	
+;  147	
+;  148	void slave_address_receive(void)
+;  149	
+;  150	{
+_slave_address_receive:
+.define "_slave_address_receive"
+.value _slave_address_receive
+.class 2
+.type 65
+.endef
+.begfunc "slave_address_receive",150,"_slave_address_receive"
+;  151	 
+;  152	
+;  153			bit_counter++; 
+.line 153
+	INC	_bit_counter
+;  154			if(bit_counter <= 0x08)					//The data of SDA is read in the rising edge 
+.line 154
+	CP	_bit_counter,#8
+	JR	ULE,_3_L_23
+;  155				{									// of SCL.In the low level of clock data
+;  156					return;							//data is not read.
+.line 156
+;  157				}								
+.line 157
+;  158			if(bit_counter == 0x09)
+.line 158
+	CP	_bit_counter,#9
+	JR	NE,_3_L_22
+;  159				{
+;  160					address_received = data_receive_byte;   // Store the address received 
+.line 160
+	LD	_address_received,_data_receive_byte
+;  161					temp1 = (data_receive_byte & 0xFE);		//Extaract only 7 bit address information.
+.line 161
+	LD	R0,_data_receive_byte
+	BCLR	0,R0
+	LD	_temp1,R0
+;  162					if(temp1 == DEVICE_ADDRESS) 
+.line 162
+	CP	_temp1,#174
+	JR	NE,_3_L_16
+;  163						{
+;  164	 	 				   	PCCTL  &= SDA_DIRECTION_OUT;   // Change SDA to OUTPUT
+.line 164
+	ANDX	4057,#254
+;  165							PCOUT &= SEND_ACK;			   //Send Acknowledgement 
+.line 165
+	ANDX	4059,#254
+;  166		    				return;
+.line 166
+	JR	_3_L_23
+;  167					   	}
+;  168	  				else 
+_3_L_16:
+.line 168
+;  169	   				 {
+;  170						i2c_flag = I2C_ADDR_MISMATCH;	// Set the address mismatch condition.
+.line 170
+	LD	_i2c_flag,#3
+;  171						return; 
+.line 171
+	JR	_3_L_23
+;  172					}	
+;  173				}
+_3_L_22:
+.line 173
+;  174	          if(bit_counter == 0x0A)
+.line 174
+	CP	_bit_counter,#10
+	JR	NE,_3_L_23
+;  175				{
+;  176					bit_counter = 0x01;		//Initialise the bit counter.
+.line 176
+	LD	_bit_counter,#1
+;  177					temp1 = data_receive_byte;
+.line 177
+	LD	_temp1,_data_receive_byte
+;  178					temp1 &= 0x01;
+.line 178
+	AND	_temp1,#1
+;  179			    	if(temp1 == 0x01) 			// Check if slave in read
+.line 179
+	CP	_temp1,#1
+	JR	NE,_3_L_20
+;  180	    		     	{						// OR Slave Transmit mode.
+;  181				 	//	send_bit = 	data_transmit_byte;
+;  182						send_bit = data_byte;
+.line 182
+	LD	_send_bit,_data_byte
+;  183						send_bit &= 0x80;
+.line 183
+	AND	_send_bit,#128
+;  184						send_bit = send_bit >> 0x07;	// Extract MSB of data_transmit_byte
+.line 184
+	LD	R0,_send_bit
+	CLR	R1
+	LD	R2,#7
+L__13:
+	SRA	R1
+	RRC	R0
+	DJNZ	R2,L__13
+	LD	_send_bit,R0
+;  185						PCCTL  &= SDA_DIRECTION_OUT; // Change SDA to OUTPUT
+.line 185
+	ANDX	4057,#254
+;  186						PCOUT |= send_bit;		// Send the MSB of data byte on SDA 	
+.line 186
+	ORX	4059,_send_bit
+;  187						i2c_flag = I2C_DATA_TRANSMITTER;  // Set the slave to slave transmit mode
+.line 187
+	LD	_i2c_flag,#2
+;  188						return;
+.line 188
+	JR	_3_L_23
+;  189						}
+;  190	       			else
+_3_L_20:
+.line 190
+;  191						{
+;  192	  	      			i2c_flag = I2C_DATA_RECEIVE;  // Set the flag to data receive mode.
+.line 192
+	LD	_i2c_flag,#1
+;  193	            		PCCTL  |= SDA_DIRECTION_IN;		 //Chanege SDA to INPUT
+.line 193
+	ORX	4057,#1
+;  194					 	}							      
+;  195		
+;  196	   		
+;  197			
+;  198				}	
+;  199		}
+_3_L_23:
+.line 199
+	RET	
+.endfunc "slave_address_receive",199,"_slave_address_receive"
+	SEGMENT ROM_DATA
+
+
+;**************************** _slave_data_receive ***************************
+;Name                         Addr/Register   Size   Type
+;_data_byte                          STATIC      1   variable
+;_data_receive_byte                  STATIC      1   variable
+;_bit_counter                        STATIC      1   variable
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+	.FRAME _n_slave_data_receive,?_n_slave_data_receive,RDATA
+	SEGMENT terrupt_TEXT
+;  200	
+;  201	/* ****************************************************************************************
+;  202	This function is  sends an acknowledge after a complete data byte is received.
+;  203	Stores the received byte in a buffer.
+;  204	*******************************************************************************************/
+;  205	
+;  206	void slave_data_receive(void)
+;  207	{
+_slave_data_receive:
+.define "_slave_data_receive"
+.value _slave_data_receive
+.class 2
+.type 65
+.endef
+.begfunc "slave_data_receive",207,"_slave_data_receive"
+;  208	  	  bit_counter++;  //Keep the count of no of bits received.
+.line 208
+	INC	_bit_counter
+;  209	 	  if(bit_counter <=0x08)
+.line 209
+	CP	_bit_counter,#8
+	JR	ULE,_4_L_30
+;  210			{
+;  211				return;
+.line 211
+;  212			}
+.line 212
+;  213	
+;  214		  if(bit_counter == 0x09)
+.line 214
+	CP	_bit_counter,#9
+	JR	NE,_4_L_28
+;  215			{
+;  216			data_byte = data_receive_byte;	// Store the data received.
+.line 216
+	LD	_data_byte,_data_receive_byte
+;  217			PCCTL  &= SDA_DIRECTION_OUT; // Change SDA to OUTPUT
+.line 217
+	ANDX	4057,#254
+;  218			PCOUT &= SEND_ACK;			 //Send Ack or Nack 
+.line 218
+	ANDX	4059,#254
+;  219			return;
+.line 219
+	JR	_4_L_30
+;  220			}
+;  221		 else if(bit_counter ==0x0A)
+_4_L_28:
+.line 221
+	CP	_bit_counter,#10
+	JR	NE,_4_L_30
+;  222		   {
+;  223		   bit_counter = 0x01;			     // Reset the bit counter.
+.line 223
+	LD	_bit_counter,#1
+;  224	       PCCTL  |= SDA_DIRECTION_IN;		 //Chanege SDA to INPUT
+.line 224
+	ORX	4057,#1
+;  225		   }
+;  226	  }
+_4_L_30:
+.line 226
+	RET	
+.endfunc "slave_data_receive",226,"_slave_data_receive"
+	SEGMENT ROM_DATA
+
+
+;**************************** _slave_transmitter ***************************
+;Name                         Addr/Register   Size   Type
+;_sda_bit                            STATIC      1   variable
+;_send_bit                           STATIC      1   variable
+;_data_byte                          STATIC      1   variable
+;_bit_counter                        STATIC      1   variable
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+	.FRAME _n_slave_transmitter,?_n_slave_transmitter,RDATA
+	SEGMENT terrupt_TEXT
+;  227	
+;  228	/*****************************************************************************************
+;  229	This function shifts the data in the transmit_data_byte and shifts the appropriate bit
+;  230	on SDA line during the low period of SCL. After sending a byte of data it checks for 
+;  231	acknowledge from the master. If master sends NACK(No-Acknowledgement), then slave stops
+;  232	sending another byte of data. If it receives acknowledgement from the master ,it stars
+;  233	sending the next data byte.However in this case the implementation is done for one byte
+;  234	transfer and hence no code is written for transmitting multiple byts.
+;  235	****************************************************************************************** */
+;  236	
+;  237	
+;  238	void slave_transmitter(void)
+;  239	{
+_slave_transmitter:
+.define "_slave_transmitter"
+.value _slave_transmitter
+.class 2
+.type 65
+.endef
+.begfunc "slave_transmitter",239,"_slave_transmitter"
+;  240				bit_counter++;  //Keep the count of no of bits transmitted.
+.line 240
+	INC	_bit_counter
+;  241				if(bit_counter <= 0x08)
+.line 241
+	CP	_bit_counter,#8
+	JR	UGT,_5_L_37
+;  242			    {
+;  243				//	send_bit=data_transmit_byte;
+;  244					send_bit = data_byte;
+.line 244
+	LD	_send_bit,_data_byte
+;  245					send_bit = (send_bit >>(8-bit_counter));
+.line 245
+	LD	R1,_send_bit
+	LD	R0,#8
+	SUB	R0,_bit_counter
+	CLR	R2
+	OR	R0,R0
+	JR	Z,L__26
+L__27:
+	SRA	R2
+	RRC	R1
+	DJNZ	R0,L__27
+L__26:
+	LD	_send_bit,R1
+;  246					send_bit &= 0x01;
+.line 246
+	AND	_send_bit,#1
+;  247					if(send_bit == 0x01)
+.line 247
+	CP	_send_bit,#1
+	JR	NE,_5_L_33
+;  248					{
+;  249					PCOUT |= send_bit; 			//Send data on SDA line.
+.line 249
+	ORX	4059,_send_bit
+;  250					
+;  251					}
+;  252					else
+.line 252
+	JR	_5_L_42
+_5_L_33:
+;  253					{
+;  254					PCOUT &= 0xFE;
+.line 254
+	ANDX	4059,#254
+;  255					
+;  256					}
+.line 256
+;  257		
+;  258					return; 
+.line 258
+	JR	_5_L_42
+;  259				}
+_5_L_37:
+.line 259
+;  260			 	if(bit_counter == 0x09)
+.line 260
+	CP	_bit_counter,#9
+	JR	NE,_5_L_41
+;  261				{
+;  262					PCCTL  |= SDA_DIRECTION_IN;  // Change SDA to INPUT
+.line 262
+	ORX	4057,#1
+;  263					return;
+.line 263
+	JR	_5_L_42
+;  264				}
+_5_L_41:
+.line 264
+;  265	
+;  266	    	    if(bit_counter == 0X0A)
+.line 266
+	CP	_bit_counter,#10
+	JR	NE,_5_L_42
+;  267	    		{
+;  268					if(sda_bit ==0x01)
+.line 268
+	CP	_sda_bit,#1
+	JR	Z,_5_L_42
+;  269		 				{
+;  270						  return; //Do not send next byte.
+.line 270
+;  271					   }
+;  272					else  
+.line 272
+;  273						{
+;  274							bit_counter = 0x01;
+.line 274
+	LD	_bit_counter,#1
+;  275							//Prepare to  send the next byte; // Not implemented
+;  276					
+;  277					}
+;  278				}
+;  279	
+;  280		 }
+_5_L_42:
+.line 280
+	RET	
+.endfunc "slave_transmitter",280,"_slave_transmitter"
+	SEGMENT ROM_DATA
+
+
+;**************************** _address_mismatch ***************************
+;Name                         Addr/Register   Size   Type
+;_bit_counter                        STATIC      1   variable
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+	.FRAME _n_address_mismatch,?_n_address_mismatch,RDATA
+	SEGMENT terrupt_TEXT
+;  281	
+;  282	
+;  283	/*************************************************************************************
+;  284	This function is called when the received address do not match with the slave address.
+;  285	Resets the bit counter to "0".
+;  286	***************************************************************************************/
+;  287	
+;  288	 void  address_mismatch(void)
+;  289	 {
+_address_mismatch:
+.define "_address_mismatch"
+.value _address_mismatch
+.class 2
+.type 65
+.endef
+.begfunc "address_mismatch",289,"_address_mismatch"
+;  290		
+;  291		bit_counter++;
+.line 291
+	INC	_bit_counter
+;  292		if(bit_counter == 0x0A)
+.line 292
+	CP	_bit_counter,#10
+	JR	NE,_6_L_45
+;  293			{
+;  294			 bit_counter = 0x00;
+.line 294
+	CLR	_bit_counter
+;  295			}
+;  296	 }
+_6_L_45:
+.line 296
+	RET	
+.endfunc "address_mismatch",296,"_address_mismatch"
+	VECTOR	C1=_SCL_interrupt
+	XREF __intrp:RDATA
+	XDEF _address_mismatch
+	XDEF _slave_transmitter
+	XDEF _slave_data_receive
+	XDEF _slave_address_receive
+	XDEF _SCL_interrupt
+	XDEF _main
+	XDEF _function_ptr
+	XDEF _byte_count
+	XDEF _send_bit
+	XDEF _temp1
+	XDEF _edge
+	XDEF _data_byte
+	XDEF _address_received
+	XDEF _rising_edge_counter
+	XDEF _bus_status
+	XDEF _sda_bit
+	XDEF _data_transmit_byte
+	XDEF _data_receive_byte
+	XDEF _bit_counter
+	XDEF _i2c_flag
+	END

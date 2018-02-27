@@ -1,0 +1,243 @@
+/*
+********************************************************
+* File : switchMatrix.c
+* Based on scl_interrupt.c (from AN0139-SC02 and LampDriver)
+* Description : Drives a switch Matrix and reports back by SPI
+*  PC0 and PC1 have to be used for the i2c pins, as these have interrupt triggering
+**************************************************************
+*/
+
+
+/*From ~/DropBox/Bossy/Workspace/pinsupport.cpp (2012 ish?)
+Description: Interrupt Timer handler that will take in the values from the input buffer, compare to the previous values. New values stored. Anything changed, then switch buffer will be added to.
+
+explanation is at: http://www.compuphase.com/electronics/debouncing.htm
+*/
+
+
+
+#include <ez8.h>
+#include <stdio.h>
+#include "lampDriver.h"
+#include "timer.h"
+#include "sysclk.h"
+
+/*
+PB0-PB2 = Strobe Select (outputs)
+PA0-PA7 = Switch Inputs (inputs)
+PB3, PB4 = LED indicators (outputs)
+
+PC0, PC1 = Switch Inputs
+PC2 = SS
+PC3 = SCLK
+PC4 = MOSI
+PC5 = MISO
+*/
+
+unsigned char const NOOUTPUT = 0x00;
+
+const uint8 NUMBER_OF_SWITCH_SAMPLES = 1;
+byte _swStrobe;
+byte _swMatrix[8];
+
+
+
+/*i2c variables*/ 
+
+unsigned char  i2c_flag;		// To hold the Different status of I2C
+
+unsigned char bit_counter;	// To keep count of no of bits received 
+							// This counter will reset when the count ==9
+unsigned char data_receive_byte; // To store the data byte received.
+
+unsigned char data_transmit_byte; // To store the data to be transmitted
+
+unsigned char volatile sda_bit;	 //Read the SDA bit
+unsigned char bus_status; // To set bus busy or free flag
+unsigned char rising_edge_counter;  // Keeps counts of no of SCL rising edges 
+									// in a byte.
+unsigned char volatile address_received;		//Store the address received
+unsigned char volatile data_byte;        	// Store the data received.
+unsigned char volatile edge;
+unsigned char volatile temp1;
+unsigned char volatile send_bit;  // Stores the MSB to be transmitted
+unsigned char byte_count; // Count no of bytes received.
+
+
+/*Lamp Specific Variables*/
+unsigned char _lightControl[64];
+unsigned char _slowBlink;
+unsigned char _fastBlink;
+unsigned char _strobe = 0;
+unsigned char _lmp = 0;
+unsigned char _diagMode = 0;
+
+int  _timerControl;
+
+int _lampCounter = 0;
+
+unsigned char const BLINKON = 0x3f;
+unsigned char const BLINKOFF =0x00;
+
+void Initialize(void);
+void LampLoop(void);
+void SetLampAll(int value);
+void SetLamp(int , unsigned char );
+
+int ledIsOn;
+
+//Initialization of  the function pointer
+void (*function_ptr[4])(void) = { 
+	slave_address_receive,
+	slave_data_receive,
+	slave_transmitter,
+	address_mismatch }; 
+
+/* *******************************************************************************
+The main routine ,sets the Port pins PC0 and PC1 to work as either input or output
+with open drain.The I2C bus status is set to free(No Transaction on the I2C bus).
+Sets the interrupt PC0 and PC1 to highist priority.Enables the interrupt.
+/*********************************************************************************/ 
+
+
+void main()
+{
+  Initialize();	
+  SwitchLoop();
+ }
+
+void Initialize(void){
+    DI();				// Globally disable all interrupts    
+    sysclk_init();		// Initialize system clock per the selected clock source/frequency from project
+	                    // setting and in the sysclk.c	
+    timer_init();		// Intialize timer
+	/*
+	PB0-PB2 = Strobe Select (outputs)
+	PA0-PA7 = Switch Inputs (inputs)
+	PB3, PB4 = LED indicators (outputs)
+
+	PC0, PC1 = Switch Inputs (need to do this still)
+	PC2 = SS
+	PC3 = SCLK
+	PC4 = MOSI
+	PC5 = MISO
+	*/
+	
+	
+  //PB0-2 are TTL Output for Strobe control to the 74ls138
+  //PB3-4 are open drain outputs for LEDs
+  PBADDR = 0x01; // Direction
+  PBCTL = 0xE0; //1110 - 0000 all putputs are zeros
+  PBADDR = 0x03; //output control
+  PBCTL = 0x18;     //0001-1000 (open drain on PB3-PB4 for the LEDs)
+  PBADDR = 0x00;
+
+  //PA0-7 are TTL input (from the 339 comparators)
+  PAADDR = 0x01; //Data Direction
+  PACTL = 0xFF; //1111 - 1111 all inputa
+  PAADDR = 0x03;
+//  PACTL = 0x00; //not sure if we need this for inputs
+  PAADDR = 0x00;
+
+  //TODO Need to setup the SPI flags  
+  PCADDR = 0x01;				//Set the  Value to select DATA direction
+  PCCTL  |= SDA_DIRECTION_IN;   // Change SDA to INPUT
+  PCCTL  |=	SCL_DIRECTION_IN;   //OR with PC1
+  //PC2-3 are input
+  PCCTL |= 0x0C;
+
+  IRQ2ENL = 0x03;
+  IRQ2ENH = 0x03;    // Set SDA and SCL for Highist priority
+
+EI();				//Enable all interrupts
+  
+}
+ 
+
+
+int SwitchStrobeIncAndSet()
+{
+    if(_swStrobe>=8)
+    {
+        _swStrobe = 0;
+    }
+
+    //Bits 12-14 Switch Matrix strobe (to 74ls138) on reg2
+    int outputValue = 0x00;
+
+    outputValue |= (_swStrobe<<12);
+    outputValue |= 0x8fff; //1000 1111 1111 1111
+
+    _swStrobe++;
+    return outputValue;
+}
+
+
+
+/*Switch Matrix Handling routines*/
+
+/*
+Description: Interrupt Timer handler that will take in the values from the input buffer, compare to the previous values. New values stored. Anything changed, then switch buffer will be added to.
+
+explanation is at: http://www.compuphase.com/electronics/debouncing.htm
+
+*/
+
+//This will debounce the strobe sample passed in, as well as update the debounced state when necessary (after 4 vertical counter cycles)
+//Needs to be called every 5 ms per strobe. Therefore 8 strobes = 5ms/8 = every 625uSec
+//Returns changes after they have been debounced.
+unsigned char debounce(unsigned char strobeSample, int strobe)
+{
+    //static unsigned char state, cnt0, cnt1;
+    unsigned char delta;
+    unsigned char changes;
+
+    delta = strobeSample ^ debounced_state[strobe];
+    clock_B[strobe] = (clock_B[strobe] ^ clock_A[strobe]) & delta;
+    clock_A[strobe] = ~clock_A[strobe] & delta;
+
+    changes = delta & ~(clock_A[strobe] | clock_B[strobe]);
+    debounced_state[strobe] ^= changes;
+
+    return changes //debounced_state[strobe];
+}
+
+
+
+void SwitchLoop(void){
+	int i;
+	//unsigned long int count = 60;  //about 86 clock cycles per while loop, so this should be 260 usec?  
+
+	/*
+	PB0-PB2 = Strobe Select (outputs)
+	PA0-PA7 = Switch Inputs (inputs)
+	PB3, PB4 = LED indicators (outputs)
+
+	PC0, PC1 = Switch Inputs (need to do this still)
+	PC2 = SS
+	PC3 = SCLK
+	PC4 = MOSI
+	PC5 = MISO
+	*/
+
+	while(1){
+		char sample;
+		char curSwitches;
+		SwitchStrobeIncAndSet();
+		//need to set _reg3
+		sample = PCIN;
+		curSwitches =debounce(sample,_swStrobe);
+		
+		if(curSwitches!=0x00){
+			//depending if anything changed, we need to notify the RaspPi, as well as do the diag leds
+			//therefore previous prob needs to turn changes so that we know we need to report.
+			
+			//this might not work since if the switch was just released, then it would 0
+		}
+		while(count>0)
+			count--;
+		count=60;
+	}
+}
+
+

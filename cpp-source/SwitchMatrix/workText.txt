@@ -1,0 +1,25 @@
+unsigned char debounce(unsigned char strobeSample, int strobe)
+{
+    //static unsigned char state, cnt0, cnt1;
+    unsigned char delta;
+    unsigned char changes;
+
+1    delta = strobeSample ^ debounced_state[strobe];
+2    clock_B[strobe] = (clock_B[strobe] ^ clock_A[strobe]) & delta;
+3    clock_A[strobe] = ~clock_A[strobe] & delta;
+
+4    changes = delta & ~(clock_A[strobe] | clock_B[strobe]);
+5    debounced_state[strobe] ^= changes;
+
+    return changes //debounced_state[strobe];
+}
+0000 0000 TO
+0001 0000
+
+1 DELTA = 0001 0000
+2 clockb = 0
+3 clocka = 0001 0000
+4 changes =  (0001 0000) & ~(0001 0000 | 0000 0000) = 0000 0000
+
+
+

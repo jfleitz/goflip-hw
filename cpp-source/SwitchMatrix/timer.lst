@@ -1,0 +1,893 @@
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 24-Aug-15     21:23:42     page:   1
+
+
+PC     Object              I  Line    Source 
+                           A     1    ; Z8 Encore! ANSI C Compiler Release 3.64
+                           A     2    ; -nofastcall -const=ROM -listinc -model=S -opt
+                           A     3    ; -noreduceopt -debug -norevaa -peephole -local
+                           A     4    ; -alias 
+                           A     5    	DEFINE timer_TEXT,SPACE=ROM
+                           A     6    	FILE	".\timer.c"
+                           A     7    .debug "C"
+                           A     8    	SEGMENT ROM_DATA
+                           A     9    
+                           A    10    
+                           A    11    ;**************************** _blink_timer ****
+                           A    12    ;Name                         Addr/Register   S
+                           A    13    ;_blinkISR                           IMPORT  --
+                           A    14    
+                           A    15    
+                           A    16    ; Aggregate Stack Size: 0 (words)
+                           A    17    
+                           A    18    
+                           A    19    	.FRAME _n_blink_timer,?_n_blink_timer,RDATA
+                           A    20    	.FCALL _n_blinkISR
+                           A    21    	SEGMENT timer_TEXT
+                           A    22    ;    1	/*!\file gpio.h
+                           A    23    ;    2	 * \brief Definition file for the Z8 En
+                           A    24    ;    3	 *
+                           A    25    ;    4	 *  This file contains header informati
+                           A    26    ;    5	 *  driver implementations for Z8 Encor
+                           A    27    ;    6	 *
+                           A    28    ;    7	 *  This source file uses Doxygen-style
+                           A    29    ;    8	 *  automatically.
+                           A    30    ;    9	 *
+                           A    31    ;   10	 *  Copyright (C) 1999-2004 by  ZiLOG, 
+                           A    32    ;   11	 *  All Rights Reserved.
+                           A    33    ;   12	 */
+                           A    34    ;   13	
+                           A    35    ;   14	#pragma once // Include this file only 
+                           A    36    ;   15	#ifndef _GPIO_H_
+                           A    37    ;   16	#define _GPIO_H_
+                           A    38    ;   17	
+                           A    39    ;   18	#include <defines.h>
+                           A    40    ;   19	
+                           A    41    ;   20	
+                           A    42    ;   21	#ifdef _DEBUG
+                           A    43    ;   22	#define GPIOPARAMETER_CHECKING			                           A    44    ;   23	#endif
+                           A    45    ;   24	
+                           A    46    ;   25	
+                           A    47    ;   26	/*! The GPIO ports available for partic
+                           A    48    ;   27	#if (defined(EZ8_PORT4) && !defined(_Z8
+                           A    49    ;   28	#define PORTD
+                           A    50    ;   29	#endif
+                           A    51    ;   30	
+                           A    52    ;   31	#if defined(EZ8_PORT8)||defined(EZ8_POR
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 24-Aug-15     21:23:42     page:   2
+
+
+PC     Object              I  Line    Source timer.src
+                           A    53    ;   32	#define PORTE
+                           A    54    ;   33	#endif
+                           A    55    ;   34	#if defined(EZ8_PORT8)
+                           A    56    ;   35	#define PORTF
+                           A    57    ;   36	#define PORTG
+                           A    58    ;   37	#define PORTH
+                           A    59    ;   38	#endif
+                           A    60    ;   39	
+                           A    61    ;   40	#define GPIOERR_SUCCESS		(CHAR)0		                           A    62    ;   41	#define GPIOERR_INVALIDPINS	(CHAR)1		                           A    63    ;   42	#define GPIOERR_FAILURE		(CHAR)(-1)	                           A    64    ;   43	
+                           A    65    ;   44	
+                           A    66    ;   45	/*! all the ports bits are set to input
+                           A    67    ;   46	#define PORTA_ADDRVAL_DEF   0x01
+                           A    68    ;   47	#define PORTA_CTLVAL_DEF    0xFF
+                           A    69    ;   48	#define PORTA_OUTVAL_DEF    0x00
+                           A    70    ;   49	
+                           A    71    ;   50	#define PORTB_ADDRVAL_DEF   0x01
+                           A    72    ;   51	#define PORTB_CTLVAL_DEF    0xFF
+                           A    73    ;   52	#define PORTB_OUTVAL_DEF    0x00
+                           A    74    ;   53	
+                           A    75    ;   54	#define PORTC_ADDRVAL_DEF   0x01
+                           A    76    ;   55	#define PORTC_CTLVAL_DEF    0xFF
+                           A    77    ;   56	#define PORTC_OUTVAL_DEF    0x00
+                           A    78    ;   57	
+                           A    79    ;   58	#ifdef PORTD
+                           A    80    ;   59	#define PORTD_ADDRVAL_DEF   0x01
+                           A    81    ;   60	#define PORTD_CTLVAL_DEF    0xFF
+                           A    82    ;   61	#define PORTD_OUTVAL_DEF    0x00
+                           A    83    ;   62	#endif
+                           A    84    ;   63	
+                           A    85    ;   64	#ifdef PORTE
+                           A    86    ;   65	#define PORTE_ADDRVAL_DEF   0x01
+                           A    87    ;   66	#define PORTE_CTLVAL_DEF    0xFF
+                           A    88    ;   67	#define PORTE_OUTVAL_DEF    0x00
+                           A    89    ;   68	#endif
+                           A    90    ;   69	
+                           A    91    ;   70	#ifdef PORTF
+                           A    92    ;   71	#define PORTF_ADDRVAL_DEF   0x01
+                           A    93    ;   72	#define PORTF_CTLVAL_DEF    0xFF
+                           A    94    ;   73	#define PORTF_OUTVAL_DEF    0x00
+                           A    95    ;   74	#endif
+                           A    96    ;   75	
+                           A    97    ;   76	#ifdef PORTG
+                           A    98    ;   77	#define PORTG_ADDRVAL_DEF   0x01
+                           A    99    ;   78	#define PORTG_CTLVAL_DEF    0xFF
+                           A   100    ;   79	#define PORTG_OUTVAL_DEF    0x00
+                           A   101    ;   80	#endif
+                           A   102    ;   81	
+                           A   103    ;   82	#ifdef PORTH
+                           A   104    ;   83	#define PORTH_ADDRVAL_DEF   0x01
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 24-Aug-15     21:23:42     page:   3
+
+
+PC     Object              I  Line    Source timer.src
+                           A   105    ;   84	#define PORTH_CTLVAL_DEF    0xFF
+                           A   106    ;   85	#define PORTH_OUTVAL_DEF    0x00
+                           A   107    ;   86	#endif
+                           A   108    ;   87	
+                           A   109    ;   88	
+                           A   110    ;   89	/*! Control Register access codes used 
+                           A   111    ;   90	#define PORTADDR_NOFUNC			0x00
+                           A   112    ;   91	#define PORTADDR_DATADIR		0x01
+                           A   113    ;   92	#define PORTADDR_ALTFUNC		0x02
+                           A   114    ;   93	#if defined(_Z8FMC16) || defined(__ZSLB
+                           A   115    ;   94	#define PORTADDR_ALTFUNC0		0x02
+                           A   116    ;   95	#endif
+                           A   117    ;   96	#define PORTADDR_OPENDRAIN		0x03
+                           A   118    ;   97	#define PORTADDR_HIGHDRIVE		0x04
+                           A   119    ;   98	#define PORTADDR_STPMDREC		0x05
+                           A   120    ;   99	#if defined (_Z8F1680)||defined(_Z8F04)
+                           A   121    ;  100	#define PORTADDR_PULLUP		0x06
+                           A   122    ;  101	#endif
+                           A   123    ;  102	#if defined (_Z8F1680)||defined(_Z8F04)
+                           A   124    ;  103	#define PORTADDR_ALTFUNCSET1	0x07
+                           A   125    ;  104	#define PORTADDR_ALTFUNCSET2	0x08
+                           A   126    ;  105	#endif
+                           A   127    ;  106	#if defined(_Z8FMC16) || defined(__ZSLB
+                           A   128    ;  107	#define PORTADDR_ALTFUNC1		0x07
+                           A   129    ;  108	#define PORTADDR_IRQES			0x08
+                           A   130    ;  109	#define PORTADDR_IRQPS			0x09
+                           A   131    ;  110	#endif
+                           A   132    ;  111	
+                           A   133    ;  112	
+                           A   134    ;  113	/*! Definitions for Current Drive Level
+                           A   135    ;  114	#if defined(_Z8F04A) ||defined (_Z8F168
+                           A   136    ;  115	#define DRIVELEVEL_3MA			0
+                           A   137    ;  116	#define DRIVELEVEL_7MA			1
+                           A   138    ;  117	#define DRIVELEVEL_13MA			2
+                           A   139    ;  118	#define DRIVELEVEL_20MA			3
+                           A   140    ;  119	#endif
+                           A   141    ;  120	
+                           A   142    ;  121	/*! Definitions for trigger edges */
+                           A   143    ;  122	#define EDGE_FALLING			0
+                           A   144    ;  123	#define EDGE_RISING				1
+                           A   145    ;  124	
+                           A   146    ;  125	/*! GPIO pin patterns */
+                           A   147    ;  126	#define PORTPIN_ZERO		(BYTE)0x01	                           A   148    ;  127	#define PORTPIN_ONE			(BYTE)0x02	                           A   149    ;  128	#define PORTPIN_TWO			(BYTE)0x04	                           A   150    ;  129	#define PORTPIN_THREE		(BYTE)0x08	                           A   151    ;  130	#define PORTPIN_FOUR		(BYTE)0x10	                           A   152    ;  131	#define PORTPIN_FIVE 		(BYTE)0x20	                           A   153    ;  132	#define PORTPIN_SIX			(BYTE)0x40	                           A   154    ;  133	#define PORTPIN_SEVEN		(BYTE)0x80	                           A   155    ;  134	#define PORTPIN_FOURPINS_L	(BYTE)0x0F	                           A   156    ;  135	#define PORTPIN_FOURPINS_U	(BYTE)0xF0	Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 24-Aug-15     21:23:42     page:   4
+
+
+PC     Object              I  Line    Source timer.src
+                           A   157    ;  136	#define PORTPIN_PATTERN_AA	(BYTE)0xAA	                           A   158    ;  137	#define PORTPIN_PATTERN_55	(BYTE)0x55	                           A   159    ;  138	#define PORTPIN_ALL			(BYTE)0xFF	                           A   160    ;  139	
+                           A   161    ;  140	/*! Port mask index used for validating
+                           A   162    ;  141	#define MSKINDEX_PORTB		(BYTE)0
+                           A   163    ;  142	#define MSKINDEX_PORTC		(BYTE)1
+                           A   164    ;  143	#define MSKINDEX_PORTD		(BYTE)2
+                           A   165    ;  144	#define MSKINDEX_PORTE		(BYTE)3
+                           A   166    ;  145	#define MSKINDEX_PORTF		(BYTE)4
+                           A   167    ;  146	#define MSKINDEX_PORTG		(BYTE)5
+                           A   168    ;  147	#define MSKINDEX_PORTH		(BYTE)6
+                           A   169    ;  148	
+                           A   170    ;  149	/*!
+                           A   171    ;  150	 * \brief The settings required to conf
+                           A   172    ;  151	 */
+                           A   173    ;  152	typedef struct
+                           A   174    ;  153	{
+                           A   175    ;  154		BYTE addr ;					//!< Th
+                           A   176    ;  155		BYTE ctl ;					//!< Th
+                           A   177    ;  156		BYTE out ;					//!< Th
+                           A   178    ;  157		BYTE in ;					//!< Th
+                           A   179    ;  158	
+                           A   180    ;  159	} PORT ;
+                           A   181    .begrec "NONAME0",4
+                           A   182    .define "addr"
+                           A   183    .value 0
+                           A   184    .class 8
+                           A   185    .type 12
+                           A   186    .endef
+                           A   187    .define "ctl"
+                           A   188    .value 1
+                           A   189    .class 8
+                           A   190    .type 12
+                           A   191    .endef
+                           A   192    .define "out"
+                           A   193    .value 2
+                           A   194    .class 8
+                           A   195    .type 12
+                           A   196    .endef
+                           A   197    .define "in"
+                           A   198    .value 3
+                           A   199    .class 8
+                           A   200    .type 12
+                           A   201    .endef
+                           A   202    .endrec "NONAME0"
+                           A   203    ;    1	/**************************************
+                           A   204    ;    2	 *  Copyright (C) 1999-2012 by  ZiLOG, 
+                           A   205    ;    3	 *  All Rights Reserved
+                           A   206    ;    4	 **************************************
+                           A   207    ;    5	 *
+                           A   208    ;    6	 * This header is for internal use only
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 24-Aug-15     21:23:42     page:   5
+
+
+PC     Object              I  Line    Source timer.src
+                           A   209    ;    7	 * an ANSI standard header file.		                           A   210    ;    8	 *
+                           A   211    ;    9	 **************************************
+                           A   212    ;   10	
+                           A   213    ;   11	#pragma once // Include this file only 
+                           A   214    ;   12	#ifndef FORMAT_H
+                           A   215    ;   13	#define FORMAT_H
+                           A   216    ;   14	
+                           A   217    ;   15	#include <zconst.h>
+                           A   218    ;   16	#include <stdarg.h>
+                           A   219    ;   17	
+                           A   220    ;   18	/* Note: 24 bits times log(2) is 7.224 
+                           A   221    ;   19	   We only need 14 if and when we suppo
+                           A   222    ;   20	#define MAXDIGITS 10
+                           A   223    ;   21	#define MINEXP -4
+                           A   224    ;   22	#define DEFAULT_PRECISION 6
+                           A   225    ;   23	
+                           A   226    ;   24	
+                           A   227    ;   25	/*  Sizes allowed for various data */
+                           A   228    ;   26	/*  For small model, we must restrict t
+                           A   229    ;   27	#if (defined(__MODEL__) && (__MODEL__ =
+                           A   230    ;   28	#define FLT_CHARS 20  // Only need FLT_
+                           A   231    ;   29	#define PTR_CHARS 11
+                           A   232    ;   30	#define INT_CHARS 9
+                           A   233    ;   31	#else
+                           A   234    ;   32	#define FLT_CHARS 127
+                           A   235    ;   33	#define PTR_CHARS 127
+                           A   236    ;   34	#define INT_CHARS 127
+                           A   237    ;   35	#endif
+                           A   238    ;   36	
+                           A   239    ;   37	/*	structures and defines for format r
+                           A   240    ;   38	/*      NOTE: Some fields in this struc
+                           A   241    ;   39	/*            known to the optimizer,  
+                           A   242    ;   40	/*            code in optimizer/genprin
+                           A   243    ;   41	struct fmt_type {
+                           A   244    ;   42	  char flags;		/* flags bit mask *
+                           A   245    ;   43	  char size;		/* size character h
+                           A   246    ;   44	  char space;		/* space character 
+                           A   247    ;   45	  char type;		/* type of argument
+                           A   248    ;   46	  char field_width;	/* field width */
+                           A   249    ;   47	  char precision;	/* precision */
+                           A   250    ;   48	  char print_leading_char;  // Initial 
+                           A   251    ;   49	     /* several print helper functions 
+                           A   252    ;   50	      * The following need to be preser
+                           A   253    ;   51	      * utilities.
+                           A   254    ;   52	      */
+                           A   255    ;   53	  far char* dest;       /* Destination 
+                           A   256    ;   54	  unsigned char print_len;
+                           A   257    ;   55	};
+                           A   258    .begrec "fmt_type",10
+                           A   259    .define "flags"
+                           A   260    .value 0
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 24-Aug-15     21:23:42     page:   6
+
+
+PC     Object              I  Line    Source timer.src
+                           A   261    .class 8
+                           A   262    .type 2
+                           A   263    .endef
+                           A   264    .define "size"
+                           A   265    .value 1
+                           A   266    .class 8
+                           A   267    .type 2
+                           A   268    .endef
+                           A   269    .define "space"
+                           A   270    .value 2
+                           A   271    .class 8
+                           A   272    .type 2
+                           A   273    .endef
+                           A   274    .define "type"
+                           A   275    .value 3
+                           A   276    .class 8
+                           A   277    .type 2
+                           A   278    .endef
+                           A   279    .define "field_width"
+                           A   280    .value 4
+                           A   281    .class 8
+                           A   282    .type 2
+                           A   283    .endef
+                           A   284    .define "precision"
+                           A   285    .value 5
+                           A   286    .class 8
+                           A   287    .type 2
+                           A   288    .endef
+                           A   289    .define "print_leading_char"
+                           A   290    .value 6
+                           A   291    .class 8
+                           A   292    .type 2
+                           A   293    .endef
+                           A   294    .define "dest"
+                           A   295    .value 7
+                           A   296    .class 8
+                           A   297    .type 162
+                           A   298    .endef
+                           A   299    .define "print_len"
+                           A   300    .value 9
+                           A   301    .class 8
+                           A   302    .type 12
+                           A   303    .endef
+                           A   304    .endrec "fmt_type"
+                           A   305    ;   56	
+                           A   306    ;   57	/* Some additional data for formatting 
+                           A   307    ;   58	
+                           A   308    ;   59	struct flt_fmt_data
+                           A   309    ;   60	{
+                           A   310    ;   61	  unsigned char pad_whole;
+                           A   311    ;   62	  unsigned char pad_pre_fract;
+                           A   312    ;   63	  unsigned char pad_post_fract;
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 24-Aug-15     21:23:42     page:   7
+
+
+PC     Object              I  Line    Source timer.src
+                           A   313    ;   64	  char * pad_at;
+                           A   314    ;   65	};
+                           A   315    .begrec "flt_fmt_data",4
+                           A   316    .define "pad_whole"
+                           A   317    .value 0
+                           A   318    .class 8
+                           A   319    .type 12
+                           A   320    .endef
+                           A   321    .define "pad_pre_fract"
+                           A   322    .value 1
+                           A   323    .class 8
+                           A   324    .type 12
+                           A   325    .endef
+                           A   326    .define "pad_post_fract"
+                           A   327    .value 2
+                           A   328    .class 8
+                           A   329    .type 12
+                           A   330    .endef
+                           A   331    .define "pad_at"
+                           A   332    .value 3
+                           A   333    .class 8
+                           A   334    .type 130
+                           A   335    .endef
+                           A   336    .endrec "flt_fmt_data"
+                           A   337    ;   66	
+                           A   338    ;   67	/* Data passed between top level driver
+                           A   339    ;   68	 * when printf's are generated inline *
+                           A   340    ;   69	struct fmt_control_data
+                           A   341    ;   70	{
+                           A   342    ;   71	  char status;		/* status, OK, ERR,
+                           A   343    ;   72	  char chr;		/* pass thru character 
+                           A   344    ;   73	};
+                           A   345    .begrec "fmt_control_data",2
+                           A   346    .define "status"
+                           A   347    .value 0
+                           A   348    .class 8
+                           A   349    .type 2
+                           A   350    .endef
+                           A   351    .define "chr"
+                           A   352    .value 1
+                           A   353    .class 8
+                           A   354    .type 2
+                           A   355    .endef
+                           A   356    .endrec "fmt_control_data"
+                           A   357    ;   74	
+                           A   358    ;   75	
+                           A   359    ;   76	struct _set_type{ char * begin; char *e
+                           A   360    .begrec "_set_type",2
+                           A   361    .define "begin"
+                           A   362    .value 0
+                           A   363    .class 8
+                           A   364    .type 130
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 24-Aug-15     21:23:42     page:   8
+
+
+PC     Object              I  Line    Source timer.src
+                           A   365    .endef
+                           A   366    .define "end"
+                           A   367    .value 1
+                           A   368    .class 8
+                           A   369    .type 130
+                           A   370    .endef
+                           A   371    .endrec "_set_type"
+                           A   372    ;   77	struct near_set_type{ char near * begin
+                           A   373    .begrec "near_set_type",2
+                           A   374    .define "begin"
+                           A   375    .value 0
+                           A   376    .class 8
+                           A   377    .type 130
+                           A   378    .endef
+                           A   379    .define "end"
+                           A   380    .value 1
+                           A   381    .class 8
+                           A   382    .type 130
+                           A   383    .endef
+                           A   384    .endrec "near_set_type"
+                           A   385    ;   78	struct far_set_type{ char far * begin; 
+                           A   386    .begrec "far_set_type",4
+                           A   387    .define "begin"
+                           A   388    .value 0
+                           A   389    .class 8
+                           A   390    .type 162
+                           A   391    .endef
+                           A   392    .define "end"
+                           A   393    .value 2
+                           A   394    .class 8
+                           A   395    .type 162
+                           A   396    .endef
+                           A   397    .endrec "far_set_type"
+                           A   398    ;   79	struct rom_set_type{ char rom * begin; 
+                           A   399    .begrec "rom_set_type",4
+                           A   400    .define "begin"
+                           A   401    .value 0
+                           A   402    .class 8
+                           A   403    .type 194
+                           A   404    .endef
+                           A   405    .define "end"
+                           A   406    .value 2
+                           A   407    .class 8
+                           A   408    .type 194
+                           A   409    .endef
+                           A   410    .endrec "rom_set_type"
+                           A   411    ;   80	
+                           A   412    ;   81	/* info flags */
+                           A   413    ;   82	#define FLT_INFO_SIGN	(1<<0)
+                           A   414    ;   83	#define FLT_INFO_INF	(1<<1)
+                           A   415    ;   84	#define FLT_INFO_NAN	(1<<2)
+                           A   416    ;   85	
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 24-Aug-15     21:23:42     page:   9
+
+
+PC     Object              I  Line    Source timer.src
+                           A   417    ;   86	
+                           A   418    ;   87	struct flt_info {
+                           A   419    ;   88	  unsigned char flags;			/* 1=si
+                           A   420    ;   89	  char exp;				/* (signed) exp
+                           A   421    ;   90	  unsigned char digits[MAXDIGITS];	/* 
+                           A   422    ;   91	};
+                           A   423    .begrec "flt_info",12
+                           A   424    .define "flags"
+                           A   425    .value 0
+                           A   426    .class 8
+                           A   427    .type 12
+                           A   428    .endef
+                           A   429    .define "exp"
+                           A   430    .value 1
+                           A   431    .class 8
+                           A   432    .type 2
+                           A   433    .endef
+                           A   434    .define "digits"
+                           A   435    .value 2
+                           A   436    .class 8
+                           A   437    .dim 10
+                           A   438    .type 108
+                           A   439    .endef
+                           A   440    .endrec "flt_info"
+                           A   441    ;    1	/*!\file uart.h
+                           A   442    ;    2	 * \brief Header file for Z8 Encore! UA
+                           A   443    ;    3	 *
+                           A   444    ;    4	 *  This file contains header informati
+                           A   445    ;    5	 *  implementations for Z8 Encore! micr
+                           A   446    ;    6	 *
+                           A   447    ;    7	 *  This source file uses Doxygen-style
+                           A   448    ;    8	 *  automatically.
+                           A   449    ;    9	 *
+                           A   450    ;   10	 *  Copyright (C) 1999-2004 by  ZiLOG, 
+                           A   451    ;   11	 *  All Rights Reserved.
+                           A   452    ;   12	 */
+                           A   453    ;   13	
+                           A   454    ;   14	#pragma once // Include this file only 
+                           A   455    ;   15	#ifndef _UART_H_
+                           A   456    ;   16	#define _UART_H_
+                           A   457    ;   17	
+                           A   458    ;   18	#include <defines.h>
+                           A   459    ;   19	#include <uartdefs.h>
+                           A   460    ;   20	
+                           A   461    ;   21	
+                           A   462    ;   22	
+                           A   463    ;   23	/*! UART interrupt enable definitions u
+                           A   464    ;   24	#if defined(_Z8FMC16)
+                           A   465    ;   25	#define IRQ_U0RXI						                           A   466    ;   26	#define IRQ_U0TXI						                           A   467    ;   27	#else
+                           A   468    ;   28	#define IRQ_U0RXI						Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 24-Aug-15     21:23:42     page:  10
+
+
+PC     Object              I  Line    Source timer.src
+                           A   469    ;   29	#define IRQ_U0TXI						                           A   470    ;   30	#endif
+                           A   471    ;   31	
+                           A   472    ;   32	#ifdef EZ8_UART1
+                           A   473    ;   33	#define IRQ_U1RXI						                           A   474    ;   34	#define IRQ_U1TXI						                           A   475    ;   35	#endif
+                           A   476    ;   36	
+                           A   477    ;   37	#define REGFILEADDR_U0TXD				                           A   478    ;   38	#define REGFILEADDR_U1TXD				                           A   479    ;   39	
+                           A   480    ;   40	#define CLOCK_DIVISOR					                           A   481    ;   41		
+                           A   482    ;   42	#define BAUD_9600						                           A   483    ;   43	#define BAUD_19200						                           A   484    ;   44	#define BAUD_38400						                           A   485    ;   45	#define BAUD_57600						                           A   486    ;   46	#define BAUD_115200						                           A   487    ;   47	
+                           A   488    ;   48	#define DATABITS_8						                           A   489    ;   49	#define DATABITS_9						                           A   490    ;   50	
+                           A   491    ;   51	#define STOPBITS_1						                           A   492    ;   52	#define STOPBITS_2						                           A   493    ;   53											                           A   494    ;   54	#define PAR_NOPARITY					                           A   495    ;   55	#define PAR_ODPARITY					                           A   496    ;   56	#define PAR_EVPARITY					                           A   497    ;   57	
+                           A   498    ;   58	
+                           A   499    ;   59	/*!
+                           A   500    ;   60	 * The error codes consists of both the
+                           A   501    ;   61	 * (through status registers), and the 
+                           A   502    ;   62	 * software.
+                           A   503    ;   63	 */
+                           A   504    ;   64	#define UART_ERR_NONE					                           A   505    ;   65	#define UART_ERR_KBHIT					                           A   506    ;   66	#define UART_ERR_FRAMINGERR				                           A   507    ;   67	#define UART_ERR_PARITYERR				                           A   508    ;   68	#define UART_ERR_OVERRUNERR				                           A   509    ;   69	#define UART_ERR_BREAKINDICATIONERR		                           A   510    ;   70	#define UART_ERR_INVBAUDRATE			                           A   511    ;   71	#define UART_ERR_INVPARITY				                           A   512    ;   72	#define UART_ERR_INVSTOPBITS			                           A   513    ;   73	#define UART_ERR_INVDATABITS			                           A   514    ;   74	#define UART_ERR_BUSY					                           A   515    ;   75	#define UART_ERR_NULLPOINTER			                           A   516    ;   76	
+                           A   517    ;   77	#define UART_ERR_FAILURE				                           A   518    ;   78	
+                           A   519    ;   79	#define UART_ERR_USERBASE				                           A   520    ;   80	
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 24-Aug-15     21:23:42     page:  11
+
+
+PC     Object              I  Line    Source timer.src
+                           A   521    ;   81	
+                           A   522    ;   82	#define UART_IO_PENDING					                           A   523    ;   83	#define UART_IO_COMPLETE				                           A   524    ;   84	
+                           A   525    ;   85	
+                           A   526    ;   86	/*!
+                           A   527    ;   87	 * \brief The settings required to conf
+                           A   528    ;   88	 *
+                           A   529    ;   89	 * This structure will contain all the 
+                           A   530    ;   90	 * configure the UART device. This stru
+                           A   531    ;   91	 * (initializing) the UART device as we
+                           A   532    ;   92	 * the UART device.
+                           A   533    ;   93	 */
+                           A   534    ;   94	typedef struct
+                           A   535    ;   95	{
+                           A   536    ;   96	   INT32 baudRate ;						                           A   537    ;   97	   BYTE stopBits ;						                           A   538    ;   98	   BYTE parity ;						                           A   539    ;   99	
+                           A   540    ;  100	} UART ;
+                           A   541    .begrec "NONAME1",6
+                           A   542    .define "baudRate"
+                           A   543    .value 0
+                           A   544    .class 8
+                           A   545    .type 5
+                           A   546    .endef
+                           A   547    .define "stopBits"
+                           A   548    .value 4
+                           A   549    .class 8
+                           A   550    .type 12
+                           A   551    .endef
+                           A   552    .define "parity"
+                           A   553    .value 5
+                           A   554    .class 8
+                           A   555    .type 12
+                           A   556    .endef
+                           A   557    .endrec "NONAME1"
+                           A   558    ;  101	
+                           A   559    ;  102	typedef UINT8 BUFFSIZE_T ;
+                           A   560    ;  103	
+                           A   561    ;  104	/*!
+                           A   562    ;  105	 * \brief The FIFO structure.
+                           A   563    ;  106	 *
+                           A   564    ;  107	 * This structure is used to hold infor
+                           A   565    ;  108	 * transmit/receive FIFO buffers implem
+                           A   566    ;  109	 */
+                           A   567    ;  110	typedef struct
+                           A   568    ;  111	{
+                           A   569    ;  112		UCHAR *pBuffer ;					                           A   570    ;  113		BUFFSIZE_T next_in ;				                           A   571    ;  114		BUFFSIZE_T next_out ;				                           A   572    ;  115		BUFFSIZE_T size ;					Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 24-Aug-15     21:23:42     page:  12
+
+
+PC     Object              I  Line    Source timer.src
+                           A   573    ;  116	
+                           A   574    ;  117	} FIFO ;
+                           A   575    .begrec "NONAME2",4
+                           A   576    .define "pBuffer"
+                           A   577    .value 0
+                           A   578    .class 8
+                           A   579    .type 140
+                           A   580    .endef
+                           A   581    .define "next_in"
+                           A   582    .value 1
+                           A   583    .class 8
+                           A   584    .type 12
+                           A   585    .endef
+                           A   586    .define "next_out"
+                           A   587    .value 2
+                           A   588    .class 8
+                           A   589    .type 12
+                           A   590    .endef
+                           A   591    .define "size"
+                           A   592    .value 3
+                           A   593    .class 8
+                           A   594    .type 12
+                           A   595    .endef
+                           A   596    .endrec "NONAME2"
+                           A   597    ;    1	/**************************************
+                           A   598    ;    2	 * File: timer.c
+                           A   599    ;    3	 * Description:
+                           A   600    ;    4	 *   	This file include implementatio
+                           A   601    ;    5	 *       o Timer 0 initialization
+                           A   602    ;    6	 *       o Interrupt handling for timer
+                           A   603    ;    7	 *		 
+                           A   604    ;    8	 *
+                           A   605    ;    9	 * Last modified: 21 Apr 2006
+                           A   606    ;   10	 **************************************
+                           A   607    ;   11	 * Copyright (C) 2008 by Zilog, Inc.  A
+                           A   608    ;   12	 **************************************
+                           A   609    ;   13	
+                           A   610    ;   14	 /*************************************
+                           A   611    ;   15	 *  header file includes
+                           A   612    ;   16	 **************************************
+                           A   613    ;   17	 #include <eZ8.h>
+                           A   614    ;   18	#include <sio.h>
+                           A   615    ;   19	#include "timer.h"
+                           A   616    ;   20	#include "switchmatrix.h"
+                           A   617    ;   21	
+                           A   618    ;   22	/**************************************
+                           A   619    ;   23	 * constants defintion and global varia
+                           A   620    ;   24	 **************************************
+                           A   621    ;   25	
+                           A   622    ;   26	/*-------------------------------------
+                           A   623    ;   27	 * By default, LEDs are blinking at var
+                           A   624    ;   28	 * the frequency is, the faster the bli
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 24-Aug-15     21:23:42     page:  13
+
+
+PC     Object              I  Line    Source timer.src
+                           A   625    ;   29	 * 
+                           A   626    ;   30	 * To flash LEDs at constant rate for a
+                           A   627    ;   31	 * line; "#define FIXED_BLINK_RATE	1"
+                           A   628    ;   32	 *-------------------------------------
+                           A   629    ;   33	#define STARTCOUNT 1
+                           A   630    ;   34	#define BLINK_RELOAD 0xffff
+                           A   631    ;   35	//#define LAMP_RELOAD 0xB400	//shoul
+                           A   632    ;   36	#define LAMP_RELOAD 0x3fff	//should be
+                           A   633    ;   37	
+                           A   634    ;   38	void setupBlinkInterruptTimer1();
+                           A   635    ;   39	
+                           A   636    ;   40	
+                           A   637    ;   41	
+                           A   638    ;   42	/**************************************
+                           A   639    ;   43	 * Global variables
+                           A   640    ;   44	 **************************************
+                           A   641    ;   45	
+                           A   642    ;   46	void interrupt blink_timer(void) 
+                           A   643    ;   47	{
+0000                       A   644    _blink_timer:
+                           A   645    .define "_blink_timer"
+                           A   646    .value _blink_timer
+                           A   647    .class 2
+                           A   648    .type 65
+                           A   649    .endef
+                           A   650    .begfunc "blink_timer",47,"_blink_timer"
+0000 C8FFD0                A   651    	PUSHX	4093
+0003 E8 000FFD             A   652    	LDX	4093,__intrp
+0007 09100000              A   653    	ADDX	__intrp,#16
+                           A   654    ;   48			blinkISR();
+                           A   655    .line 48
+000B D6 0000               A   656    	CALL	_blinkISR
+                           A   657    ;   49	}
+                           A   658    .line 49
+000E 29100000              A   659    	SUBX	__intrp,#16
+0012 D8FFD0                A   660    	POPX	4093
+0015 BF                    A   661    	IRET	
+                           A   662    .endfunc "blink_timer",49,"_blink_timer"
+                           A   663    	SEGMENT ROM_DATA
+                           A   664    
+                           A   665    
+                           A   666    ;**************************** _timer_init *****
+                           A   667    ;Name                         Addr/Register   S
+                           A   668    ;_setupBlinkInterruptTimer1          IMPORT  --
+                           A   669    
+                           A   670    
+                           A   671    ; Aggregate Stack Size: 0 (words)
+                           A   672    
+                           A   673    
+                           A   674    	.FRAME _n_timer_init,?_n_timer_init,RDATA
+                           A   675    	.FCALL _n_setupBlinkInterruptTimer1
+                           A   676    	SEGMENT timer_TEXT
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 24-Aug-15     21:23:42     page:  14
+
+
+PC     Object              I  Line    Source timer.src
+                           A   677    ;   50	
+                           A   678    ;   51	/**************************************
+                           A   679    ;   52	 * Function: timer_init
+                           A   680    ;   53	 * Description: 
+                           A   681    ;   54	 *    Intialize timer0 and  timer inter
+                           A   682    ;   55	 *
+                           A   683    ;   56	 **************************************
+                           A   684    ;   57	void timer_init(void)
+                           A   685    ;   58	{
+0016                       A   686    _timer_init:
+                           A   687    .define "_timer_init"
+                           A   688    .value _timer_init
+                           A   689    .class 2
+                           A   690    .type 65
+                           A   691    .endef
+                           A   692    .begfunc "timer_init",58,"_timer_init"
+                           A   693    ;   59	
+                           A   694    ;   60		/*---------------------------------
+                           A   695    ;   61		 * The timer control registers(TxTC
+                           A   696    ;   62		 * 
+                           A   697    ;   63		 * +--------+-------+-------+-----+
+                           A   698    ;   64		 * |        | BITS  |   7   |  6  |
+                           A   699    ;   65		 * | TxTCL0 | ------+-------+-----+
+                           A   700    ;   66		 * |        | FIELD | TMODE | TICON
+                           A   701    ;   67		 * +--------+-------+-------+------
+                           A   702    ;   68		 *                      |         |
+                           A   703    ;   69		 *                      |         |
+                           A   704    ;   70		 *                      |         |
+                           A   705    ;   71		 *                      |         |
+                           A   706    ;   72		 *                      |         |
+                           A   707    ;   73		 *                      |         |
+                           A   708    ;   74		 *                      |         |
+                           A   709    ;   75		 *                      |         |
+                           A   710    ;   76		 *                      |         |
+                           A   711    ;   77		 *                      |         |
+                           A   712    ;   78		 *                      |         |
+                           A   713    ;   79		 *                      |         |
+                           A   714    ;   80		 *                      |         |
+                           A   715    ;   81		 *                      |         |
+                           A   716    ;   82		 *                      |         |
+                           A   717    ;   83		 *                      |         |
+                           A   718    ;   84		 *                      |         |
+                           A   719    ;   85		 *                      |         |
+                           A   720    ;   86		 *                      |         |
+                           A   721    ;   87		 *                      |          
+                           A   722    ;   88		 *                      |          
+                           A   723    ;   89		 *                      |          
+                           A   724    ;   90		 *                      |
+                           A   725    ;   91		 *                      |_ Timer Mo
+                           A   726    ;   92		 *                         used alo
+                           A   727    ;   93		 *                         mode of 
+                           A   728    ;   94		 *
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 24-Aug-15     21:23:42     page:  15
+
+
+PC     Object              I  Line    Source timer.src
+                           A   729    ;   95		 * +--------+-------+-----+------+-
+                           A   730    ;   96		 * |        | BITS  |  7  |   6  | 
+                           A   731    ;   97		 * | TxTCL1 | ------+-----+------+-
+                           A   732    ;   98		 * |        | FIELD | TEN | TPOL | 
+                           A   733    ;   99		 * +--------+-------+-----+------+-
+                           A   734    ;  100		 *                     |      |    
+                           A   735    ;  101		 *                     |      |    
+                           A   736    ;  102		 *                     |      |    
+                           A   737    ;  103		 *                     |      |    
+                           A   738    ;  104		 *                     |      |    
+                           A   739    ;  105		 *                     |      |    
+                           A   740    ;  106		 *                     |      |    
+                           A   741    ;  107		 *                     |      |    
+                           A   742    ;  108		 *                     |      |    
+                           A   743    ;  109		 *                     |      |    
+                           A   744    ;  110		 *                     |      |    
+                           A   745    ;  111		 *                     |      |    
+                           A   746    ;  112		 *                     |      |    
+                           A   747    ;  113		 *                     |      |    
+                           A   748    ;  114		 *                     |      |    
+                           A   749    ;  115		 *                     |      |    
+                           A   750    ;  116		 *                     |      |    
+                           A   751    ;  117		 *                     |      |    
+                           A   752    ;  118		 *                     |      |    
+                           A   753    ;  119		 *                     |      |    
+                           A   754    ;  120		 *                     |      |    
+                           A   755    ;  121		 *                     |      |    
+                           A   756    ;  122		 *                     |      |    
+                           A   757    ;  123		 *                     |      |    
+                           A   758    ;  124		 *                     |      |__ T
+                           A   759    ;  125		 *                     |          F
+                           A   760    ;  126		 *                     |          W
+                           A   761    ;  127		 *                     |          W
+                           A   762    ;  128		 *                     |__ Timer En
+                           A   763    ;  129		 *                         0 = Time
+                           A   764    ;  130		 *                         1 = Time
+                           A   765    ;  131		 *
+                           A   766    ;  132		 *
+                           A   767    ;  133		 *
+                           A   768    ;  134		 *---------------------------------
+                           A   769    ;  135	
+                           A   770    ;  136	
+                           A   771    ;  137		/*---------------------------------
+                           A   772    ;  138		 * Enable timer 0 interrupt via IRQ
+                           A   773    ;  139		 *
+                           A   774    ;  140		 * +---------+-------+-------+-----
+                           A   775    ;  141		 * |         | BITS  |   7   |   6 
+                           A   776    ;  142		 * | IRQ0ENH | ------+-------+-----
+                           A   777    ;  143		 * |         | FIELD | T2ENH | T1EN
+                           A   778    ;  144		 * +---------+-------+-------+-----
+                           A   779    ;  145		 *                                 
+                           A   780    ;  146		 *                                 
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 24-Aug-15     21:23:42     page:  16
+
+
+PC     Object              I  Line    Source timer.src
+                           A   781    ;  147		 *
+                           A   782    ;  148		 * +---------+-------+-------+-----
+                           A   783    ;  149		 * |         | BITS  |   7   |   6 
+                           A   784    ;  150		 * | IRQ0ENL | ------+-------+-----
+                           A   785    ;  151		 * |         | FIELD | T2ENL | T1EN
+                           A   786    ;  152		 * +---------+-------+-------+-----
+                           A   787    ;  153		 *                                 
+                           A   788    ;  154		 *                                 
+                           A   789    ;  155		 *
+                           A   790    ;  156		 *
+                           A   791    ;  157		 *	IRQ0ENH[x] IRQ0ENL[x]    Priori
+                           A   792    ;  158		 *	     0          0        Disabl
+                           A   793    ;  159		 *	     0          1        Level 
+                           A   794    ;  160		 * 	     1          0        Level 
+                           A   795    ;  161		 *	     1          1        Level 
+                           A   796    ;  162		 *	where x indicates the register 
+                           A   797    ;  163		 *---------------------------------
+                           A   798    ;  164	
+                           A   799    ;  165		/*********
+                           A   800    ;  166		 * enabled timer interrupts
+                           A   801    ;  167		 */
+                           A   802    ;  168		 
+                           A   803    ;  169		setupBlinkInterruptTimer1();
+                           A   804    .line 169
+0016 D6 0022               A   805    	CALL	_setupBlinkInterruptTimer1
+                           A   806    ;  170		
+                           A   807    ;  171	    IRQ0ENH |= 0x60;	    // Nominal 
+                           A   808    .line 171
+0019 49600FC1              A   809    	ORX	4033,#96
+                           A   810    ;  172	    IRQ0ENL &= ~0x60;       // 			                           A   811    .line 172
+001D 599F0FC2              A   812    	ANDX	4034,#-97
+                           A   813    ;  173	}
+                           A   814    .line 173
+0021 AF                    A   815    	RET	
+                           A   816    .endfunc "timer_init",173,"_timer_init"
+                           A   817    	SEGMENT ROM_DATA
+                           A   818    
+                           A   819    
+                           A   820    ;**************************** _setupBlinkInterr
+                           A   821    ;Name                         Addr/Register   S
+                           A   822    ;_SET_VECTOR                         IMPORT  --
+                           A   823    
+                           A   824    
+                           A   825    ; Aggregate Stack Size: 0 (words)
+                           A   826    
+                           A   827    
+                           A   828    	.FRAME _n_setupBlinkInterruptTimer1,?_n_set
+                           A   829    	SEGMENT timer_TEXT
+                           A   830    ;  174	
+                           A   831    ;  175		
+                           A   832    ;  176	void setupBlinkInterruptTimer1(){
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 24-Aug-15     21:23:42     page:  17
+
+
+PC     Object              I  Line    Source timer.src
+0022                       A   833    _setupBlinkInterruptTimer1:
+                           A   834    .define "_setupBlinkInterruptTimer1"
+                           A   835    .value _setupBlinkInterruptTimer1
+                           A   836    .class 2
+                           A   837    .type 65
+                           A   838    .endef
+                           A   839    .begfunc "setupBlinkInterruptTimer1",176,"_setu
+                           A   840    ;  177			unsigned char timerPres;	
+                           A   841    ;  178			timerPres = 7;
+                           A   842    ;  179		
+                           A   843    ;  180			SET_VECTOR(TIMER1, blink_timer)
+                           A   844    ;  181	
+                           A   845    ;  182			//Reload value = (1 sec * syste
+                           A   846    ;  183			//Reload value = (1 * 20000000)
+                           A   847    ;  184			T1CTL1 |= 0x1;  // CONTINUOUS m
+                           A   848    .line 184
+0022 49010F0F              A   849    	ORX	3855,#1
+                           A   850    ;  185			T1CTL1 |= (timerPres<<3); //set
+                           A   851    .line 185
+0026 49380F0F              A   852    	ORX	3855,#56
+                           A   853    ;  186		
+                           A   854    ;  187			T1H = (STARTCOUNT >> 8);
+                           A   855    .line 187
+002A E9000F08              A   856    	LDX	3848,#-0
+                           A   857    ;  188			T1L = (STARTCOUNT & 0x00FF);
+                           A   858    .line 188
+002E E9010F09              A   859    	LDX	3849,#1
+                           A   860    ;  189			T1RH = (BLINK_RELOAD >> 8);
+                           A   861    .line 189
+0032 E9FF0F0A              A   862    	LDX	3850,#255
+                           A   863    ;  190			T1RL = (BLINK_RELOAD & 0x00FF);
+                           A   864    .line 190
+0036 E9FF0F0B              A   865    	LDX	3851,#255
+                           A   866    ;  191			
+                           A   867    ;  192			T1CTL1 |= 0x80; // Enable timer
+                           A   868    .line 192
+003A 49800F0F              A   869    	ORX	3855,#128
+                           A   870    ;  193		}
+                           A   871    .line 193
+003E AF                    A   872    	RET	
+                           A   873    .endfunc "setupBlinkInterruptTimer1",193,"_setu
+000A 0000                  A   874    	VECTOR	TIMER1=_blink_timer
+                           A   875    	XREF _blinkISR:ROM
+                           A   876    	XREF __intrp:RDATA
+                           A   877    	XDEF _setupBlinkInterruptTimer1
+                           A   878    	XDEF _timer_init
+                           A   879    	XDEF _blink_timer
+                           A   880    	END
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 24-Aug-15     21:23:42     page:  18
+
+
+PC     Object              I  Line    Source 
+
+
+Errors: 0
+Warnings: 0
+Lines Assembled: 881

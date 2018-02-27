@@ -1,0 +1,1836 @@
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:35     page:   1
+
+
+PC     Object              I  Line    Source 
+                           A     1    ;  zsldevinit.asm
+                           A     2    ;  Implementation file for opening peripheral d
+                           A     3    ; 
+                           A     4    ;  This file contains implementation for openin
+                           A     5    ;  peripheral devices required by ZiLOG Standar
+                           A     6    ;  Encore! microcontrollers.
+                           A     7    ;
+                           A     8    ;  Copyright (C) 1999-2004 by  ZiLOG, Inc.
+                           A     9    ;  All Rights Reserved.
+                           A    10    ;
+                           A    11    
+                           A    12    	segment	CODE
+                           A    13    
+                           A    14    
+                           A    15    ;----------------------------------------------
+                           A    16    	XDEF _open_periphdevice
+                           A    17    	XDEF __open_periphdevice
+                           A    18    ;----------------------------------------------
+0000                       A    19    _open_periphdevice:
+0000                       A    20    __open_periphdevice:
+                           A    21    
+                           A    22    
+                           A    23    .ifdef _ZSL_DEVICE_PORTA
+                           A    24    	XREF _open_PortA
+                           A    25    
+0000 D6 0000               A    26        call _open_PortA					; initi
+                           A    27    .endif
+                           A    28    
+                           A    29    .ifdef _ZSL_DEVICE_PORTB
+                           A    30    	XREF _open_PortB
+                           A    31    
+0003 D6 0000               A    32        call _open_PortB					; initi
+                           A    33    .endif
+                           A    34    
+                           A    35    .ifdef _ZSL_DEVICE_PORTC
+                           A    36    	XREF _open_PortC
+                           A    37    
+0006 D6 0000               A    38        call _open_PortC					; initi
+                           A    39    .endif
+                           A    40    
+                           A    41    .ifdef _ZSL_DEVICE_PORTD
+                           A    42    	XREF _open_PortD
+                           A    43    
+                           A    44        call _open_PortD					; initi
+                           A    45    .endif
+                           A    46    
+                           A    47    .ifdef _ZSL_DEVICE_PORTE
+                           A    48    	XREF _open_PortE
+                           A    49    
+                           A    50        call _open_PortE					; initi
+                           A    51    .endif
+                           A    52    
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:35     page:   2
+
+
+PC     Object              I  Line    Source E:\ePin\source\LampDriver\zsldevinit.asm
+                           A    53    .ifdef _ZSL_DEVICE_PORTF
+                           A    54    	XREF _open_PortF
+                           A    55    
+                           A    56        call _open_PortF					; initi
+                           A    57    .endif
+                           A    58    
+                           A    59    .ifdef _ZSL_DEVICE_PORTG
+                           A    60    	XREF _open_PortG
+                           A    61    
+                           A    62        call _open_PortG					; initi
+                           A    63    .endif
+                           A    64    
+                           A    65    .ifdef _ZSL_DEVICE_PORTH
+                           A    66    	XREF _open_PortH
+                           A    67    
+                           A    68        call _open_PortH					; initi
+                           A    69    .endif
+                           A    70    
+                           A    71    
+                           A    72    .ifdef _ZSL_DEVICE_UART0
+                           A    73    	XREF _open_UART0
+                           A    74    
+                           A    75    	call _open_UART0				; initializ
+                           A    76    .endif
+                           A    77    
+                           A    78    
+                           A    79    
+                           A    80    .ifdef _ZSL_DEVICE_UART1
+                           A    81    	XREF _open_UART1
+                           A    82    
+                           A    83    	call _open_UART1				; initializ
+                           A    84    .endif
+                           A    85    
+                           A    86    
+0009 AF                    A    87    	ret
+                           A    88    
+                           A    89    
+                           A    90    ;----------------------------------------------
+                           A    91    	XDEF _close_periphdevice
+                           A    92    	XDEF __close_periphdevice
+                           A    93    ;----------------------------------------------
+000A                       A    94    _close_periphdevice:
+000A                       A    95    __close_periphdevice:
+                           A    96    
+                           A    97    
+                           A    98    
+                           A    99    .ifdef _ZSL_DEVICE_PORTA
+                           A   100    	XREF _close_PortA
+                           A   101    
+000A D6 0000               A   102        call _close_PortA					; close
+                           A   103    .endif
+                           A   104    
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:35     page:   3
+
+
+PC     Object              I  Line    Source E:\ePin\source\LampDriver\zsldevinit.asm
+                           A   105    .ifdef _ZSL_DEVICE_PORTB
+                           A   106    	XREF _close_PortB
+                           A   107    
+000D D6 0000               A   108        call _close_PortB					; close
+                           A   109    .endif
+                           A   110    
+                           A   111    .ifdef _ZSL_DEVICE_PORTC
+                           A   112    	XREF _close_PortC
+                           A   113    
+0010 D6 0000               A   114    	call _close_PortC				; close Por
+                           A   115    .endif
+                           A   116    
+                           A   117    .ifdef _ZSL_DEVICE_PORTD
+                           A   118    	XREF _close_PortD
+                           A   119    
+                           A   120        call _close_PortD					; close
+                           A   121    .endif
+                           A   122    
+                           A   123    .ifdef _ZSL_DEVICE_PORTE
+                           A   124    	XREF _close_PortE
+                           A   125    
+                           A   126        call _close_PortE					; close
+                           A   127    .endif
+                           A   128    
+                           A   129    .ifdef _ZSL_DEVICE_PORTF
+                           A   130    	XREF _close_PortF
+                           A   131    
+                           A   132        call _close_PortF					; close
+                           A   133    .endif
+                           A   134    
+                           A   135    .ifdef _ZSL_DEVICE_PORTG
+                           A   136    	XREF _close_PortG
+                           A   137    
+                           A   138        call _close_PortG					; close
+                           A   139    .endif
+                           A   140    
+                           A   141    .ifdef _ZSL_DEVICE_PORTH
+                           A   142    	XREF _close_PortH
+                           A   143    
+                           A   144        call _close_PortH					; close
+                           A   145    .endif
+                           A   146    
+                           A   147    .ifdef _ZSL_DEVICE_UART0
+                           A   148    	XREF _close_UART0
+                           A   149    
+                           A   150    	call _close_UART0				; close UAR
+                           A   151    .endif
+                           A   152    
+                           A   153    .ifdef _ZSL_DEVICE_UART1
+                           A   154    	XREF _close_UART1
+                           A   155    
+                           A   156    	call _close_UART1				; close UAR
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:35     page:   4
+
+
+PC     Object              I  Line    Source E:\ePin\source\LampDriver\zsldevinit.asm
+                           A   157    .endif
+                           A   158    
+0013 AF                    A   159    	ret
+                           A   160    
+                           A   161    
+                           A   162    ;----------------------------------------------
+                           A   163    .ifdef _ZSL_PORT_USED
+                           B     0    	include "gpio.inc"
+                           B     1    ;**********************************************
+                           B     2    ;*  Copyright (C) 1999-2004 by  ZiLOG, Inc.
+                           B     3    ;*  All Rights Reserved
+                           B     4    ;**********************************************
+                           B     5    ; gpio.inc
+                           B     6    ; Port masks used for identifying the pins that
+                           B     7    ; are not available in a particular port for gi
+                           B     8    ; target processor.
+                           B     9    ;**********************************************
+     00000000              B    10    NOTDEFINED set 0
+                           B    11    
+                           C     0    	include "ez8dev.inc"
+                           C     1    ;**********************************************
+                           C     2    ;*  Copyright (C) 1999-2006 by  Zilog, Inc.
+                           C     3    ;*  All Rights Reserved
+                           C     4    ;**********************************************
+                           C     5    
+     00000000              C     6    __Z8F642       SET  0
+     00000000              C     7    __Z8F640       SET  0
+     00000000              C     8    __Z8F08        SET  0
+     00000000              C     9    __Z8F04A       SET  0
+     00000000              C    10    __Z8F04        SET  0
+     00000000              C    11    __Z8F04A_8PIN  SET  0
+     00000000              C    12    __Z8F08A       SET  0
+     00000000              C    13    __Z8FMC16      SET  0
+     00000000              C    14    __Z8F0823_8PIN SET  0
+     00000000              C    15    __Z8F04_8PIN   SET  0
+     00000000              C    16    __Z8F0830A     SET  0
+     00000000              C    17    __Z8F0830S     SET  0
+     00000000              C    18    __Z8F1680      SET  0
+     00000000              C    19    __Z8F648       SET  0
+     00000000              C    20    __ZMOTION      SET  0
+                           C    21    
+     00000000              C    22    __Z8F6423  SET  0
+     00000000              C    23    __Z8F6422  SET  0
+     00000000              C    24    __Z8F6421  SET  0
+     00000000              C    25    __Z8F4823  SET  0
+     00000000              C    26    __Z8F4822  SET  0
+     00000000              C    27    __Z8F4821  SET  0
+     00000000              C    28    __Z8F3222  SET  0
+     00000000              C    29    __Z8F3221  SET  0
+     00000000              C    30    __Z8F2422  SET  0
+     00000000              C    31    __Z8F2421  SET  0
+     00000000              C    32    __Z8F1622  SET  0
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:35     page:   5
+
+
+PC     Object              I  Line    Source C:\PROGRA~2\ZiLOG\ZDSII_~1.0\include\zilog\ez8dev.inc
+     00000000              C    33    __Z8F1621  SET  0
+                           C    34    
+     00000000              C    35    __Z8F6403  SET  0
+     00000000              C    36    __Z8F6402  SET  0
+     00000000              C    37    __Z8F6401  SET  0
+     00000000              C    38    __Z8F4803  SET  0
+     00000000              C    39    __Z8F4802  SET  0
+     00000000              C    40    __Z8F4801  SET  0
+     00000000              C    41    __Z8F3202  SET  0
+     00000000              C    42    __Z8F3201  SET  0
+     00000000              C    43    __Z8F2402  SET  0
+     00000000              C    44    __Z8F2401  SET  0
+     00000000              C    45    __Z8F1602  SET  0
+     00000000              C    46    __Z8F1601  SET  0
+                           C    47    
+     00000000              C    48    __Z8F0822  SET  0
+     00000000              C    49    __Z8F0821  SET  0 
+     00000000              C    50    __Z8F0812  SET  0 
+     00000000              C    51    __Z8F0811  SET  0 
+     00000000              C    52    __Z8F0422  SET  0 
+     00000000              C    53    __Z8F0421  SET  0 
+     00000000              C    54    __Z8F0412  SET  0 
+     00000000              C    55    __Z8F0411  SET  0 
+                           C    56    
+     00000000              C    57    __Z8F042A  SET  0
+     00000000              C    58    __Z8F041A  SET  0 
+     00000000              C    59    __Z8F022A  SET  0 
+     00000000              C    60    __Z8F021A  SET  0 
+     00000000              C    61    __Z8F012A  SET  0 
+     00000000              C    62    __Z8F011A  SET  0
+                           C    63    
+     00000000              C    64    __Z8F042AXB SET  0
+     00000000              C    65    __Z8F041AXB SET  0 
+     00000000              C    66    __Z8F022AXB SET  0 
+     00000000              C    67    __Z8F021AXB SET  0 
+     00000000              C    68    __Z8F012AXB SET  0 
+     00000000              C    69    __Z8F011AXB SET  0
+                           C    70    
+     00000000              C    71    __Z8F0423XJ SET  0
+     00000000              C    72    __Z8F0413XJ SET  0
+     00000000              C    73    __Z8F0223XJ SET  0
+     00000000              C    74    __Z8F0213XJ SET  0
+     00000000              C    75    __Z8F0123XJ SET  0
+     00000000              C    76    __Z8F0113XJ SET  0
+     00000000              C    77    __Z8F0423XH SET  0
+     00000000              C    78    __Z8F0413XH SET  0
+     00000000              C    79    __Z8F0223XH SET  0
+     00000000              C    80    __Z8F0213XH SET  0
+     00000000              C    81    __Z8F0123XH SET  0
+     00000000              C    82    __Z8F0113XH SET  0
+                           C    83    
+     00000000              C    84    __Z8F082A   SET  0
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:35     page:   6
+
+
+PC     Object              I  Line    Source C:\PROGRA~2\ZiLOG\ZDSII_~1.0\include\zilog\ez8dev.inc
+     00000000              C    85    __Z8F081A   SET  0
+                           C    86    
+     00000000              C    87    __Z8FMC16100 SET 0
+     00000000              C    88    __Z8FMC08100 SET 0
+     00000000              C    89    __Z8FMC04100 SET 0
+                           C    90    
+     00000000              C    91    __Z8F0813  SET 0
+     00000000              C    92    __Z8F0823  SET 0
+                           C    93    
+     00000000              C    94    __Z8F082AXB   SET  0
+     00000000              C    95    __Z8F081AXB   SET  0
+                           C    96    
+     00000000              C    97    __Z8F0823XB   SET  0
+     00000000              C    98    __Z8F0813XB   SET  0
+                           C    99    
+     00000000              C   100    __Z8F0423   SET  0
+     00000000              C   101    __Z8F0413   SET  0
+     00000000              C   102    __Z8F0223   SET  0
+     00000000              C   103    __Z8F0213   SET  0
+     00000000              C   104    __Z8F0123   SET  0
+     00000000              C   105    __Z8F0113   SET  0
+     00000000              C   106    __Z8F0423XB SET  0
+     00000000              C   107    __Z8F0413XB SET  0
+     00000000              C   108    __Z8F0223XB SET  0
+     00000000              C   109    __Z8F0213XB SET  0
+     00000000              C   110    __Z8F0123XB SET  0
+     00000000              C   111    __Z8F0113XB SET  0
+                           C   112    
+                           C   113    
+     00000000              C   114    __Z8F1233  SET 0
+     00000000              C   115    __Z8F1232  SET 0
+     00000000              C   116    __Z8F0833  SET 0
+     00000000              C   117    __Z8F0832  SET 0
+     00000000              C   118    __Z8F0831  SET 0
+     00000000              C   119    __Z8F0830  SET 0
+     00000000              C   120    __Z8F0433  SET 0
+     00000000              C   121    __Z8F0432  SET 0
+     00000000              C   122    __Z8F0431  SET 0
+     00000000              C   123    __Z8F0430  SET 0
+     00000000              C   124    __Z8F0233  SET 0
+     00000000              C   125    __Z8F0232  SET 0
+     00000000              C   126    __Z8F0231  SET 0
+     00000000              C   127    __Z8F0230  SET 0
+     00000000              C   128    __Z8F0133  SET 0
+     00000000              C   129    __Z8F0132  SET 0
+     00000000              C   130    __Z8F0131  SET 0
+     00000000              C   131    __Z8F0130  SET 0
+                           C   132    
+     00000000              C   133    __Z8F2480XH SET 0
+     00000000              C   134    __Z8F2480XJ SET 0
+     00000000              C   135    __Z8F2480XM SET 0
+     00000000              C   136    __Z8F2480XN SET 0
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:35     page:   7
+
+
+PC     Object              I  Line    Source C:\PROGRA~2\ZiLOG\ZDSII_~1.0\include\zilog\ez8dev.inc
+     00000000              C   137    __Z8F2481XH SET 0
+     00000000              C   138    __Z8F2481XJ SET 0
+     00000000              C   139    __Z8F2481XM SET 0
+     00000000              C   140    __Z8F2481XN SET 0
+     00000000              C   141    __Z8F1680XH SET 0
+     00000000              C   142    __Z8F1680XJ SET 0
+     00000000              C   143    __Z8F1680XM SET 0
+     00000000              C   144    __Z8F1680XN SET 0
+     00000000              C   145    __Z8F1681XH SET 0
+     00000000              C   146    __Z8F1681XJ SET 0
+     00000000              C   147    __Z8F1681XM SET 0
+     00000000              C   148    __Z8F1681XN SET 0
+     00000000              C   149    __Z8F0880XH SET 0
+     00000000              C   150    __Z8F0880XJ SET 0
+     00000000              C   151    __Z8F0880XM SET 0
+     00000000              C   152    __Z8F0880XN SET 0
+     00000000              C   153    __Z8F0881XH SET 0
+     00000000              C   154    __Z8F0881XJ SET 0
+     00000000              C   155    __Z8F0881XM SET 0
+     00000000              C   156    __Z8F0881XN SET 0
+     00000000              C   157    __Z8F0480XH SET 0
+     00000000              C   158    __Z8F0480XJ SET 0
+     00000000              C   159    __Z8F0480XM SET 0
+     00000000              C   160    __Z8F0480XN SET 0
+     00000000              C   161    __Z8F0481XH SET 0
+     00000000              C   162    __Z8F0481XJ SET 0
+     00000000              C   163    __Z8F0481XM SET 0
+     00000000              C   164    __Z8F0481XN SET 0
+                           C   165    
+     00000000              C   166    __Z8F083A  SET 0
+     00000000              C   167    __Z8F043A  SET 0
+                           C   168    
+                           C   169    ; F6482 FAMILY MEMBERS
+                           C   170    
+     00000000              C   171    __Z8F6482XR  SET 0
+     00000000              C   172    __Z8F6482XT  SET 0
+     00000000              C   173    __Z8F6481XK  SET 0
+     00000000              C   174    __Z8F6481XN  SET 0
+     00000000              C   175    __Z8F6481XR  SET 0
+                           C   176    
+     00000000              C   177    __Z8F6082XR  SET 0
+     00000000              C   178    __Z8F6082XT  SET 0
+     00000000              C   179    __Z8F6081XK  SET 0
+     00000000              C   180    __Z8F6081XN  SET 0
+     00000000              C   181    __Z8F6081XR  SET 0
+                           C   182    
+     00000000              C   183    __Z8F3282XR  SET 0
+     00000000              C   184    __Z8F3282XT  SET 0
+     00000000              C   185    __Z8F3281XK  SET 0
+     00000000              C   186    __Z8F3281XN  SET 0
+     00000000              C   187    __Z8F3281XR  SET 0
+                           C   188    
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:35     page:   8
+
+
+PC     Object              I  Line    Source C:\PROGRA~2\ZiLOG\ZDSII_~1.0\include\zilog\ez8dev.inc
+     00000000              C   189    __Z8F1682XR  SET 0
+     00000000              C   190    __Z8F1682XT  SET 0
+     00000000              C   191    __Z8F1681XK  SET 0
+     00000000              C   192    __Z8F1681XN  SET 0
+     00000000              C   193    __Z8F1681XR  SET 0
+                           C   194    
+                           C   195    ; ZMotion family members
+                           C   196    
+     00000000              C   197    __Z8FS040xHH  SET 0
+     00000000              C   198    __Z8FS021xHH  SET 0
+     00000000              C   199    __Z8FS040xHJ  SET 0
+     00000000              C   200    __Z8FS021xHJ  SET 0
+     00000000              C   201    __Z8FS040xSB  SET 0
+     00000000              C   202    __Z8FS021xSB  SET 0
+                           C   203    
+                           C   204    
+                           C   205       
+                           C   206    ifdef  _Z8F6423
+                           C   207    __Z8F642   SET  1
+                           C   208    __Z8F6423  SET  1
+                           C   209    endif
+                           C   210    
+                           C   211    ifdef  _Z8F6422
+                           C   212    __Z8F642   SET  1
+                           C   213    __Z8F6422  SET  1
+                           C   214    endif
+                           C   215    
+                           C   216    ifdef  _Z8F6421
+                           C   217    __Z8F642   SET  1
+                           C   218    __Z8F6421  SET  1
+                           C   219    endif
+                           C   220    
+                           C   221    ifdef  _Z8F4823
+                           C   222    __Z8F642   SET  1
+                           C   223    __Z8F4823  SET  1
+                           C   224    endif
+                           C   225    
+                           C   226    ifdef  _Z8F4822
+                           C   227    __Z8F642   SET  1
+                           C   228    __Z8F4822  SET  1
+                           C   229    endif
+                           C   230    
+                           C   231    ifdef  _Z8F4821
+                           C   232    __Z8F642   SET  1
+                           C   233    __Z8F4821  SET  1
+                           C   234    endif
+                           C   235    
+                           C   236    ifdef  _Z8F3222
+                           C   237    __Z8F642   SET  1
+                           C   238    __Z8F3222  SET  1
+                           C   239    endif
+                           C   240    
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:35     page:   9
+
+
+PC     Object              I  Line    Source C:\PROGRA~2\ZiLOG\ZDSII_~1.0\include\zilog\ez8dev.inc
+                           C   241    ifdef  _Z8F3221
+                           C   242    __Z8F642   SET  1
+                           C   243    __Z8F3221  SET  1
+                           C   244    endif
+                           C   245    
+                           C   246    ifdef  _Z8F2422
+                           C   247    __Z8F642   SET  1
+                           C   248    __Z8F2422  SET  1
+                           C   249    endif
+                           C   250    
+                           C   251    ifdef  _Z8F2421
+                           C   252    __Z8F642   SET  1
+                           C   253    __Z8F2421  SET  1
+                           C   254    endif
+                           C   255    
+                           C   256    ifdef  _Z8F1622
+                           C   257    __Z8F642   SET  1
+                           C   258    __Z8F1622  SET  1
+                           C   259    endif
+                           C   260    
+                           C   261    ifdef  _Z8F1621
+                           C   262    __Z8F642   SET  1
+                           C   263    __Z8F1621  SET  1
+                           C   264    endif
+                           C   265    
+                           C   266    ifdef  _Z8F6403
+                           C   267    __Z8F640   SET  1
+                           C   268    __Z8F6403  SET  1
+                           C   269    endif
+                           C   270    
+                           C   271    ifdef  _Z8F6402
+                           C   272    __Z8F640   SET  1
+                           C   273    __Z8F6402  SET  1
+                           C   274    endif
+                           C   275    
+                           C   276    ifdef  _Z8F6401
+                           C   277    __Z8F640   SET  1
+                           C   278    __Z8F6401  SET  1
+                           C   279    endif
+                           C   280    
+                           C   281    ifdef  _Z8F4803
+                           C   282    __Z8F640   SET  1
+                           C   283    __Z8F4803  SET  1
+                           C   284    endif
+                           C   285    
+                           C   286    ifdef  _Z8F4802
+                           C   287    __Z8F640   SET  1
+                           C   288    __Z8F4802  SET  1
+                           C   289    endif
+                           C   290    
+                           C   291    ifdef  _Z8F4801
+                           C   292    __Z8F640   SET  1
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:35     page:  10
+
+
+PC     Object              I  Line    Source C:\PROGRA~2\ZiLOG\ZDSII_~1.0\include\zilog\ez8dev.inc
+                           C   293    __Z8F4801  SET  1
+                           C   294    endif
+                           C   295    
+                           C   296    ifdef  _Z8F3202
+                           C   297    __Z8F640   SET  1
+                           C   298    __Z8F3202  SET  1
+                           C   299    endif
+                           C   300    
+                           C   301    ifdef  _Z8F3201
+                           C   302    __Z8F640   SET  1
+                           C   303    __Z8F3201  SET  1
+                           C   304    endif
+                           C   305    
+                           C   306    ifdef  _Z8F2402
+                           C   307    __Z8F640   SET  1
+                           C   308    __Z8F2402  SET  1
+                           C   309    endif
+                           C   310    
+                           C   311    ifdef  _Z8F2401
+                           C   312    __Z8F640   SET  1
+                           C   313    __Z8F2401  SET  1
+                           C   314    endif
+                           C   315    
+                           C   316    ifdef  _Z8F1602
+                           C   317    __Z8F640   SET  1
+                           C   318    __Z8F1602  SET  1
+                           C   319    endif
+                           C   320    
+                           C   321    ifdef  _Z8F1601
+                           C   322    __Z8F640   SET  1
+                           C   323    __Z8F1601  SET  1
+                           C   324    endif
+                           C   325    
+                           C   326    ifdef  _Z8F0822
+     00000001              C   327    __Z8F08    SET  1
+     00000001              C   328    __Z8F0822  SET  1
+                           C   329    endif
+                           C   330    
+                           C   331    ifdef  _Z8F0821
+                           C   332    __Z8F08    SET  1
+                           C   333    __Z8F0821  SET  1
+                           C   334    endif
+                           C   335    
+                           C   336    ifdef  _Z8F0812
+                           C   337    __Z8F08    SET  1
+                           C   338    __Z8F0812  SET  1
+                           C   339    endif
+                           C   340    
+                           C   341    ifdef  _Z8F0811
+                           C   342    __Z8F08    SET  1
+                           C   343    __Z8F0811  SET  1
+                           C   344    endif
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:35     page:  11
+
+
+PC     Object              I  Line    Source C:\PROGRA~2\ZiLOG\ZDSII_~1.0\include\zilog\ez8dev.inc
+                           C   345    
+                           C   346    ifdef  _Z8F0422
+                           C   347    __Z8F08    SET  1
+                           C   348    __Z8F0422  SET  1
+                           C   349    endif
+                           C   350    
+                           C   351    ifdef  _Z8F0421
+                           C   352    __Z8F08    SET  1
+                           C   353    __Z8F0421  SET  1
+                           C   354    endif
+                           C   355    
+                           C   356    ifdef  _Z8F0412
+                           C   357    __Z8F08    SET  1
+                           C   358    __Z8F0412  SET  1
+                           C   359    endif
+                           C   360    
+                           C   361    ifdef  _Z8F0411
+                           C   362    __Z8F08    SET  1
+                           C   363    __Z8F0411  SET  1
+                           C   364    endif
+                           C   365    
+                           C   366    ifdef  _Z8F042A
+                           C   367    __Z8F04A   SET  1
+                           C   368    __Z8F042A  SET  1
+                           C   369    endif
+                           C   370    
+                           C   371    ifdef  _Z8F041A
+                           C   372    __Z8F04A   SET  1
+                           C   373    __Z8F041A  SET  1
+                           C   374    endif
+                           C   375    
+                           C   376    ifdef  _Z8F022A
+                           C   377    __Z8F04A   SET  1
+                           C   378    __Z8F022A  SET  1
+                           C   379    endif
+                           C   380    
+                           C   381    ifdef  _Z8F021A
+                           C   382    __Z8F04A   SET  1
+                           C   383    __Z8F021A  SET  1
+                           C   384    endif
+                           C   385    
+                           C   386    ifdef  _Z8F012A
+                           C   387    __Z8F04A   SET  1
+                           C   388    __Z8F012A  SET  1
+                           C   389    endif
+                           C   390    
+                           C   391    ifdef  _Z8F011A
+                           C   392    __Z8F04A   SET  1
+                           C   393    __Z8F011A  SET  1
+                           C   394    endif
+                           C   395    
+                           C   396    ifdef  _Z8F0423XJ
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:35     page:  12
+
+
+PC     Object              I  Line    Source C:\PROGRA~2\ZiLOG\ZDSII_~1.0\include\zilog\ez8dev.inc
+                           C   397    __Z8F04   SET  1
+                           C   398    __Z8F0423XJ  SET  1
+                           C   399    endif
+                           C   400    
+                           C   401    ifdef  _Z8F0413XJ
+                           C   402    __Z8F04   SET  1
+                           C   403    __Z8F0413XJ  SET  1
+                           C   404    endif
+                           C   405    
+                           C   406    ifdef  _Z8F0223XJ
+                           C   407    __Z8F04   SET  1
+                           C   408    __Z8F0223XJ  SET  1
+                           C   409    endif
+                           C   410    
+                           C   411    ifdef  _Z8F0213XJ
+                           C   412    __Z8F04   SET  1
+                           C   413    __Z8F0213XJ  SET  1
+                           C   414    endif
+                           C   415    
+                           C   416    ifdef  _Z8F0123XJ
+                           C   417    __Z8F04   SET  1
+                           C   418    __Z8F0123XJ  SET  1
+                           C   419    endif
+                           C   420    
+                           C   421    ifdef  _Z8F0113XJ
+                           C   422    __Z8F04   SET  1
+                           C   423    __Z8F0113XJ  SET  1
+                           C   424    endif
+                           C   425    
+                           C   426    ifdef  _Z8F0423XH
+                           C   427    __Z8F04   SET  1
+                           C   428    __Z8F0423XH  SET  1
+                           C   429    endif
+                           C   430    
+                           C   431    ifdef  _Z8F0413XH
+                           C   432    __Z8F04   SET  1
+                           C   433    __Z8F0413XH  SET  1
+                           C   434    endif
+                           C   435    
+                           C   436    ifdef  _Z8F0223XH
+                           C   437    __Z8F04   SET  1
+                           C   438    __Z8F0223XH  SET  1
+                           C   439    endif
+                           C   440    
+                           C   441    ifdef  _Z8F0213XH
+                           C   442    __Z8F04   SET  1
+                           C   443    __Z8F0213XH  SET  1
+                           C   444    endif
+                           C   445    
+                           C   446    ifdef  _Z8F0123XH
+                           C   447    __Z8F04   SET  1
+                           C   448    __Z8F0123XH  SET  1
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:35     page:  13
+
+
+PC     Object              I  Line    Source C:\PROGRA~2\ZiLOG\ZDSII_~1.0\include\zilog\ez8dev.inc
+                           C   449    endif
+                           C   450    
+                           C   451    ifdef  _Z8F0113XH
+                           C   452    __Z8F04   SET  1
+                           C   453    __Z8F0113XH  SET  1
+                           C   454    endif
+                           C   455    
+                           C   456    ifdef  _Z8F042AXB
+                           C   457    __Z8F04A      SET  1
+                           C   458    __Z8F04A_8PIN SET  1
+                           C   459    __Z8F042AXB   SET  1
+                           C   460    endif
+                           C   461    
+                           C   462    ifdef  _Z8F041AXB
+                           C   463    __Z8F04A      SET  1
+                           C   464    __Z8F04A_8PIN SET  1
+                           C   465    __Z8F041AXB   SET  1
+                           C   466    endif
+                           C   467    
+                           C   468    ifdef  _Z8F022AXB
+                           C   469    __Z8F04A      SET  1
+                           C   470    __Z8F04A_8PIN SET  1
+                           C   471    __Z8F022AXB   SET  1
+                           C   472    endif
+                           C   473    
+                           C   474    ifdef  _Z8F021AXB
+                           C   475    __Z8F04A      SET  1
+                           C   476    __Z8F04A_8PIN SET  1
+                           C   477    __Z8F021AXB   SET  1
+                           C   478    endif
+                           C   479    
+                           C   480    ifdef  _Z8F012AXB
+                           C   481    __Z8F04A      SET  1
+                           C   482    __Z8F04A_8PIN SET  1
+                           C   483    __Z8F012AXB   SET  1
+                           C   484    endif
+                           C   485    
+                           C   486    ifdef  _Z8F011AXB
+                           C   487    __Z8F04A      SET  1
+                           C   488    __Z8F04A_8PIN SET  1
+                           C   489    __Z8F011AXB   SET  1
+                           C   490    endif
+                           C   491    
+                           C   492    ifdef  _Z8F081A
+                           C   493    __Z8F04A   SET  1
+                           C   494    __Z8F08A   SET  1
+                           C   495    __Z8F081A  SET  1
+                           C   496    endif
+                           C   497    
+                           C   498    ifdef  _Z8F082A
+                           C   499    __Z8F04A   SET  1
+                           C   500    __Z8F08A   SET  1
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:35     page:  14
+
+
+PC     Object              I  Line    Source C:\PROGRA~2\ZiLOG\ZDSII_~1.0\include\zilog\ez8dev.inc
+                           C   501    __Z8F082A  SET  1
+                           C   502    endif
+                           C   503    
+                           C   504    ifdef _Z8FMC16100
+                           C   505    __Z8FMC16    SET  1
+                           C   506    __Z8FMC16100 SET  1
+                           C   507    endif
+                           C   508    
+                           C   509    ifdef _Z8FMC08100
+                           C   510    __Z8FMC16    SET  1
+                           C   511    __Z8FMC08100 SET  1
+                           C   512    endif
+                           C   513    
+                           C   514    ifdef _Z8FMC04100
+                           C   515    __Z8FMC16    SET  1
+                           C   516    __Z8FMC04100 SET  1
+                           C   517    endif
+                           C   518    
+                           C   519    ifdef _Z8F0813
+                           C   520    __Z8F04    SET  1
+                           C   521    __Z8F0813  SET  1
+                           C   522    endif
+                           C   523    
+                           C   524    ifdef _Z8F0823
+                           C   525    __Z8F04    SET  1
+                           C   526    __Z8F0823  SET  1
+                           C   527    endif
+                           C   528    
+                           C   529    ifdef  _Z8F081AXB
+                           C   530    __Z8F04A      SET  1
+                           C   531    __Z8F08A      SET  1
+                           C   532    __Z8F04A_8PIN SET  1
+                           C   533    __Z8F081AXB   SET  1
+                           C   534    endif
+                           C   535    
+                           C   536    ifdef  _Z8F082AXB
+                           C   537    __Z8F04A      SET  1
+                           C   538    __Z8F08A      SET  1
+                           C   539    __Z8F04A_8PIN SET  1
+                           C   540    __Z8F082AXB   SET  1
+                           C   541    endif
+                           C   542    
+                           C   543    ifdef  _Z8F0813XB
+                           C   544    __Z8F04        SET  1
+                           C   545    __Z8F0823_8PIN SET  1
+                           C   546    __Z8F0813XB    SET  1
+                           C   547    endif
+                           C   548    
+                           C   549    ifdef  _Z8F0823XB
+                           C   550    __Z8F04        SET  1
+                           C   551    __Z8F0823_8PIN SET  1
+                           C   552    __Z8F0823XB    SET  1
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:35     page:  15
+
+
+PC     Object              I  Line    Source C:\PROGRA~2\ZiLOG\ZDSII_~1.0\include\zilog\ez8dev.inc
+                           C   553    endif
+                           C   554    
+                           C   555    ifdef  _Z8F0113
+                           C   556    __Z8F04    SET  1
+                           C   557    __Z8F0113  SET  1
+                           C   558    endif
+                           C   559    
+                           C   560    ifdef  _Z8F0123
+                           C   561    __Z8F04    SET  1
+                           C   562    __Z8F0123  SET  1
+                           C   563    endif
+                           C   564    
+                           C   565    ifdef  _Z8F0213
+                           C   566    __Z8F04    SET  1
+                           C   567    __Z8F0213  SET  1
+                           C   568    endif
+                           C   569    
+                           C   570    ifdef  _Z8F0223
+                           C   571    __Z8F04    SET  1
+                           C   572    __Z8F0223  SET  1
+                           C   573    endif
+                           C   574    
+                           C   575    ifdef  _Z8F0413
+                           C   576    __Z8F04    SET  1
+                           C   577    __Z8F0413  SET  1
+                           C   578    endif
+                           C   579    
+                           C   580    ifdef  _Z8F0423
+                           C   581    __Z8F04    SET  1
+                           C   582    __Z8F0423  SET  1
+                           C   583    endif
+                           C   584    
+                           C   585    ifdef  _Z8F0113XB
+                           C   586    __Z8F04      SET  1
+                           C   587    __Z8F04_8PIN SET  1
+                           C   588    __Z8F0113XB  SET  1
+                           C   589    endif
+                           C   590    
+                           C   591    ifdef  _Z8F0123XB
+                           C   592    __Z8F04      SET  1
+                           C   593    __Z8F04_8PIN SET  1
+                           C   594    __Z8F0123XB  SET  1
+                           C   595    endif
+                           C   596    
+                           C   597    ifdef  _Z8F0213XB
+                           C   598    __Z8F04      SET  1
+                           C   599    __Z8F04_8PIN SET  1
+                           C   600    __Z8F0213XB  SET  1
+                           C   601    endif
+                           C   602    
+                           C   603    ifdef  _Z8F0223XB
+                           C   604    __Z8F04      SET  1
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:35     page:  16
+
+
+PC     Object              I  Line    Source C:\PROGRA~2\ZiLOG\ZDSII_~1.0\include\zilog\ez8dev.inc
+                           C   605    __Z8F04_8PIN SET  1
+                           C   606    __Z8F0223XB  SET  1
+                           C   607    endif
+                           C   608    
+                           C   609    ifdef  _Z8F0413XB
+                           C   610    __Z8F04      SET  1
+                           C   611    __Z8F04_8PIN SET  1
+                           C   612    __Z8F0413XB  SET  1
+                           C   613    endif
+                           C   614    
+                           C   615    ifdef  _Z8F0423XB
+                           C   616    __Z8F04      SET  1
+                           C   617    __Z8F04_8PIN SET  1
+                           C   618    __Z8F0423XB  SET  1
+                           C   619    endif
+                           C   620    
+                           C   621    ifdef  _Z8F1233
+                           C   622    __Z8F04A     SET  1
+                           C   623    __Z8F0830A   SET  1
+                           C   624    __Z8F0830S   SET  1
+                           C   625    __Z8F1233    SET  1
+                           C   626    endif
+                           C   627    
+                           C   628    ifdef  _Z8F1232
+                           C   629    __Z8F04A     SET  1
+                           C   630    __Z8F0830A   SET  1
+                           C   631    __Z8F0830S   SET  1
+                           C   632    __Z8F1232    SET  1
+                           C   633    endif
+                           C   634    
+                           C   635    ifdef  _Z8F0833
+                           C   636    __Z8F04A     SET  1
+                           C   637    __Z8F0830A   SET  1
+                           C   638    __Z8F0830S   SET  1
+                           C   639    __Z8F0833    SET  1
+                           C   640    endif
+                           C   641    
+                           C   642    ifdef  _Z8F0832
+                           C   643    __Z8F04A     SET  1
+                           C   644    __Z8F0830A   SET  1
+                           C   645    __Z8F0830S   SET  1
+                           C   646    __Z8F0832    SET  1
+                           C   647    endif
+                           C   648    
+                           C   649    ifdef  _Z8F0831
+                           C   650    __Z8F04A     SET  1
+                           C   651    __Z8F0830A   SET  1
+                           C   652    __Z8F0830S   SET  1
+                           C   653    __Z8F0831    SET  1
+                           C   654    endif
+                           C   655    
+                           C   656    ifdef  _Z8F0830
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:35     page:  17
+
+
+PC     Object              I  Line    Source C:\PROGRA~2\ZiLOG\ZDSII_~1.0\include\zilog\ez8dev.inc
+                           C   657    __Z8F04A     SET  1
+                           C   658    __Z8F0830A   SET  1
+                           C   659    __Z8F0830S   SET  1
+                           C   660    __Z8F0830    SET  1
+                           C   661    endif
+                           C   662    
+                           C   663    ifdef  _Z8F0433
+                           C   664    __Z8F04A     SET  1
+                           C   665    __Z8F0830A   SET  1
+                           C   666    __Z8F0830S   SET  1
+                           C   667    __Z8F0433    SET  1
+                           C   668    endif
+                           C   669    
+                           C   670    ifdef  _Z8F0432
+                           C   671    __Z8F04A     SET  1
+                           C   672    __Z8F0830A   SET  1
+                           C   673    __Z8F0830S   SET  1
+                           C   674    __Z8F0432    SET  1
+                           C   675    endif
+                           C   676    
+                           C   677    ifdef  _Z8F0431
+                           C   678    __Z8F04A     SET  1
+                           C   679    __Z8F0830A   SET  1
+                           C   680    __Z8F0830S   SET  1
+                           C   681    __Z8F0431    SET  1
+                           C   682    endif
+                           C   683    
+                           C   684    ifdef  _Z8F0430
+                           C   685    __Z8F04A     SET  1
+                           C   686    __Z8F0830A   SET  1
+                           C   687    __Z8F0830S   SET  1
+                           C   688    __Z8F0430    SET  1
+                           C   689    endif
+                           C   690    
+                           C   691    ifdef  _Z8F0233
+                           C   692    __Z8F04A     SET  1
+                           C   693    __Z8F0830A   SET  1
+                           C   694    __Z8F0830S   SET  1
+                           C   695    __Z8F0233    SET  1
+                           C   696    endif
+                           C   697    
+                           C   698    ifdef  _Z8F0232
+                           C   699    __Z8F04A     SET  1
+                           C   700    __Z8F0830A   SET  1
+                           C   701    __Z8F0830S   SET  1
+                           C   702    __Z8F0232    SET  1
+                           C   703    endif
+                           C   704    
+                           C   705    ifdef  _Z8F0231
+                           C   706    __Z8F04A     SET  1
+                           C   707    __Z8F0830A   SET  1
+                           C   708    __Z8F0830S   SET  1
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:35     page:  18
+
+
+PC     Object              I  Line    Source C:\PROGRA~2\ZiLOG\ZDSII_~1.0\include\zilog\ez8dev.inc
+                           C   709    __Z8F0231    SET  1
+                           C   710    endif
+                           C   711    
+                           C   712    ifdef  _Z8F0230
+                           C   713    __Z8F04A     SET  1
+                           C   714    __Z8F0830A   SET  1
+                           C   715    __Z8F0830S   SET  1
+                           C   716    __Z8F0230    SET  1
+                           C   717    endif
+                           C   718    
+                           C   719    ifdef  _Z8F0133
+                           C   720    __Z8F04A     SET  1
+                           C   721    __Z8F0830A   SET  1
+                           C   722    __Z8F0830S   SET  1
+                           C   723    __Z8F0133    SET  1
+                           C   724    endif
+                           C   725    
+                           C   726    ifdef  _Z8F0132
+                           C   727    __Z8F04A     SET  1
+                           C   728    __Z8F0830A   SET  1
+                           C   729    __Z8F0830S   SET  1
+                           C   730    __Z8F0132    SET  1
+                           C   731    endif
+                           C   732    
+                           C   733    ifdef  _Z8F0131
+                           C   734    __Z8F04A     SET  1
+                           C   735    __Z8F0830A   SET  1
+                           C   736    __Z8F0830S   SET  1
+                           C   737    __Z8F0131    SET  1
+                           C   738    endif
+                           C   739    
+                           C   740    ifdef  _Z8F0130
+                           C   741    __Z8F04A     SET  1
+                           C   742    __Z8F0830A   SET  1
+                           C   743    __Z8F0830S   SET  1
+                           C   744    __Z8F0130    SET  1
+                           C   745    endif
+                           C   746    
+                           C   747    ifdef _Z8F2480XH
+                           C   748    __Z8F1680    SET  1
+                           C   749    __Z8F2480XH  SET  1
+                           C   750    endif
+                           C   751    
+                           C   752    ifdef _Z8F2480XJ
+                           C   753    __Z8F1680    SET  1
+                           C   754    __Z8F2480XJ  SET  1
+                           C   755    endif
+                           C   756    
+                           C   757    ifdef _Z8F2480XM
+                           C   758    __Z8F1680    SET  1
+                           C   759    __Z8F2480XM  SET  1
+                           C   760    endif
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:35     page:  19
+
+
+PC     Object              I  Line    Source C:\PROGRA~2\ZiLOG\ZDSII_~1.0\include\zilog\ez8dev.inc
+                           C   761    
+                           C   762    ifdef _Z8F2480XN
+                           C   763    __Z8F1680    SET  1
+                           C   764    __Z8F2480XN  SET  1
+                           C   765    endif
+                           C   766    
+                           C   767    ifdef _Z8F2481XH
+                           C   768    __Z8F1680    SET  1
+                           C   769    __Z8F2481XH  SET  1
+                           C   770    endif
+                           C   771    
+                           C   772    ifdef _Z8F2481XJ
+                           C   773    __Z8F1680    SET  1
+                           C   774    __Z8F2481XJ  SET  1
+                           C   775    endif
+                           C   776    
+                           C   777    ifdef _Z8F2481XM
+                           C   778    __Z8F1680    SET  1
+                           C   779    __Z8F2481XM  SET  1
+                           C   780    endif
+                           C   781    
+                           C   782    ifdef _Z8F2481XN
+                           C   783    __Z8F1680    SET  1
+                           C   784    __Z8F2481XN  SET  1
+                           C   785    endif
+                           C   786    
+                           C   787    ifdef _Z8F1680XH
+                           C   788    __Z8F1680    SET  1
+                           C   789    __Z8F1680XH  SET  1
+                           C   790    endif
+                           C   791    
+                           C   792    ifdef _Z8F1680XJ
+                           C   793    __Z8F1680    SET  1
+                           C   794    __Z8F1680XJ  SET  1
+                           C   795    endif
+                           C   796    
+                           C   797    ifdef _Z8F1680XM
+                           C   798    __Z8F1680    SET  1
+                           C   799    __Z8F1680XM  SET  1
+                           C   800    endif
+                           C   801    
+                           C   802    ifdef _Z8F1680XN
+                           C   803    __Z8F1680    SET  1
+                           C   804    __Z8F1680XN  SET  1
+                           C   805    endif
+                           C   806    
+                           C   807    ifdef _Z8F1681XH
+                           C   808    __Z8F1680    SET  1
+                           C   809    __Z8F1681XH  SET  1
+                           C   810    endif
+                           C   811    
+                           C   812    ; The Z8F1681XJ part was envisioned early in th
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:35     page:  20
+
+
+PC     Object              I  Line    Source C:\PROGRA~2\ZiLOG\ZDSII_~1.0\include\zilog\ez8dev.inc
+                           C   813    ; but was eventually dropped and never offered 
+                           C   814    ; name is in conflict with the Z8F1681XJ (and .
+                           C   815    ; of the F6482 project.  In order to support th
+                           C   816    ; which really does exist, with minimal effect 
+                           C   817    ; of part names, we have made the small change 
+                           C   818    ; part name: Z8F1681XJ => Z8F1681ZJ
+                           C   819    ;  
+                           C   820    ;  Later development: the new Z8F1681XJ part wa
+                           C   821    ;  all the Z8Fxx81XJ parts that were originally
+                           C   822    ;  But maybe the name might still get used agai
+                           C   823    ;  not reverse the change we made here to get r
+                           C   824    ifdef _Z8F1681ZJ
+                           C   825    __Z8F1680    SET  1
+                           C   826    __Z8F1681XJ  SET  1
+                           C   827    endif
+                           C   828    
+                           C   829    ifdef _Z8F1681XM
+                           C   830    __Z8F1680    SET  1
+                           C   831    __Z8F1681XM  SET  1
+                           C   832    endif
+                           C   833    
+                           C   834    ; See previous comment
+                           C   835    ifdef _Z8F1681ZN
+                           C   836    __Z8F1680    SET  1
+                           C   837    __Z8F1681XN  SET  1
+                           C   838    endif
+                           C   839    
+                           C   840    ifdef _Z8F0880XH
+                           C   841    __Z8F1680    SET  1
+                           C   842    __Z8F0880XH  SET  1
+                           C   843    endif
+                           C   844    
+                           C   845    ifdef _Z8F0880XJ
+                           C   846    __Z8F1680    SET  1
+                           C   847    __Z8F0880XJ  SET  1
+                           C   848    endif
+                           C   849    
+                           C   850    ifdef _Z8F0880XM
+                           C   851    __Z8F1680    SET  1
+                           C   852    __Z8F0880XM  SET  1
+                           C   853    endif
+                           C   854    
+                           C   855    ifdef _Z8F0880XN
+                           C   856    __Z8F1680    SET  1
+                           C   857    __Z8F0880XN  SET  1
+                           C   858    endif
+                           C   859    
+                           C   860    ifdef _Z8F0881XH
+                           C   861    __Z8F1680    SET  1
+                           C   862    __Z8F0881XH  SET  1
+                           C   863    endif
+                           C   864    
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:35     page:  21
+
+
+PC     Object              I  Line    Source C:\PROGRA~2\ZiLOG\ZDSII_~1.0\include\zilog\ez8dev.inc
+                           C   865    ifdef _Z8F0881XJ
+                           C   866    __Z8F1680    SET  1
+                           C   867    __Z8F0881XJ  SET  1
+                           C   868    endif
+                           C   869    
+                           C   870    ifdef _Z8F0881XM
+                           C   871    __Z8F1680    SET  1
+                           C   872    __Z8F0881XM  SET  1
+                           C   873    endif
+                           C   874    
+                           C   875    ifdef _Z8F0881XN
+                           C   876    __Z8F1680    SET  1
+                           C   877    __Z8F0881XN  SET  1
+                           C   878    endif
+                           C   879    
+                           C   880    ifdef _Z8F0480XH
+                           C   881    __Z8F1680    SET  1
+                           C   882    __Z8F0480XH  SET  1
+                           C   883    endif
+                           C   884    
+                           C   885    ifdef _Z8F0480XJ
+                           C   886    __Z8F1680    SET  1
+                           C   887    __Z8F0480XJ  SET  1
+                           C   888    endif
+                           C   889    
+                           C   890    ifdef _Z8F0480XM
+                           C   891    __Z8F1680    SET  1
+                           C   892    __Z8F0480XM  SET  1
+                           C   893    endif
+                           C   894    
+                           C   895    ifdef _Z8F0480XN
+                           C   896    __Z8F1680    SET  1
+                           C   897    __Z8F0480XN  SET  1
+                           C   898    endif
+                           C   899    
+                           C   900    ifdef _Z8F0481XH
+                           C   901    __Z8F1680    SET  1
+                           C   902    __Z8F0481XH  SET  1
+                           C   903    endif
+                           C   904    
+                           C   905    ifdef _Z8F0481XJ
+                           C   906    __Z8F1680    SET  1
+                           C   907    __Z8F0481XJ  SET  1
+                           C   908    endif
+                           C   909    
+                           C   910    ifdef _Z8F0481XM
+                           C   911    __Z8F1680    SET  1
+                           C   912    __Z8F0481XM  SET  1
+                           C   913    endif
+                           C   914    
+                           C   915    ifdef _Z8F0481XN
+                           C   916    __Z8F1680    SET  1
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:35     page:  22
+
+
+PC     Object              I  Line    Source C:\PROGRA~2\ZiLOG\ZDSII_~1.0\include\zilog\ez8dev.inc
+                           C   917    __Z8F0481XN  SET  1
+                           C   918    endif
+                           C   919    
+                           C   920    ifdef  _Z8F083A
+                           C   921    __Z8F04A     SET  1
+                           C   922    __Z8F0830A   SET  1
+                           C   923    __Z8F083A    SET  1
+                           C   924    endif
+                           C   925    
+                           C   926    ifdef  _Z8F043A
+                           C   927    __Z8F04A     SET  1
+                           C   928    __Z8F0830A   SET  1
+                           C   929    __Z8F043A    SET  1
+                           C   930    endif
+                           C   931    
+                           C   932    
+                           C   933    ; Some F6482-specific defines
+     00000000              C   934    __Z8F648_X82	SET 0
+     00000000              C   935    __Z8F648_X81	SET 0
+     00000000              C   936    __Z8F648_64K	SET 0
+     00000000              C   937    __Z8F648_82XR	SET 0
+     00000000              C   938    __Z8F648_82XT	SET 0
+     00000000              C   939    __Z8F648_81XK	SET 0
+     00000000              C   940    __Z8F648_81XN	SET 0
+     00000000              C   941    __Z8F648_81XR	SET 0
+                           C   942    
+                           C   943    ifdef  _Z8F6482XR
+                           C   944    __Z8F648		SET 1
+                           C   945    __Z8F648_X82	SET 1
+                           C   946    __Z8F648_64K	SET 1
+                           C   947    __Z8F648_82XR	SET 1
+                           C   948    __Z8F6482XR		SET 1
+                           C   949    endif
+                           C   950    
+                           C   951    ifdef  _Z8F6482XT 
+                           C   952    __Z8F648		SET 1
+                           C   953    __Z8F648_X82	SET 1
+                           C   954    __Z8F648_64K	SET 1
+                           C   955    __Z8F648_82XT	SET 1
+                           C   956    __Z8F6482XT 	SET 1
+                           C   957    endif
+                           C   958    
+                           C   959    ifdef  _Z8F6481XK 
+                           C   960    __Z8F648		SET 1
+                           C   961    __Z8F648_X81	SET 1
+                           C   962    __Z8F648_64K	SET 1
+                           C   963    __Z8F648_81XK	SET 1
+                           C   964    __Z8F6481XK  	SET 1
+                           C   965    endif
+                           C   966    
+                           C   967    ifdef  _Z8F6481XN
+                           C   968    __Z8F648		SET 1
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:35     page:  23
+
+
+PC     Object              I  Line    Source C:\PROGRA~2\ZiLOG\ZDSII_~1.0\include\zilog\ez8dev.inc
+                           C   969    __Z8F648_X81	SET 1
+                           C   970    __Z8F648_64K	SET 1
+                           C   971    __Z8F648_81XN	SET 1
+                           C   972    __Z8F6481XN 	SET 1
+                           C   973    endif
+                           C   974    
+                           C   975    ifdef  _Z8F6481XR 
+                           C   976    __Z8F648		SET 1
+                           C   977    __Z8F648_X81	SET 1
+                           C   978    __Z8F648_64K	SET 1
+                           C   979    __Z8F648_81XR	SET 1
+                           C   980    __Z8F6481XR  	SET 1
+                           C   981    endif
+                           C   982    
+                           C   983    
+                           C   984    ifdef  _Z8F6082XR 
+                           C   985    __Z8F648		SET 1
+                           C   986    __Z8F648_X82	SET 1
+                           C   987    __Z8F648_82XR	SET 1
+                           C   988    __Z8F6082XR  	SET 1
+                           C   989    endif
+                           C   990    
+                           C   991    ifdef  _Z8F6082XT 
+                           C   992    __Z8F648		SET 1
+                           C   993    __Z8F648_X82	SET 1
+                           C   994    __Z8F648_82XT	SET 1
+                           C   995    __Z8F6082XT  	SET 1
+                           C   996    endif
+                           C   997    
+                           C   998    ifdef  _Z8F6081XK 
+                           C   999    __Z8F648		SET 1
+                           C  1000    __Z8F648_X81	SET 1
+                           C  1001    __Z8F648_81XK	SET 1
+                           C  1002    __Z8F6081XK  	SET 1
+                           C  1003    endif
+                           C  1004    
+                           C  1005    ifdef  _Z8F6081XN 
+                           C  1006    __Z8F648		SET 1
+                           C  1007    __Z8F648_X81	SET 1
+                           C  1008    __Z8F648_81XN	SET 1
+                           C  1009    __Z8F6081XN  	SET 1
+                           C  1010    endif
+                           C  1011    
+                           C  1012    ifdef  _Z8F6081XR 
+                           C  1013    __Z8F648		SET 1
+                           C  1014    __Z8F648_X81	SET 1
+                           C  1015    __Z8F648_81XR	SET 1
+                           C  1016    __Z8F6081XR  	SET 1
+                           C  1017    endif
+                           C  1018    
+                           C  1019    
+                           C  1020    ifdef  _Z8F3282XR 
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:35     page:  24
+
+
+PC     Object              I  Line    Source C:\PROGRA~2\ZiLOG\ZDSII_~1.0\include\zilog\ez8dev.inc
+                           C  1021    __Z8F648		SET 1
+                           C  1022    __Z8F648_X82	SET 1
+                           C  1023    __Z8F648_82XR	SET 1
+                           C  1024    __Z8F3282XR  	SET 1
+                           C  1025    endif
+                           C  1026    
+                           C  1027    ifdef  _Z8F3282XT 
+                           C  1028    __Z8F648		SET 1
+                           C  1029    __Z8F648_X82	SET 1
+                           C  1030    __Z8F648_82XT	SET 1
+                           C  1031    __Z8F3282XT  	SET 1
+                           C  1032    endif
+                           C  1033    
+                           C  1034    ifdef  _Z8F3281XK 
+                           C  1035    __Z8F648		SET 1
+                           C  1036    __Z8F648_X81	SET 1
+                           C  1037    __Z8F648_81XK	SET 1
+                           C  1038    __Z8F3281XK  	SET 1
+                           C  1039    endif
+                           C  1040    
+                           C  1041    ifdef  _Z8F3281XN 
+                           C  1042    __Z8F648		SET 1
+                           C  1043    __Z8F648_X81	SET 1
+                           C  1044    __Z8F648_81XN	SET 1
+                           C  1045    __Z8F3281XN  	SET 1
+                           C  1046    endif
+                           C  1047    
+                           C  1048    ifdef  _Z8F3281XR
+                           C  1049    __Z8F648		SET 1
+                           C  1050    __Z8F648_X81	SET 1
+                           C  1051    __Z8F648_81XR	SET 1
+                           C  1052    __Z8F3281XR 	SET 1
+                           C  1053    endif
+                           C  1054    
+                           C  1055    
+                           C  1056    ifdef  _Z8F1682XR 
+                           C  1057    __Z8F648		SET 1
+                           C  1058    __Z8F648_X82	SET 1
+                           C  1059    __Z8F648_82XR	SET 1
+                           C  1060    __Z8F1682XR  	SET 1
+                           C  1061    endif
+                           C  1062    
+                           C  1063    ifdef  _Z8F1682XT 
+                           C  1064    __Z8F648		SET 1
+                           C  1065    __Z8F648_X82	SET 1
+                           C  1066    __Z8F648_82XT	SET 1
+                           C  1067    __Z8F1682XT  	SET 1
+                           C  1068    endif
+                           C  1069    
+                           C  1070    ifdef  _Z8F1681XK 
+                           C  1071    __Z8F648		SET 1
+                           C  1072    __Z8F648_X81	SET 1
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:35     page:  25
+
+
+PC     Object              I  Line    Source C:\PROGRA~2\ZiLOG\ZDSII_~1.0\include\zilog\ez8dev.inc
+                           C  1073    __Z8F648_81XK	SET 1
+                           C  1074    __Z8F1681XK  	SET 1
+                           C  1075    endif
+                           C  1076    
+                           C  1077    ifdef  _Z8F1681XN 
+                           C  1078    __Z8F648		SET 1
+                           C  1079    __Z8F648_X81	SET 1
+                           C  1080    __Z8F648_81XN	SET 1
+                           C  1081    __Z8F1681XN  	SET 1
+                           C  1082    endif
+                           C  1083    
+                           C  1084    ifdef  _Z8F1681XR 
+                           C  1085    __Z8F648		SET 1
+                           C  1086    __Z8F648_X81	SET 1
+                           C  1087    __Z8F648_81XR	SET 1
+                           C  1088    __Z8F1681XR  	SET 1
+                           C  1089    endif
+                           C  1090    
+                           C  1091    ifdef  _Z8FS040xHH
+                           C  1092    __ZMOTION       SET 1
+                           C  1093    ; The CPU base part for this ZMOTION part is
+                           C  1094    ; the Z8F082AHH
+                           C  1095    __Z8F04A        SET 1
+                           C  1096    __Z8F08A        SET 1
+                           C  1097    __Z8F082A       SET 1
+                           C  1098    __Z8FS040xHH    SET 1
+                           C  1099    endif
+                           C  1100    
+                           C  1101    ifdef  _Z8FS021xHH
+                           C  1102    __ZMOTION       SET 1
+                           C  1103    ; The CPU base part for this ZMOTION part is
+                           C  1104    ; the Z8F082AHH
+                           C  1105    __Z8F04A        SET 1
+                           C  1106    __Z8F08A        SET 1
+                           C  1107    __Z8F082A       SET 1
+                           C  1108    __Z8FS021xHH    SET 1
+                           C  1109    endif
+                           C  1110    
+                           C  1111    ifdef  _Z8FS040xHJ
+                           C  1112    __ZMOTION       SET 1
+                           C  1113    ; The CPU base part for this ZMOTION part is
+                           C  1114    ; the Z8F082AHJ
+                           C  1115    __Z8F04A        SET 1
+                           C  1116    __Z8F08A        SET 1
+                           C  1117    __Z8F082A       SET 1
+                           C  1118    __Z8FS040xHJ    SET 1
+                           C  1119    endif
+                           C  1120    
+                           C  1121    ifdef  _Z8FS021xHJ
+                           C  1122    __ZMOTION       SET 1
+                           C  1123    ; The CPU base part for this ZMOTION part is
+                           C  1124    ; the Z8F082AHJ
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:35     page:  26
+
+
+PC     Object              I  Line    Source C:\PROGRA~2\ZiLOG\ZDSII_~1.0\include\zilog\ez8dev.inc
+                           C  1125    __Z8F04A        SET 1
+                           C  1126    __Z8F08A        SET 1
+                           C  1127    __Z8F082A       SET 1
+                           C  1128    __Z8FS021xHJ    SET 1
+                           C  1129    endif
+                           C  1130    
+                           C  1131    ifdef  _Z8FS040xSB
+                           C  1132    __ZMOTION       SET 1
+                           C  1133    ; The CPU base part for this ZMOTION part is
+                           C  1134    ; the Z8F082ASB
+                           C  1135    __Z8F04A        SET 1
+                           C  1136    __Z8F08A        SET 1
+                           C  1137    __Z8F04A_8PIN   SET 1
+                           C  1138    __Z8F082AXB     SET 1
+                           C  1139    __Z8FS040xSB    SET 1
+                           C  1140    endif
+                           C  1141    
+                           C  1142    ifdef  _Z8FS021xSB
+                           C  1143    __ZMOTION       SET 1
+                           C  1144    ; The CPU base part for this ZMOTION part is
+                           C  1145    ; the Z8F082ASB
+                           C  1146    __Z8F04A        SET 1
+                           C  1147    __Z8F08A        SET 1
+                           C  1148    __Z8F04A_8PIN   SET 1
+                           C  1149    __Z8F082AXB     SET 1
+                           C  1150    __Z8FS021xSB    SET 1
+                           C  1151    endif
+                           C  1152    
+                           B    13    
+                           B    14    ; Target Group-1
+                           B    15    if (NOTDEFINED=1)
+                           B    16    define		PORTMASKS_DEFINED
+                           B    17    PORTAMASK	SET			%00
+                           B    18    PORTBMASK	SET			%F0
+                           B    19    PORTCMASK	SET			%F0
+                           B    20    PORTDMASK	SET			%FE
+                           B    21    PORTEMASK	SET			%FF
+                           B    22    PORTFMASK	SET			%FF
+                           B    23    PORTGMASK	SET			%FF
+                           B    24    PORTHMASK	SET			%FF
+                           B    25    endif
+                           B    26    
+                           B    27    ; Target Group-2
+                           B    28    if (__Z8F042A=1) || (__Z8F022A=1) || (__Z8F012A
+                           B    29    define		PORTMASKS_DEFINED
+                           B    30    PORTAMASK	SET			%00
+                           B    31    PORTBMASK	SET			%C0
+                           B    32    PORTCMASK	SET			%00
+                           B    33    PORTDMASK	SET			%FE
+                           B    34    PORTEMASK	SET			%FF
+                           B    35    PORTFMASK	SET			%FF
+                           B    36    PORTGMASK	SET			%FF
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:35     page:  27
+
+
+PC     Object              I  Line    Source C:\PROGRA~2\ZiLOG\ZDSII_~1.0\include\zilog\gpio.inc
+                           B    37    PORTHMASK	SET			%FF
+                           B    38    endif
+                           B    39    
+                           B    40    ; Target Group-3
+                           B    41    if (__Z8F041A=1) || (__Z8F021A=1) || (__Z8F011A
+                           B    42    define		PORTMASKS_DEFINED
+                           B    43    PORTAMASK	SET			%00
+                           B    44    PORTBMASK	SET			%00
+                           B    45    PORTCMASK	SET			%00
+                           B    46    PORTDMASK	SET			%FE
+                           B    47    PORTEMASK	SET			%FF
+                           B    48    PORTFMASK	SET			%FF
+                           B    49    PORTGMASK	SET			%FF
+                           B    50    PORTHMASK	SET			%FF
+                           B    51    endif
+                           B    52    
+                           B    53    ; Target Group-4
+                           B    54    if (__Z8F0411=1) || (__Z8F0421=1) || (__Z8F0811
+                           B    55    define		PORTMASKS_DEFINED
+                           B    56    PORTAMASK	SET			%00
+                           B    57    PORTBMASK	SET			%FC
+                           B    58    PORTCMASK	SET			%FE
+                           B    59    PORTDMASK	SET			%FF
+                           B    60    PORTEMASK	SET			%FF
+                           B    61    PORTFMASK	SET			%FF
+                           B    62    PORTGMASK	SET			%FF
+                           B    63    PORTHMASK	SET			%FF
+                           B    64    endif
+                           B    65    
+                           B    66    ; Target Group-5
+                           B    67    if (__Z8F0412=1) || (__Z8F0422=1) || (__Z8F0812
+                           B    68    define		PORTMASKS_DEFINED
+     00000000              B    69    PORTAMASK	SET			%00
+     000000E0              B    70    PORTBMASK	SET			%E0
+     000000C0              B    71    PORTCMASK	SET			%C0
+     000000FF              B    72    PORTDMASK	SET			%FF
+     000000FF              B    73    PORTEMASK	SET			%FF
+     000000FF              B    74    PORTFMASK	SET			%FF
+     000000FF              B    75    PORTGMASK	SET			%FF
+     000000FF              B    76    PORTHMASK	SET			%FF
+                           B    77    endif
+                           B    78    
+                           B    79    ; Target Group-6
+                           B    80    if (NOTDEFINED=1) ; group same as 7 (__Z8F1601=
+                           B    81    define		PORTMASKS_DEFINED
+                           B    82    PORTAMASK	SET			%00
+                           B    83    PORTBMASK	SET			%00
+                           B    84    PORTCMASK	SET			%80
+                           B    85    PORTDMASK	SET			%84
+                           B    86    PORTEMASK	SET			%FF
+                           B    87    PORTFMASK	SET			%FF
+                           B    88    PORTGMASK	SET			%FF
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:35     page:  28
+
+
+PC     Object              I  Line    Source C:\PROGRA~2\ZiLOG\ZDSII_~1.0\include\zilog\gpio.inc
+                           B    89    PORTHMASK	SET			%FF
+                           B    90    endif
+                           B    91    
+                           B    92    ; Target Group-7
+                           B    93    if (__Z8F1601=1) || (__Z8F1621=1) || (__Z8F2401
+                           B    94    define		PORTMASKS_DEFINED
+                           B    95    PORTAMASK	SET			%00
+                           B    96    PORTBMASK	SET			%00
+                           B    97    PORTCMASK	SET			%00
+                           B    98    PORTDMASK	SET			%80
+                           B    99    PORTEMASK	SET			%FF
+                           B   100    PORTFMASK	SET			%FF
+                           B   101    PORTGMASK	SET			%FF
+                           B   102    PORTHMASK	SET			%FF
+                           B   103    endif
+                           B   104    
+                           B   105    ; Target Group-8
+                           B   106    if (__Z8F1602=1) || (__Z8F2402=1) || (__Z8F3202
+                           B   107    define		PORTMASKS_DEFINED
+                           B   108    PORTAMASK	SET			%00
+                           B   109    PORTBMASK	SET			%00
+                           B   110    PORTCMASK	SET			%00
+                           B   111    PORTDMASK	SET			%00
+                           B   112    PORTEMASK	SET			%00
+                           B   113    PORTFMASK	SET			%7F
+                           B   114    PORTGMASK	SET			%F7
+                           B   115    PORTHMASK	SET			%F0
+                           B   116    endif
+                           B   117    
+                           B   118    ; Target Group-9
+                           B   119    if (__Z8F4803=1) || (__Z8F6403=1) || (__Z8F4823
+                           B   120    define		PORTMASKS_DEFINED
+                           B   121    PORTAMASK	SET			%00
+                           B   122    PORTBMASK	SET			%00
+                           B   123    PORTCMASK	SET			%00
+                           B   124    PORTDMASK	SET			%00
+                           B   125    PORTEMASK	SET			%00
+                           B   126    PORTFMASK	SET			%00
+                           B   127    PORTGMASK	SET			%00
+                           B   128    PORTHMASK	SET			%F0
+                           B   129    endif
+                           B   130    
+                           B   131    ; Target Group-10
+                           B   132    if (__Z8F081AXB=1) || (__Z8F082AXB=1) || (__Z8F
+                           B   133    define		PORTMASKS_DEFINED
+                           B   134    PORTAMASK	SET			%C0
+                           B   135    PORTBMASK	SET			%FF
+                           B   136    PORTCMASK	SET			%FF
+                           B   137    PORTDMASK	SET			%FF
+                           B   138    PORTEMASK	SET			%FF
+                           B   139    PORTFMASK	SET			%FF
+                           B   140    PORTGMASK	SET			%FF
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:35     page:  29
+
+
+PC     Object              I  Line    Source C:\PROGRA~2\ZiLOG\ZDSII_~1.0\include\zilog\gpio.inc
+                           B   141    PORTHMASK	SET			%FF
+                           B   142    endif
+                           B   143    
+                           B   144    ; Target Group-11
+                           B   145    if (__Z8F0813=1) || (__Z8F0823=1)
+                           B   146    define		PORTMASKS_DEFINED
+                           B   147    PORTAMASK	SET			%00
+                           B   148    PORTBMASK	SET			%00
+                           B   149    PORTCMASK	SET			%00
+                           B   150    PORTDMASK	SET			%FF
+                           B   151    PORTEMASK	SET			%FF
+                           B   152    PORTFMASK	SET			%FF
+                           B   153    PORTGMASK	SET			%FF
+                           B   154    PORTHMASK	SET			%FF
+                           B   155    endif
+                           B   156    
+                           B   157    ; Target Group-12
+                           B   158    if (__Z8F0423=1) || (__Z8F0413=1) || (__Z8F0223
+                           B   159    define		PORTMASKS_DEFINED
+                           B   160    PORTAMASK	SET			%00
+                           B   161    PORTBMASK	SET			%00
+                           B   162    PORTCMASK	SET			%00
+                           B   163    PORTDMASK	SET			%FF
+                           B   164    PORTEMASK	SET			%FF
+                           B   165    PORTFMASK	SET			%FF
+                           B   166    PORTGMASK	SET			%FF
+                           B   167    PORTHMASK	SET			%FF
+                           B   168    endif
+                           B   169    
+                           B   170    ; Target Group-13
+                           B   171    if (__Z8F081A=1) || (__Z8F082A=1)
+                           B   172    define		PORTMASKS_DEFINED
+                           B   173    PORTAMASK	SET			%00
+                           B   174    if (__Z8F081A=1)
+                           B   175    PORTBMASK	SET			%00
+                           B   176    else
+                           B   177    PORTBMASK	SET			%C0
+                           B   178    endif
+                           B   179    PORTCMASK	SET			%00
+                           B   180    PORTDMASK	SET			%FE
+                           B   181    PORTEMASK	SET			%FF
+                           B   182    PORTFMASK	SET			%FF
+                           B   183    PORTGMASK	SET			%FF
+                           B   184    PORTHMASK	SET			%FF
+                           B   185    endif
+                           B   186    
+                           B   187    ; Target Group-14
+                           B   188    if (__Z8FMC16=1)
+                           B   189    define		PORTMASKS_DEFINED
+                           B   190    PORTAMASK	SET			%00
+                           B   191    PORTBMASK	SET			%00
+                           B   192    PORTCMASK	SET			%FE
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:35     page:  30
+
+
+PC     Object              I  Line    Source C:\PROGRA~2\ZiLOG\ZDSII_~1.0\include\zilog\gpio.inc
+                           B   193    PORTDMASK	SET			%FF
+                           B   194    PORTEMASK	SET			%FF
+                           B   195    PORTFMASK	SET			%FF
+                           B   196    PORTGMASK	SET			%FF
+                           B   197    PORTHMASK	SET			%FF
+                           B   198    endif
+                           B   199    
+                           B   200    ; Target Group-15
+                           B   201    if (__Z8F0480XM=1)||(__Z8F0880XM=1)||(__Z8F1680
+                           B   202    define		PORTMASKS_DEFINED
+                           B   203    PORTAMASK	SET			%00
+                           B   204    PORTBMASK	SET			%00
+                           B   205    PORTCMASK	SET			%00
+                           B   206    PORTDMASK	SET			%00
+                           B   207    PORTEMASK	SET			%FE
+                           B   208    PORTFMASK	SET			%FF
+                           B   209    PORTGMASK	SET			%FF
+                           B   210    PORTHMASK	SET			%FF
+                           B   211    endif
+                           B   212    
+                           B   213    ; Target Group-16
+                           B   214    if (__Z8F0481XM=1)||(__Z8F0881XM=1)||(__Z8F1681
+                           B   215    define		PORTMASKS_DEFINED
+                           B   216    PORTAMASK	SET			%00
+                           B   217    PORTBMASK	SET			%00
+                           B   218    PORTCMASK	SET			%00
+                           B   219    PORTDMASK	SET			%00
+                           B   220    PORTEMASK	SET			%F8
+                           B   221    PORTFMASK	SET			%FF
+                           B   222    PORTGMASK	SET			%FF
+                           B   223    PORTHMASK	SET			%FF
+                           B   224    endif
+                           B   225    
+                           B   226    ; Target Group-17
+                           B   227    if (__Z8F0480XN=1)||(__Z8F0880XN=1)||(__Z8F1680
+                           B   228    define		PORTMASKS_DEFINED
+                           B   229    PORTAMASK	SET			%00
+                           B   230    PORTBMASK	SET			%00
+                           B   231    PORTCMASK	SET			%00
+                           B   232    PORTDMASK	SET			%00
+                           B   233    PORTEMASK	SET			%E0
+                           B   234    PORTFMASK	SET			%FF
+                           B   235    PORTGMASK	SET			%FF
+                           B   236    PORTHMASK	SET			%FF
+                           B   237    endif
+                           B   238    
+                           B   239    ; Target Group-18
+                           B   240    if (__Z8F0481XN=1)||(__Z8F0881XN=1)||(__Z8F1681
+                           B   241    define		PORTMASKS_DEFINED
+                           B   242    PORTAMASK	SET			%00
+                           B   243    PORTBMASK	SET			%00
+                           B   244    PORTCMASK	SET			%00
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:35     page:  31
+
+
+PC     Object              I  Line    Source C:\PROGRA~2\ZiLOG\ZDSII_~1.0\include\zilog\gpio.inc
+                           B   245    PORTDMASK	SET			%00
+                           B   246    PORTEMASK	SET			%80
+                           B   247    PORTFMASK	SET			%FF
+                           B   248    PORTGMASK	SET			%FF
+                           B   249    PORTHMASK	SET			%FF
+                           B   250    endif
+                           B   251    
+                           B   252    ; Target Group-19
+                           B   253    if (__Z8F0481XH=1)||(__Z8F0881XH=1)||(__Z8F1681
+                           B   254    define		PORTMASKS_DEFINED
+                           B   255    PORTAMASK	SET			%00
+                           B   256    PORTBMASK	SET			%F0
+                           B   257    PORTCMASK	SET			%F0
+                           B   258    PORTDMASK	SET			%FE
+                           B   259    PORTEMASK	SET			%FF
+                           B   260    PORTFMASK	SET			%FF
+                           B   261    PORTGMASK	SET			%FF
+                           B   262    PORTHMASK	SET			%FF
+                           B   263    endif
+                           B   264    
+                           B   265    ; Target Group-20
+                           B   266    if (__Z8F0481XJ=1)||(__Z8F0881XJ=1)||(__Z8F1681
+                           B   267    define		PORTMASKS_DEFINED
+                           B   268    PORTAMASK	SET			%00
+                           B   269    PORTBMASK	SET			%00
+                           B   270    PORTCMASK	SET			%00
+                           B   271    PORTDMASK	SET			%FE
+                           B   272    PORTEMASK	SET			%FF
+                           B   273    PORTFMASK	SET			%FF
+                           B   274    PORTGMASK	SET			%FF
+                           B   275    PORTHMASK	SET			%FF
+                           B   276    endif
+                           B   277    
+                           B   278    ; Target Group-21
+                           B   279    if (__Z8F0480XJ=1)||(__Z8F0880XJ=1)||(__Z8F1680
+                           B   280    define		PORTMASKS_DEFINED
+                           B   281    PORTAMASK	SET			%00
+                           B   282    PORTBMASK	SET			%C0
+                           B   283    PORTCMASK	SET			%00
+                           B   284    PORTDMASK	SET			%FE
+                           B   285    PORTEMASK	SET			%FF
+                           B   286    PORTFMASK	SET			%FF
+                           B   287    PORTGMASK	SET			%FF
+                           B   288    PORTHMASK	SET			%FF
+                           B   289    endif
+                           B   290    
+                           B   291    ; Default Group (assumes all ports and their bi
+                           B   292    ifndef PORTMASKS_DEFINED
+                           B   293    PORTAMASK	SET			%00
+                           B   294    PORTBMASK	SET			%00
+                           B   295    PORTCMASK	SET			%00
+                           B   296    PORTDMASK	SET			%00
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:35     page:  32
+
+
+PC     Object              I  Line    Source C:\PROGRA~2\ZiLOG\ZDSII_~1.0\include\zilog\gpio.inc
+                           B   297    PORTEMASK	SET			%00
+                           B   298    PORTFMASK	SET			%00
+                           B   299    PORTGMASK	SET			%00
+                           B   300    PORTHMASK	SET			%F0
+                           B   301    endif
+                           B   302    
+                           B   303    
+                           A   165    
+                           A   166    .ifdef _MODEL_LARGE
+                           A   167    	segment far_data
+                           A   168    .endif
+                           A   169    .ifdef _MODEL_SMALL
+                           A   170    	segment near_data
+                           A   171    .endif
+                           A   172    
+                           A   173    .ifdef _ZSL_DEVICE_PORTA
+                           A   174    	XDEF _portamask
+0000                       A   175    _portamask:
+0000 00                    A   176    	db PORTAMASK
+                           A   177    .endif
+                           A   178    .ifdef _ZSL_DEVICE_PORTB
+                           A   179    	XDEF _portbmask
+0001                       A   180    _portbmask:
+0001 E0                    A   181    	db PORTBMASK
+                           A   182    .endif
+                           A   183    .ifdef _ZSL_DEVICE_PORTC
+                           A   184    	XDEF _portcmask
+0002                       A   185    _portcmask:
+0002 C0                    A   186    	db PORTCMASK
+                           A   187    .endif
+                           A   188    .ifdef _ZSL_DEVICE_PORTD
+                           A   189    	XDEF _portdmask
+                           A   190    _portdmask:
+                           A   191    	db PORTDMASK
+                           A   192    .endif
+                           A   193    .ifdef _ZSL_DEVICE_PORTE
+                           A   194    	XDEF _portemask
+                           A   195    _portemask:
+                           A   196    	db PORTEMASK
+                           A   197    .endif
+                           A   198    .ifdef _ZSL_DEVICE_PORTF
+                           A   199    	XDEF _portfmask
+                           A   200    _portfmask:
+                           A   201    	db PORTFMASK
+                           A   202    .endif
+                           A   203    .ifdef _ZSL_DEVICE_PORTG
+                           A   204    	XDEF _portgmask
+                           A   205    _portgmask:
+                           A   206    	db PORTGMASK
+                           A   207    .endif
+                           A   208    .ifdef _ZSL_DEVICE_PORTH
+                           A   209    	XDEF _porthmask
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 26-May-15     23:49:35     page:  33
+
+
+PC     Object              I  Line    Source E:\ePin\source\LampDriver\zsldevinit.asm
+                           A   210    _porthmask:
+                           A   211    	db PORTHMASK
+                           A   212    .endif
+                           A   213    
+                           A   214    
+                           A   215    .endif ;if PORT used
+                           A   216    
+                           A   217    ;----------------------------------------------
+                           A   218    .ifdef _MODEL_LARGE
+                           A   219    	segment far_data
+                           A   220    .endif
+                           A   221    .ifdef _MODEL_SMALL
+                           A   222    	segment near_data
+                           A   223    .endif
+                           A   224    
+                           A   225    	XDEF _g_simulate
+                           A   226    	XDEF _g_clock0
+                           A   227    	XDEF _g_clock1
+                           A   228    	XREF _zsl_g_clock_xdefine
+                           A   229    
+0003                       A   230    _g_simulate:
+                           A   231    .ifdef _SIMULATE
+                           A   232    	db 1
+                           A   233    .else
+0003 00                    A   234    	db 0
+                           A   235    .endif
+                           A   236    
+0004                       A   237    _g_clock0:
+0004                       A   238    _g_clock1:							; The clock
+0004 00000000              A   239    	dl _zsl_g_clock_xdefine
+                           A   240    
+                           A   241    
+                           A   242    
+                           A   243    ; End of File
+                           A   244    
+
+
+Errors: 0
+Warnings: 0
+Lines Assembled: 1700

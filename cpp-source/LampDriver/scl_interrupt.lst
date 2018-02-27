@@ -1,0 +1,928 @@
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 27-Sep-14     08:33:40     page:   1
+
+
+PC     Object              I  Line    Source 
+                           A     1    ; Z8 Encore! ANSI C Compiler Release 3.64
+                           A     2    ; -nofastcall -const=ROM -listinc -model=S -opt
+                           A     3    ; -noreduceopt -debug -norevaa -peephole -local
+                           A     4    ; -alias 
+                           A     5    	DEFINE terrupt_TEXT,SPACE=ROM
+                           A     6    	FILE	".\scl_interrupt.c"
+                           A     7    .debug "C"
+                           A     8    	SEGMENT NEAR_BSS
+0000                       A     9    _i2c_flag:
+0000                       A    10    	DS	1
+                           A    11    .define "i2c_flag"
+                           A    12    .alias "_i2c_flag"
+                           A    13    .class 147
+                           A    14    .value _i2c_flag
+                           A    15    .type 12
+                           A    16    .endef
+0001                       A    17    _bit_counter:
+0001                       A    18    	DS	1
+                           A    19    .define "bit_counter"
+                           A    20    .alias "_bit_counter"
+                           A    21    .class 147
+                           A    22    .value _bit_counter
+                           A    23    .type 12
+                           A    24    .endef
+0002                       A    25    _data_receive_byte:
+0002                       A    26    	DS	1
+                           A    27    .define "data_receive_byte"
+                           A    28    .alias "_data_receive_byte"
+                           A    29    .class 147
+                           A    30    .value _data_receive_byte
+                           A    31    .type 12
+                           A    32    .endef
+0003                       A    33    _data_transmit_byte:
+0003                       A    34    	DS	1
+                           A    35    .define "data_transmit_byte"
+                           A    36    .alias "_data_transmit_byte"
+                           A    37    .class 147
+                           A    38    .value _data_transmit_byte
+                           A    39    .type 12
+                           A    40    .endef
+0004                       A    41    _sda_bit:
+0004                       A    42    	DS	1
+                           A    43    .define "sda_bit"
+                           A    44    .alias "_sda_bit"
+                           A    45    .class 147
+                           A    46    .value _sda_bit
+                           A    47    .type 12
+                           A    48    .endef
+0005                       A    49    _bus_status:
+0005                       A    50    	DS	1
+                           A    51    .define "bus_status"
+                           A    52    .alias "_bus_status"
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 27-Sep-14     08:33:40     page:   2
+
+
+PC     Object              I  Line    Source scl_interrupt.src
+                           A    53    .class 147
+                           A    54    .value _bus_status
+                           A    55    .type 12
+                           A    56    .endef
+0006                       A    57    _rising_edge_counter:
+0006                       A    58    	DS	1
+                           A    59    .define "rising_edge_counter"
+                           A    60    .alias "_rising_edge_counter"
+                           A    61    .class 147
+                           A    62    .value _rising_edge_counter
+                           A    63    .type 12
+                           A    64    .endef
+0007                       A    65    _address_received:
+0007                       A    66    	DS	1
+                           A    67    .define "address_received"
+                           A    68    .alias "_address_received"
+                           A    69    .class 147
+                           A    70    .value _address_received
+                           A    71    .type 12
+                           A    72    .endef
+0008                       A    73    _data_byte:
+0008                       A    74    	DS	1
+                           A    75    .define "data_byte"
+                           A    76    .alias "_data_byte"
+                           A    77    .class 147
+                           A    78    .value _data_byte
+                           A    79    .type 12
+                           A    80    .endef
+0009                       A    81    _edge:
+0009                       A    82    	DS	1
+                           A    83    .define "edge"
+                           A    84    .alias "_edge"
+                           A    85    .class 147
+                           A    86    .value _edge
+                           A    87    .type 12
+                           A    88    .endef
+000A                       A    89    _temp1:
+000A                       A    90    	DS	1
+                           A    91    .define "temp1"
+                           A    92    .alias "_temp1"
+                           A    93    .class 147
+                           A    94    .value _temp1
+                           A    95    .type 12
+                           A    96    .endef
+000B                       A    97    _send_bit:
+000B                       A    98    	DS	1
+                           A    99    .define "send_bit"
+                           A   100    .alias "_send_bit"
+                           A   101    .class 147
+                           A   102    .value _send_bit
+                           A   103    .type 12
+                           A   104    .endef
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 27-Sep-14     08:33:40     page:   3
+
+
+PC     Object              I  Line    Source scl_interrupt.src
+000C                       A   105    _byte_count:
+000C                       A   106    	DS	1
+                           A   107    .define "byte_count"
+                           A   108    .alias "_byte_count"
+                           A   109    .class 147
+                           A   110    .value _byte_count
+                           A   111    .type 12
+                           A   112    .endef
+                           A   113    	SEGMENT NEAR_DATA
+0000                       A   114    _function_ptr:
+0000 00B2                  A   115    	DW	_slave_address_receive
+0002 011B                  A   116    	DW	_slave_data_receive
+0004 0141                  A   117    	DW	_slave_transmitter
+0006 018F                  A   118    	DW	_address_mismatch
+                           A   119    .define "function_ptr"
+                           A   120    .alias "_function_ptr"
+                           A   121    .class 133
+                           A   122    .value _function_ptr
+                           A   123    .dim 4
+                           A   124    .type 5217
+                           A   125    .endef
+                           A   126    	SEGMENT ROM_DATA
+                           A   127    
+                           A   128    
+                           A   129    ;**************************** _main ***********
+                           A   130    ;Name                         Addr/Register   S
+                           A   131    ;_EI                                 IMPORT  --
+                           A   132    ;_bus_status                         STATIC    
+                           A   133    ;_i2c_flag                           STATIC    
+                           A   134    
+                           A   135    
+                           A   136    ; Aggregate Stack Size: 0 (words)
+                           A   137    
+                           A   138    
+                           A   139    	.FRAME _n_main,?_n_main,RDATA
+                           A   140    ;    1	/*
+                           A   141    ;    2	***************************************
+                           A   142    ;    3	* File : scl_interrupt.c
+                           A   143    ;    4	* Description : Codes for I2C slave fun
+                           A   144    ;    5	* 
+                           A   145    ;    6	* Copyright 2004 ZiLOG Inc. ALL RIGHTS 
+                           A   146    ;    7	*
+                           A   147    ;    8	* The source code in this file was writ
+                           A   148    ;    9	* authorized ZiLOG employee or a licens
+                           A   149    ;   10	* The source code has been verified to 
+                           A   150    ;   11	* extent possible.
+                           A   151    ;   12	*
+                           A   152    ;   13	* Permission to use this code is grante
+                           A   153    ;   14	* basis. However users are cautioned to
+                           A   154    ;   15	* code contained herein.
+                           A   155    ;   16	*
+                           A   156    ;   17	* ZiLOG DOES NOT GUARANTEE THE VERACITY
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 27-Sep-14     08:33:40     page:   4
+
+
+PC     Object              I  Line    Source scl_interrupt.src
+                           A   157    ;   18	***************************************
+                           A   158    ;   19	*/
+                           A   159    ;   20	
+                           A   160    ;   21	#include <ez8.h>
+                           A   161    ;   22	#include "scl_interrupt.h"
+                           A   162    ;   23	
+                           A   163    ;   24	 
+                           A   164    ;   25	
+                           A   165    ;   26	unsigned char  i2c_flag;		// To h
+                           A   166    ;   27	
+                           A   167    ;   28	unsigned char bit_counter;	// To keep 
+                           A   168    ;   29								// This cou
+                           A   169    ;   30	unsigned char data_receive_byte; // To 
+                           A   170    ;   31	
+                           A   171    ;   32	unsigned char data_transmit_byte; // To
+                           A   172    ;   33	
+                           A   173    ;   34	unsigned char volatile sda_bit;	 //Read
+                           A   174    ;   35	unsigned char bus_status; // To set bus
+                           A   175    ;   36	unsigned char rising_edge_counter;  // 
+                           A   176    ;   37										// 
+                           A   177    ;   38	unsigned char volatile address_received
+                           A   178    ;   39	unsigned char volatile data_byte;      
+                           A   179    ;   40	unsigned char volatile edge;
+                           A   180    ;   41	unsigned char volatile temp1;
+                           A   181    ;   42	unsigned char volatile send_bit;  // St
+                           A   182    ;   43	unsigned char byte_count; // Count no o
+                           A   183    ;   44	
+                           A   184    ;   45	
+                           A   185    ;   46	//Initialization of  the function point
+                           A   186    ;   47	void (*function_ptr[4])(void) = { 
+                           A   187    	SEGMENT terrupt_TEXT
+                           A   188    ;   48		slave_address_receive,
+                           A   189    ;   49		slave_data_receive,
+                           A   190    ;   50		slave_transmitter,
+                           A   191    ;   51		address_mismatch }; 
+                           A   192    ;   52	
+                           A   193    ;   53	/* ************************************
+                           A   194    ;   54	The main routine ,sets the Port pins PC
+                           A   195    ;   55	with open drain.The I2C bus status is s
+                           A   196    ;   56	Sets the interrupt PC0 and PC1 to highi
+                           A   197    ;   57	add his code in this main OR can call s
+                           A   198    ;   58	/**************************************
+                           A   199    ;   59	
+                           A   200    ;   60	
+                           A   201    ;   61	void main()
+                           A   202    ;   62	{
+0000                       A   203    _main:
+                           A   204    .define "_main"
+                           A   205    .value _main
+                           A   206    .class 2
+                           A   207    .type 65
+                           A   208    .endef
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 27-Sep-14     08:33:40     page:   5
+
+
+PC     Object              I  Line    Source scl_interrupt.src
+                           A   209    .begfunc "main",62,"_main"
+                           A   210    ;   63	  PCADDR = 0x03 ; //For open drain mode
+                           A   211    .line 63
+0000 E9030FD8              A   212    	LDX	4056,#3
+                           A   213    ;   64	  PCCTL |= 0x03; // Port pin PC0 to ope
+                           A   214    .line 64
+0004 49030FD9              A   215    	ORX	4057,#3
+                           A   216    ;   65	
+                           A   217    ;   66	  i2c_flag = I2C_ADDRESS_RECEIVE;	
+                           A   218    .line 66
+0008 B0 00                 A   219    	CLR	_i2c_flag
+                           A   220    ;   67	  PCADDR = 0x01;				//Set t
+                           A   221    .line 67
+000A E9010FD8              A   222    	LDX	4056,#1
+                           A   223    ;   68	  PCCTL  |= SDA_DIRECTION_IN;   // Chan
+                           A   224    .line 68
+000E 49010FD9              A   225    	ORX	4057,#1
+                           A   226    ;   69	  PCCTL  |=	SCL_DIRECTION_IN;   //OR wi
+                           A   227    .line 69
+0012 49020FD9              A   228    	ORX	4057,#2
+                           A   229    ;   70	  bus_status = I2C_BUS_FREE;	// Indi
+                           A   230    .line 70
+0016 B0 05                 A   231    	CLR	_bus_status
+                           A   232    ;   71	  IRQ2ENL = 0x03;
+                           A   233    .line 71
+0018 E9030FC8              A   234    	LDX	4040,#3
+                           A   235    ;   72	  IRQ2ENH = 0x03;    // Set SDA and SCL
+                           A   236    .line 72
+001C E9030FC7              A   237    	LDX	4039,#3
+                           A   238    ;   73	
+                           A   239    ;   74	  EI();				//Enable all interr
+                           A   240    .line 74
+0020 9F                    A   241    	EI
+                           A   242    ;   75	  while(1){;}		// Wait in infinite
+0021                       A   243    _1_L_1:
+                           A   244    .line 75
+0021 8B FE                 A   245    	JR	_1_L_1
+                           A   246    ;   76	 }
+                           A   247    .line 76
+0023 AF                    A   248    	RET	
+                           A   249    .endfunc "main",76,"_main"
+                           A   250    	SEGMENT ROM_DATA
+                           A   251    
+                           A   252    
+                           A   253    ;**************************** _SCL_interrupt **
+                           A   254    ;Name                         Addr/Register   S
+                           A   255    ;_i2c_flag                           STATIC    
+                           A   256    ;_function_ptr                       STATIC    
+                           A   257    ;_data_receive_byte                  STATIC    
+                           A   258    ;_sda_bit                            STATIC    
+                           A   259    ;_rising_edge_counter                STATIC    
+                           A   260    ;_SET_VECTOR                         IMPORT  --
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 27-Sep-14     08:33:40     page:   6
+
+
+PC     Object              I  Line    Source scl_interrupt.src
+                           A   261    ;_edge                               STATIC    
+                           A   262    
+                           A   263    
+                           A   264    ; Aggregate Stack Size: 0 (words)
+                           A   265    
+                           A   266    
+                           A   267    	.FRAME _n_SCL_interrupt,?_n_SCL_interrupt,R
+                           A   268    	SEGMENT terrupt_TEXT
+                           A   269    ;   77	
+                           A   270    ;   78	
+                           A   271    ;   79	/* ************************************
+                           A   272    ;   80	This is an interrupt service routine. T
+                           A   273    ;   81	rising and falling edges of SCL(on I2C 
+                           A   274    ;   82	"rising_edge_counter" is incremented to
+                           A   275    ;   83	decisions. This routine reads the data 
+                           A   276    ;   84	data is shifted(MSB is received or tran
+                           A   277    ;   85	8 bits are received.During the low edge
+                           A   278    ;   86	functions based on the I2C flag status.
+                           A   279    ;   87	***************************************
+                           A   280    ;   88	
+                           A   281    ;   89	#pragma interrupt
+                           A   282    ;   90	 void SCL_interrupt(void)
+                           A   283    ;   91	 {	 
+0024                       A   284    _SCL_interrupt:
+                           A   285    .define "_SCL_interrupt"
+                           A   286    .value _SCL_interrupt
+                           A   287    .class 2
+                           A   288    .type 65
+                           A   289    .endef
+                           A   290    .begfunc "SCL_interrupt",91,"_SCL_interrupt"
+0024 C8FFD0                A   291    	PUSHX	4093
+0027 E8 000FFD             A   292    	LDX	4093,__intrp
+002B 09100000              A   293    	ADDX	__intrp,#16
+                           A   294    ;   92	    edge = PCIN & SCL_READ;
+                           A   295    .line 92
+002F 840FDA                A   296    	LDX	R0,4058
+0032 56E002                A   297    	AND	R0,#2
+0035 E4E0 09               A   298    	LD	_edge,R0
+                           A   299    ;   93	 	SET_VECTOR(C1 ,SCL_interrupt);
+                           A   300    ;   94		 if (edge == 0x02)  		// Risi
+                           A   301    .line 94
+0038 A6 09 02              A   302    	CP	_edge,#2
+003B EB 47                 A   303    	JR	NE,_2_L_11
+                           A   304    ;   95			{	
+                           A   305    ;   96			
+                           A   306    ;   97				rising_edge_counter++;
+                           A   307    .line 97
+003D 20 06                 A   308    	INC	_rising_edge_counter
+                           A   309    ;   98			    if(rising_edge_counter == 0
+                           A   310    .line 98
+003F A6 06 0A              A   311    	CP	_rising_edge_counter,#10
+0042 EB 11                 A   312    	JR	NE,_2_L_5
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 27-Sep-14     08:33:40     page:   7
+
+
+PC     Object              I  Line    Source scl_interrupt.src
+                           A   313    ;   99				 {
+                           A   314    ;  100					rising_edge_counter = 0
+                           A   315    .line 100
+0044 E6 06 01              A   316    	LD	_rising_edge_counter,#1
+                           A   317    ;  101					IRQ2 = IRQ2 & 0XFE;		                           A   318    .line 101
+0047 59FE0FC6              A   319    	ANDX	4038,#254
+                           A   320    ;  102					IRQ2ENH |= SDA_INTR_ENA
+                           A   321    .line 102
+004B 49010FC7              A   322    	ORX	4039,#1
+                           A   323    ;  103	  				IRQ2ENL |= SDA_INTR_ENA
+                           A   324    .line 103
+004F 49010FC8              A   325    	ORX	4040,#1
+                           A   326    ;  104						
+                           A   327    ;  105			   }
+                           A   328    ;  106	
+                           A   329    ;  107				else
+                           A   330    .line 107
+0053 8B 08                 A   331    	JR	_2_L_7
+0055                       A   332    _2_L_5:
+                           A   333    ;  108				 {
+                           A   334    ;  109					IRQ2ENH &= SDA_INTR_DIS
+                           A   335    .line 109
+0055 59FE0FC7              A   336    	ANDX	4039,#254
+                           A   337    ;  110	  				IRQ2ENL &= SDA_INTR_DIS
+                           A   338    .line 110
+0059 59FE0FC8              A   339    	ANDX	4040,#254
+                           A   340    ;  111					
+                           A   341    ;  112				 }
+005D                       A   342    _2_L_7:
+                           A   343    .line 112
+                           A   344    ;  113	
+                           A   345    ;  114			    if(rising_edge_counter <= 0
+                           A   346    .line 114
+005D A6 06 07              A   347    	CP	_rising_edge_counter,#7
+0060 BB 0F                 A   348    	JR	UGT,_2_L_9
+                           A   349    ;  115				{
+                           A   350    ;  116					sda_bit = PCIN & SDA_RE
+                           A   351    .line 116
+0062 840FDA                A   352    	LDX	R0,4058
+0065 56E001                A   353    	AND	R0,#1
+0068 E4E0 04               A   354    	LD	_sda_bit,R0
+                           A   355    ;  117	   				data_receive_byte |= sd
+                           A   356    .line 117
+006B 44 04 02              A   357    	OR	_data_receive_byte,_sda_bit
+                           A   358    ;  118	   				data_receive_byte <<= 0
+                           A   359    .line 118
+006E 04 02 02              A   360    	ADD	_data_receive_byte,_data_receive_byte
+                           A   361    ;  119					
+                           A   362    ;  120				}
+0071                       A   363    _2_L_9:
+                           A   364    .line 120
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 27-Sep-14     08:33:40     page:   8
+
+
+PC     Object              I  Line    Source scl_interrupt.src
+                           A   365    ;  121				if(rising_edge_counter == 0
+                           A   366    .line 121
+0071 A6 06 08              A   367    	CP	_rising_edge_counter,#8
+0074 EB 34                 A   368    	JR	NE,_2_L_12
+                           A   369    ;  122				{
+                           A   370    ;  123					sda_bit = PCIN & SDA_RE
+                           A   371    .line 123
+0076 840FDA                A   372    	LDX	R0,4058
+0079 56E001                A   373    	AND	R0,#1
+007C E4E0 04               A   374    	LD	_sda_bit,R0
+                           A   375    ;  124	   				data_receive_byte |= sd
+                           A   376    .line 124
+007F 44 04 02              A   377    	OR	_data_receive_byte,_sda_bit
+                           A   378    ;  125					
+                           A   379    ;  126				}
+                           A   380    ;  127			}
+                           A   381    ;  128		else		// Falling edge detecte
+                           A   382    .line 128
+0082 8B 26                 A   383    	JR	_2_L_12
+0084                       A   384    _2_L_11:
+                           A   385    ;  129		{
+                           A   386    ;  130		IRQ2ENH &= SDA_INTR_DISABLE;    // 
+                           A   387    .line 130
+0084 59FE0FC7              A   388    	ANDX	4039,#254
+                           A   389    ;  131	  	IRQ2ENL &= SDA_INTR_DISABLE;    // 
+                           A   390    .line 131
+0088 59FE0FC8              A   391    	ANDX	4040,#254
+                           A   392    ;  132					
+                           A   393    ;  133		PCCTL  &= SCL_DIRECTION_OUT; 	// 
+                           A   394    .line 133
+008C 59FD0FD9              A   395    	ANDX	4057,#253
+                           A   396    ;  134	  	PCOUT  &= HOLD_SCL_LOW;		 	// 
+                           A   397    .line 134
+0090 59FD0FDB              A   398    	ANDX	4059,#253
+                           A   399    ;  135		(*function_ptr[i2c_flag])(); 	//C
+                           A   400    .line 135
+0094 E4 00 E2              A   401    	LD	R2,_i2c_flag
+0097 3C02                  A   402    	LD	R3,#2
+0099 F4E2                  A   403    	MULT	RR2
+009B 0C 00                 A   404    	LD	R0,#_function_ptr
+009D 0203                  A   405    	ADD	R0,R3
+009F E320                  A   406    	LD	R2,@R0
+00A1 C73001                A   407    	LD	R3,1(R0)
+00A4 D4E2                  A   408    	CALL	@RR2
+                           A   409    ;  136		PCCTL |= SCL_DIRECTION_IN;   	// 
+                           A   410    .line 136
+00A6 49020FD9              A   411    	ORX	4057,#2
+                           A   412    ;  137	
+                           A   413    ;  138		}	 
+                           A   414    ;  139	}
+00AA                       A   415    _2_L_12:
+                           A   416    .line 139
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 27-Sep-14     08:33:40     page:   9
+
+
+PC     Object              I  Line    Source scl_interrupt.src
+00AA 29100000              A   417    	SUBX	__intrp,#16
+00AE D8FFD0                A   418    	POPX	4093
+00B1 BF                    A   419    	IRET	
+                           A   420    .endfunc "SCL_interrupt",139,"_SCL_interrupt"
+                           A   421    	SEGMENT ROM_DATA
+                           A   422    
+                           A   423    
+                           A   424    ;**************************** _slave_address_re
+                           A   425    ;Name                         Addr/Register   S
+                           A   426    ;_send_bit                           STATIC    
+                           A   427    ;_data_byte                          STATIC    
+                           A   428    ;_i2c_flag                           STATIC    
+                           A   429    ;_temp1                              STATIC    
+                           A   430    ;_address_received                   STATIC    
+                           A   431    ;_data_receive_byte                  STATIC    
+                           A   432    ;_bit_counter                        STATIC    
+                           A   433    
+                           A   434    
+                           A   435    ; Aggregate Stack Size: 0 (words)
+                           A   436    
+                           A   437    
+                           A   438    	.FRAME _n_slave_address_receive,?_n_slave_a
+                           A   439    	SEGMENT terrupt_TEXT
+                           A   440    ;  140	/* ************************************
+                           A   441    ;  141	This fuction, after receiving the addre
+                           A   442    ;  142	Sends Acknowledge if the Address receiv
+                           A   443    ;  143	otherwise it sets the address mismatch 
+                           A   444    ;  144	slave or write to slave and accordingly
+                           A   445    ;  145	***************************************
+                           A   446    ;  146	
+                           A   447    ;  147	
+                           A   448    ;  148	void slave_address_receive(void)
+                           A   449    ;  149	
+                           A   450    ;  150	{
+00B2                       A   451    _slave_address_receive:
+                           A   452    .define "_slave_address_receive"
+                           A   453    .value _slave_address_receive
+                           A   454    .class 2
+                           A   455    .type 65
+                           A   456    .endef
+                           A   457    .begfunc "slave_address_receive",150,"_slave_ad
+                           A   458    ;  151	 
+                           A   459    ;  152	
+                           A   460    ;  153			bit_counter++; 
+                           A   461    .line 153
+00B2 20 01                 A   462    	INC	_bit_counter
+                           A   463    ;  154			if(bit_counter <= 0x08)			                           A   464    .line 154
+00B4 A6 01 08              A   465    	CP	_bit_counter,#8
+00B7 3B 61                 A   466    	JR	ULE,_3_L_23
+                           A   467    ;  155				{							                           A   468    ;  156					return;					Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 27-Sep-14     08:33:40     page:  10
+
+
+PC     Object              I  Line    Source scl_interrupt.src
+                           A   469    .line 156
+                           A   470    ;  157				}							                           A   471    .line 157
+                           A   472    ;  158			if(bit_counter == 0x09)
+                           A   473    .line 158
+00B9 A6 01 09              A   474    	CP	_bit_counter,#9
+00BC EB 1F                 A   475    	JR	NE,_3_L_22
+                           A   476    ;  159				{
+                           A   477    ;  160					address_received = data
+                           A   478    .line 160
+00BE E4 02 07              A   479    	LD	_address_received,_data_receive_byte
+                           A   480    ;  161					temp1 = (data_receive_b
+                           A   481    .line 161
+00C1 E4 02 E0              A   482    	LD	R0,_data_receive_byte
+00C4 E200                  A   483    	BCLR	0,R0
+00C6 E4E0 0A               A   484    	LD	_temp1,R0
+                           A   485    ;  162					if(temp1 == DEVICE_ADDR
+                           A   486    .line 162
+00C9 A6 0A AE              A   487    	CP	_temp1,#174
+00CC EB 0A                 A   488    	JR	NE,_3_L_16
+                           A   489    ;  163						{
+                           A   490    ;  164	 	 				   	PCCTL  &= SDA_D
+                           A   491    .line 164
+00CE 59FE0FD9              A   492    	ANDX	4057,#254
+                           A   493    ;  165							PCOUT &= SEND_A
+                           A   494    .line 165
+00D2 59FE0FDB              A   495    	ANDX	4059,#254
+                           A   496    ;  166		    				return;
+                           A   497    .line 166
+00D6 8B 42                 A   498    	JR	_3_L_23
+                           A   499    ;  167					   	}
+                           A   500    ;  168	  				else 
+00D8                       A   501    _3_L_16:
+                           A   502    .line 168
+                           A   503    ;  169	   				 {
+                           A   504    ;  170						i2c_flag = I2C_ADDR
+                           A   505    .line 170
+00D8 E6 00 03              A   506    	LD	_i2c_flag,#3
+                           A   507    ;  171						return; 
+                           A   508    .line 171
+00DB 8B 3D                 A   509    	JR	_3_L_23
+                           A   510    ;  172					}	
+                           A   511    ;  173				}
+00DD                       A   512    _3_L_22:
+                           A   513    .line 173
+                           A   514    ;  174	          if(bit_counter == 0x0A)
+                           A   515    .line 174
+00DD A6 01 0A              A   516    	CP	_bit_counter,#10
+00E0 EB 38                 A   517    	JR	NE,_3_L_23
+                           A   518    ;  175				{
+                           A   519    ;  176					bit_counter = 0x01;		                           A   520    .line 176
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 27-Sep-14     08:33:40     page:  11
+
+
+PC     Object              I  Line    Source scl_interrupt.src
+00E2 E6 01 01              A   521    	LD	_bit_counter,#1
+                           A   522    ;  177					temp1 = data_receive_by
+                           A   523    .line 177
+00E5 E4 02 0A              A   524    	LD	_temp1,_data_receive_byte
+                           A   525    ;  178					temp1 &= 0x01;
+                           A   526    .line 178
+00E8 56 0A 01              A   527    	AND	_temp1,#1
+                           A   528    ;  179			    	if(temp1 == 0x01) 		                           A   529    .line 179
+00EB A6 0A 01              A   530    	CP	_temp1,#1
+00EE EB 23                 A   531    	JR	NE,_3_L_20
+                           A   532    ;  180	    		     	{					                           A   533    ;  181				 	//	send_bit = 	data_tr
+                           A   534    ;  182						send_bit = data_byt
+                           A   535    .line 182
+00F0 E4 08 0B              A   536    	LD	_send_bit,_data_byte
+                           A   537    ;  183						send_bit &= 0x80;
+                           A   538    .line 183
+00F3 56 0B 80              A   539    	AND	_send_bit,#128
+                           A   540    ;  184						send_bit = send_bit
+                           A   541    .line 184
+00F6 E4 0B E0              A   542    	LD	R0,_send_bit
+00F9 B0E1                  A   543    	CLR	R1
+00FB 2C07                  A   544    	LD	R2,#7
+00FD                       A   545    L__13:
+00FD D0E1                  A   546    	SRA	R1
+00FF C0E0                  A   547    	RRC	R0
+0101 2A FA                 A   548    	DJNZ	R2,L__13
+0103 E4E0 0B               A   549    	LD	_send_bit,R0
+                           A   550    ;  185						PCCTL  &= SDA_DIREC
+                           A   551    .line 185
+0106 59FE0FD9              A   552    	ANDX	4057,#254
+                           A   553    ;  186						PCOUT |= send_bit;	                           A   554    .line 186
+010A 48 00BFDB             A   555    	ORX	4059,_send_bit
+                           A   556    ;  187						i2c_flag = I2C_DATA
+                           A   557    .line 187
+010E E6 00 02              A   558    	LD	_i2c_flag,#2
+                           A   559    ;  188						return;
+                           A   560    .line 188
+0111 8B 07                 A   561    	JR	_3_L_23
+                           A   562    ;  189						}
+                           A   563    ;  190	       			else
+0113                       A   564    _3_L_20:
+                           A   565    .line 190
+                           A   566    ;  191						{
+                           A   567    ;  192	  	      			i2c_flag = I2C_DATA
+                           A   568    .line 192
+0113 E6 00 01              A   569    	LD	_i2c_flag,#1
+                           A   570    ;  193	            		PCCTL  |= SDA_DIREC
+                           A   571    .line 193
+0116 49010FD9              A   572    	ORX	4057,#1
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 27-Sep-14     08:33:40     page:  12
+
+
+PC     Object              I  Line    Source scl_interrupt.src
+                           A   573    ;  194					 	}					                           A   574    ;  195		
+                           A   575    ;  196	   		
+                           A   576    ;  197			
+                           A   577    ;  198				}	
+                           A   578    ;  199		}
+011A                       A   579    _3_L_23:
+                           A   580    .line 199
+011A AF                    A   581    	RET	
+                           A   582    .endfunc "slave_address_receive",199,"_slave_ad
+                           A   583    	SEGMENT ROM_DATA
+                           A   584    
+                           A   585    
+                           A   586    ;**************************** _slave_data_recei
+                           A   587    ;Name                         Addr/Register   S
+                           A   588    ;_data_byte                          STATIC    
+                           A   589    ;_data_receive_byte                  STATIC    
+                           A   590    ;_bit_counter                        STATIC    
+                           A   591    
+                           A   592    
+                           A   593    ; Aggregate Stack Size: 0 (words)
+                           A   594    
+                           A   595    
+                           A   596    	.FRAME _n_slave_data_receive,?_n_slave_data
+                           A   597    	SEGMENT terrupt_TEXT
+                           A   598    ;  200	
+                           A   599    ;  201	/* ************************************
+                           A   600    ;  202	This function is  sends an acknowledge 
+                           A   601    ;  203	Stores the received byte in a buffer.
+                           A   602    ;  204	***************************************
+                           A   603    ;  205	
+                           A   604    ;  206	void slave_data_receive(void)
+                           A   605    ;  207	{
+011B                       A   606    _slave_data_receive:
+                           A   607    .define "_slave_data_receive"
+                           A   608    .value _slave_data_receive
+                           A   609    .class 2
+                           A   610    .type 65
+                           A   611    .endef
+                           A   612    .begfunc "slave_data_receive",207,"_slave_data_
+                           A   613    ;  208	  	  bit_counter++;  //Keep the count 
+                           A   614    .line 208
+011B 20 01                 A   615    	INC	_bit_counter
+                           A   616    ;  209	 	  if(bit_counter <=0x08)
+                           A   617    .line 209
+011D A6 01 08              A   618    	CP	_bit_counter,#8
+0120 3B 1E                 A   619    	JR	ULE,_4_L_30
+                           A   620    ;  210			{
+                           A   621    ;  211				return;
+                           A   622    .line 211
+                           A   623    ;  212			}
+                           A   624    .line 212
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 27-Sep-14     08:33:40     page:  13
+
+
+PC     Object              I  Line    Source scl_interrupt.src
+                           A   625    ;  213	
+                           A   626    ;  214		  if(bit_counter == 0x09)
+                           A   627    .line 214
+0122 A6 01 09              A   628    	CP	_bit_counter,#9
+0125 EB 0D                 A   629    	JR	NE,_4_L_28
+                           A   630    ;  215			{
+                           A   631    ;  216			data_byte = data_receive_byte;	                           A   632    .line 216
+0127 E4 02 08              A   633    	LD	_data_byte,_data_receive_byte
+                           A   634    ;  217			PCCTL  &= SDA_DIRECTION_OUT; //
+                           A   635    .line 217
+012A 59FE0FD9              A   636    	ANDX	4057,#254
+                           A   637    ;  218			PCOUT &= SEND_ACK;			 //
+                           A   638    .line 218
+012E 59FE0FDB              A   639    	ANDX	4059,#254
+                           A   640    ;  219			return;
+                           A   641    .line 219
+0132 8B 0C                 A   642    	JR	_4_L_30
+                           A   643    ;  220			}
+                           A   644    ;  221		 else if(bit_counter ==0x0A)
+0134                       A   645    _4_L_28:
+                           A   646    .line 221
+0134 A6 01 0A              A   647    	CP	_bit_counter,#10
+0137 EB 07                 A   648    	JR	NE,_4_L_30
+                           A   649    ;  222		   {
+                           A   650    ;  223		   bit_counter = 0x01;			   
+                           A   651    .line 223
+0139 E6 01 01              A   652    	LD	_bit_counter,#1
+                           A   653    ;  224	       PCCTL  |= SDA_DIRECTION_IN;		                           A   654    .line 224
+013C 49010FD9              A   655    	ORX	4057,#1
+                           A   656    ;  225		   }
+                           A   657    ;  226	  }
+0140                       A   658    _4_L_30:
+                           A   659    .line 226
+0140 AF                    A   660    	RET	
+                           A   661    .endfunc "slave_data_receive",226,"_slave_data_
+                           A   662    	SEGMENT ROM_DATA
+                           A   663    
+                           A   664    
+                           A   665    ;**************************** _slave_transmitte
+                           A   666    ;Name                         Addr/Register   S
+                           A   667    ;_sda_bit                            STATIC    
+                           A   668    ;_send_bit                           STATIC    
+                           A   669    ;_data_byte                          STATIC    
+                           A   670    ;_bit_counter                        STATIC    
+                           A   671    
+                           A   672    
+                           A   673    ; Aggregate Stack Size: 0 (words)
+                           A   674    
+                           A   675    
+                           A   676    	.FRAME _n_slave_transmitter,?_n_slave_trans
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 27-Sep-14     08:33:40     page:  14
+
+
+PC     Object              I  Line    Source scl_interrupt.src
+                           A   677    	SEGMENT terrupt_TEXT
+                           A   678    ;  227	
+                           A   679    ;  228	/**************************************
+                           A   680    ;  229	This function shifts the data in the tr
+                           A   681    ;  230	on SDA line during the low period of SC
+                           A   682    ;  231	acknowledge from the master. If master 
+                           A   683    ;  232	sending another byte of data. If it rec
+                           A   684    ;  233	sending the next data byte.However in t
+                           A   685    ;  234	transfer and hence no code is written f
+                           A   686    ;  235	***************************************
+                           A   687    ;  236	
+                           A   688    ;  237	
+                           A   689    ;  238	void slave_transmitter(void)
+                           A   690    ;  239	{
+0141                       A   691    _slave_transmitter:
+                           A   692    .define "_slave_transmitter"
+                           A   693    .value _slave_transmitter
+                           A   694    .class 2
+                           A   695    .type 65
+                           A   696    .endef
+                           A   697    .begfunc "slave_transmitter",239,"_slave_transm
+                           A   698    ;  240				bit_counter++;  //Keep the 
+                           A   699    .line 240
+0141 20 01                 A   700    	INC	_bit_counter
+                           A   701    ;  241				if(bit_counter <= 0x08)
+                           A   702    .line 241
+0143 A6 01 08              A   703    	CP	_bit_counter,#8
+0146 BB 2E                 A   704    	JR	UGT,_5_L_37
+                           A   705    ;  242			    {
+                           A   706    ;  243				//	send_bit=data_transmit_
+                           A   707    ;  244					send_bit = data_byte;
+                           A   708    .line 244
+0148 E4 08 0B              A   709    	LD	_send_bit,_data_byte
+                           A   710    ;  245					send_bit = (send_bit >>
+                           A   711    .line 245
+014B E4 0B E1              A   712    	LD	R1,_send_bit
+014E 0C08                  A   713    	LD	R0,#8
+0150 24 01 E0              A   714    	SUB	R0,_bit_counter
+0153 B0E2                  A   715    	CLR	R2
+0155 4200                  A   716    	OR	R0,R0
+0157 6B 06                 A   717    	JR	Z,L__26
+0159                       A   718    L__27:
+0159 D0E2                  A   719    	SRA	R2
+015B C0E1                  A   720    	RRC	R1
+015D 0A FA                 A   721    	DJNZ	R0,L__27
+015F                       A   722    L__26:
+015F E4E1 0B               A   723    	LD	_send_bit,R1
+                           A   724    ;  246					send_bit &= 0x01;
+                           A   725    .line 246
+0162 56 0B 01              A   726    	AND	_send_bit,#1
+                           A   727    ;  247					if(send_bit == 0x01)
+                           A   728    .line 247
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 27-Sep-14     08:33:40     page:  15
+
+
+PC     Object              I  Line    Source scl_interrupt.src
+0165 A6 0B 01              A   729    	CP	_send_bit,#1
+0168 EB 06                 A   730    	JR	NE,_5_L_33
+                           A   731    ;  248					{
+                           A   732    ;  249					PCOUT |= send_bit; 		                           A   733    .line 249
+016A 48 00BFDB             A   734    	ORX	4059,_send_bit
+                           A   735    ;  250					
+                           A   736    ;  251					}
+                           A   737    ;  252					else
+                           A   738    .line 252
+016E 8B 1E                 A   739    	JR	_5_L_42
+0170                       A   740    _5_L_33:
+                           A   741    ;  253					{
+                           A   742    ;  254					PCOUT &= 0xFE;
+                           A   743    .line 254
+0170 59FE0FDB              A   744    	ANDX	4059,#254
+                           A   745    ;  255					
+                           A   746    ;  256					}
+                           A   747    .line 256
+                           A   748    ;  257		
+                           A   749    ;  258					return; 
+                           A   750    .line 258
+0174 8B 18                 A   751    	JR	_5_L_42
+                           A   752    ;  259				}
+0176                       A   753    _5_L_37:
+                           A   754    .line 259
+                           A   755    ;  260			 	if(bit_counter == 0x09)
+                           A   756    .line 260
+0176 A6 01 09              A   757    	CP	_bit_counter,#9
+0179 EB 06                 A   758    	JR	NE,_5_L_41
+                           A   759    ;  261				{
+                           A   760    ;  262					PCCTL  |= SDA_DIRECTION
+                           A   761    .line 262
+017B 49010FD9              A   762    	ORX	4057,#1
+                           A   763    ;  263					return;
+                           A   764    .line 263
+017F 8B 0D                 A   765    	JR	_5_L_42
+                           A   766    ;  264				}
+0181                       A   767    _5_L_41:
+                           A   768    .line 264
+                           A   769    ;  265	
+                           A   770    ;  266	    	    if(bit_counter == 0X0A)
+                           A   771    .line 266
+0181 A6 01 0A              A   772    	CP	_bit_counter,#10
+0184 EB 08                 A   773    	JR	NE,_5_L_42
+                           A   774    ;  267	    		{
+                           A   775    ;  268					if(sda_bit ==0x01)
+                           A   776    .line 268
+0186 A6 04 01              A   777    	CP	_sda_bit,#1
+0189 6B 03                 A   778    	JR	Z,_5_L_42
+                           A   779    ;  269		 				{
+                           A   780    ;  270						  return; //Do not 
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 27-Sep-14     08:33:40     page:  16
+
+
+PC     Object              I  Line    Source scl_interrupt.src
+                           A   781    .line 270
+                           A   782    ;  271					   }
+                           A   783    ;  272					else  
+                           A   784    .line 272
+                           A   785    ;  273						{
+                           A   786    ;  274							bit_counter = 0
+                           A   787    .line 274
+018B E6 01 01              A   788    	LD	_bit_counter,#1
+                           A   789    ;  275							//Prepare to  s
+                           A   790    ;  276					
+                           A   791    ;  277					}
+                           A   792    ;  278				}
+                           A   793    ;  279	
+                           A   794    ;  280		 }
+018E                       A   795    _5_L_42:
+                           A   796    .line 280
+018E AF                    A   797    	RET	
+                           A   798    .endfunc "slave_transmitter",280,"_slave_transm
+                           A   799    	SEGMENT ROM_DATA
+                           A   800    
+                           A   801    
+                           A   802    ;**************************** _address_mismatch
+                           A   803    ;Name                         Addr/Register   S
+                           A   804    ;_bit_counter                        STATIC    
+                           A   805    
+                           A   806    
+                           A   807    ; Aggregate Stack Size: 0 (words)
+                           A   808    
+                           A   809    
+                           A   810    	.FRAME _n_address_mismatch,?_n_address_mism
+                           A   811    	SEGMENT terrupt_TEXT
+                           A   812    ;  281	
+                           A   813    ;  282	
+                           A   814    ;  283	/**************************************
+                           A   815    ;  284	This function is called when the receiv
+                           A   816    ;  285	Resets the bit counter to "0".
+                           A   817    ;  286	***************************************
+                           A   818    ;  287	
+                           A   819    ;  288	 void  address_mismatch(void)
+                           A   820    ;  289	 {
+018F                       A   821    _address_mismatch:
+                           A   822    .define "_address_mismatch"
+                           A   823    .value _address_mismatch
+                           A   824    .class 2
+                           A   825    .type 65
+                           A   826    .endef
+                           A   827    .begfunc "address_mismatch",289,"_address_misma
+                           A   828    ;  290		
+                           A   829    ;  291		bit_counter++;
+                           A   830    .line 291
+018F 20 01                 A   831    	INC	_bit_counter
+                           A   832    ;  292		if(bit_counter == 0x0A)
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 27-Sep-14     08:33:40     page:  17
+
+
+PC     Object              I  Line    Source scl_interrupt.src
+                           A   833    .line 292
+0191 A6 01 0A              A   834    	CP	_bit_counter,#10
+0194 EB 02                 A   835    	JR	NE,_6_L_45
+                           A   836    ;  293			{
+                           A   837    ;  294			 bit_counter = 0x00;
+                           A   838    .line 294
+0196 B0 01                 A   839    	CLR	_bit_counter
+                           A   840    ;  295			}
+                           A   841    ;  296	 }
+0198                       A   842    _6_L_45:
+                           A   843    .line 296
+0198 AF                    A   844    	RET	
+                           A   845    .endfunc "address_mismatch",296,"_address_misma
+0034 0024                  A   846    	VECTOR	C1=_SCL_interrupt
+                           A   847    	XREF __intrp:RDATA
+                           A   848    	XDEF _address_mismatch
+                           A   849    	XDEF _slave_transmitter
+                           A   850    	XDEF _slave_data_receive
+                           A   851    	XDEF _slave_address_receive
+                           A   852    	XDEF _SCL_interrupt
+                           A   853    	XDEF _main
+                           A   854    	XDEF _function_ptr
+                           A   855    	XDEF _byte_count
+                           A   856    	XDEF _send_bit
+                           A   857    	XDEF _temp1
+                           A   858    	XDEF _edge
+                           A   859    	XDEF _data_byte
+                           A   860    	XDEF _address_received
+                           A   861    	XDEF _rising_edge_counter
+                           A   862    	XDEF _bus_status
+                           A   863    	XDEF _sda_bit
+                           A   864    	XDEF _data_transmit_byte
+                           A   865    	XDEF _data_receive_byte
+                           A   866    	XDEF _bit_counter
+                           A   867    	XDEF _i2c_flag
+                           A   868    	END
+
+
+Errors: 0
+Warnings: 0
+Lines Assembled: 869

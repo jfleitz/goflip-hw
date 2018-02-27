@@ -1,0 +1,823 @@
+; Z8 Encore! ANSI C Compiler Release 3.64
+; -nofastcall -const=ROM -listinc -model=S -optlink -regvar
+; -noreduceopt -debug -norevaa -peephole -localcse -optsize
+; -alias 
+	DEFINE spibase_TEXT,SPACE=ROM
+	FILE	".\spibase.c"
+.debug "C"
+	SEGMENT NEAR_BSS
+_pBaseOut:
+	DS	1
+.define "pBaseOut"
+.alias "_pBaseOut"
+.class 147
+.value _pBaseOut
+.type 130
+.endef
+	SEGMENT spibase_TEXT
+;    1	/*!\file gpio.h
+;    2	 * \brief Definition file for the Z8 Encore! GPIO Ports.
+;    3	 *
+;    4	 *  This file contains header information required by GPIO Port
+;    5	 *  driver implementations for Z8 Encore! microcontrollers.
+;    6	 *
+;    7	 *  This source file uses Doxygen-style comments to generate documentation
+;    8	 *  automatically.
+;    9	 *
+;   10	 *  Copyright (C) 1999-2004 by  ZiLOG, Inc.
+;   11	 *  All Rights Reserved.
+;   12	 */
+;   13	
+;   14	#pragma once // Include this file only once
+;   15	#ifndef _GPIO_H_
+;   16	#define _GPIO_H_
+;   17	
+;   18	#include <defines.h>
+;   19	
+;   20	
+;   21	#ifdef _DEBUG
+;   22	#define GPIOPARAMETER_CHECKING									//!< Parameter validation control macro.
+;   23	#endif
+;   24	
+;   25	
+;   26	/*! The GPIO ports available for particular target. Port A, B and C are available for all targets */
+;   27	#if (defined(EZ8_PORT4) && !defined(_Z8F04)) || defined(EZ8_PORT8)||defined(EZ8_PORT5)
+;   28	#define PORTD
+;   29	#endif
+;   30	
+;   31	#if defined(EZ8_PORT8)||defined(EZ8_PORT5)
+;   32	#define PORTE
+;   33	#endif
+;   34	#if defined(EZ8_PORT8)
+;   35	#define PORTF
+;   36	#define PORTG
+;   37	#define PORTH
+;   38	#endif
+;   39	
+;   40	#define GPIOERR_SUCCESS		(CHAR)0			//!< Error code for success returned by GPIO APIs.
+;   41	#define GPIOERR_INVALIDPINS	(CHAR)1			//!< Error code for invalid GPIO pin for the target.
+;   42	#define GPIOERR_FAILURE		(CHAR)(-1)		//!< Error code for failure returned by GPIO APIs.
+;   43	
+;   44	
+;   45	/*! all the ports bits are set to input mode */
+;   46	#define PORTA_ADDRVAL_DEF   0x01
+;   47	#define PORTA_CTLVAL_DEF    0xFF
+;   48	#define PORTA_OUTVAL_DEF    0x00
+;   49	
+;   50	#define PORTB_ADDRVAL_DEF   0x01
+;   51	#define PORTB_CTLVAL_DEF    0xFF
+;   52	#define PORTB_OUTVAL_DEF    0x00
+;   53	
+;   54	#define PORTC_ADDRVAL_DEF   0x01
+;   55	#define PORTC_CTLVAL_DEF    0xFF
+;   56	#define PORTC_OUTVAL_DEF    0x00
+;   57	
+;   58	#ifdef PORTD
+;   59	#define PORTD_ADDRVAL_DEF   0x01
+;   60	#define PORTD_CTLVAL_DEF    0xFF
+;   61	#define PORTD_OUTVAL_DEF    0x00
+;   62	#endif
+;   63	
+;   64	#ifdef PORTE
+;   65	#define PORTE_ADDRVAL_DEF   0x01
+;   66	#define PORTE_CTLVAL_DEF    0xFF
+;   67	#define PORTE_OUTVAL_DEF    0x00
+;   68	#endif
+;   69	
+;   70	#ifdef PORTF
+;   71	#define PORTF_ADDRVAL_DEF   0x01
+;   72	#define PORTF_CTLVAL_DEF    0xFF
+;   73	#define PORTF_OUTVAL_DEF    0x00
+;   74	#endif
+;   75	
+;   76	#ifdef PORTG
+;   77	#define PORTG_ADDRVAL_DEF   0x01
+;   78	#define PORTG_CTLVAL_DEF    0xFF
+;   79	#define PORTG_OUTVAL_DEF    0x00
+;   80	#endif
+;   81	
+;   82	#ifdef PORTH
+;   83	#define PORTH_ADDRVAL_DEF   0x01
+;   84	#define PORTH_CTLVAL_DEF    0xFF
+;   85	#define PORTH_OUTVAL_DEF    0x00
+;   86	#endif
+;   87	
+;   88	
+;   89	/*! Control Register access codes used in Address registers */
+;   90	#define PORTADDR_NOFUNC			0x00
+;   91	#define PORTADDR_DATADIR		0x01
+;   92	#define PORTADDR_ALTFUNC		0x02
+;   93	#if defined(_Z8FMC16) || defined(__ZSLBUILD)
+;   94	#define PORTADDR_ALTFUNC0		0x02
+;   95	#endif
+;   96	#define PORTADDR_OPENDRAIN		0x03
+;   97	#define PORTADDR_HIGHDRIVE		0x04
+;   98	#define PORTADDR_STPMDREC		0x05
+;   99	#if defined (_Z8F1680)||defined(_Z8F04) || defined(_Z8F04A) || defined(_Z8F04A_8PIN) || defined(_Z8F04_8PIN) || defined(_Z8F08) || defined(_Z8F0823_8PIN) || defined(_Z8F08A) || defined(_Z8FMC16) || defined(__ZSLBUILD)
+;  100	#define PORTADDR_PULLUP		0x06
+;  101	#endif
+;  102	#if defined (_Z8F1680)||defined(_Z8F04) || defined(_Z8F04A) || defined(_Z8F04A_8PIN) || defined(_Z8F04_8PIN) || defined(_Z8F0823_8PIN) || defined(_Z8F08A) || defined(__ZSLBUILD)
+;  103	#define PORTADDR_ALTFUNCSET1	0x07
+;  104	#define PORTADDR_ALTFUNCSET2	0x08
+;  105	#endif
+;  106	#if defined(_Z8FMC16) || defined(__ZSLBUILD)
+;  107	#define PORTADDR_ALTFUNC1		0x07
+;  108	#define PORTADDR_IRQES			0x08
+;  109	#define PORTADDR_IRQPS			0x09
+;  110	#endif
+;  111	
+;  112	
+;  113	/*! Definitions for Current Drive Levels used in LED Drive Mode */
+;  114	#if defined(_Z8F04A) ||defined (_Z8F1680)|| defined(__ZSLBUILD)
+;  115	#define DRIVELEVEL_3MA			0
+;  116	#define DRIVELEVEL_7MA			1
+;  117	#define DRIVELEVEL_13MA			2
+;  118	#define DRIVELEVEL_20MA			3
+;  119	#endif
+;  120	
+;  121	/*! Definitions for trigger edges */
+;  122	#define EDGE_FALLING			0
+;  123	#define EDGE_RISING				1
+;  124	
+;  125	/*! GPIO pin patterns */
+;  126	#define PORTPIN_ZERO		(BYTE)0x01			//!< The bit mask for Port bit 0.
+;  127	#define PORTPIN_ONE			(BYTE)0x02			//!< The bit mask for Port bit 1.
+;  128	#define PORTPIN_TWO			(BYTE)0x04			//!< The bit mask for Port bit 2.
+;  129	#define PORTPIN_THREE		(BYTE)0x08			//!< The bit mask for Port bit 3.
+;  130	#define PORTPIN_FOUR		(BYTE)0x10			//!< The bit mask for Port bit 4.
+;  131	#define PORTPIN_FIVE 		(BYTE)0x20			//!< The bit mask for Port bit 5.
+;  132	#define PORTPIN_SIX			(BYTE)0x40			//!< The bit mask for Port bit 6.
+;  133	#define PORTPIN_SEVEN		(BYTE)0x80			//!< The bit mask for Port bit 7.
+;  134	#define PORTPIN_FOURPINS_L	(BYTE)0x0F			//!< The bit mask for lower four Port bits.
+;  135	#define PORTPIN_FOURPINS_U	(BYTE)0xF0			//!< The bit mask for upper four Port bits.
+;  136	#define PORTPIN_PATTERN_AA	(BYTE)0xAA			//!< The bit mask for alternate bits (odd numbered pins).
+;  137	#define PORTPIN_PATTERN_55	(BYTE)0x55			//!< The bit mask for alternate bits (even numbered pins).
+;  138	#define PORTPIN_ALL			(BYTE)0xFF			//!< The bit mask for all Port bits.
+;  139	
+;  140	/*! Port mask index used for validating the port pins */
+;  141	#define MSKINDEX_PORTB		(BYTE)0
+;  142	#define MSKINDEX_PORTC		(BYTE)1
+;  143	#define MSKINDEX_PORTD		(BYTE)2
+;  144	#define MSKINDEX_PORTE		(BYTE)3
+;  145	#define MSKINDEX_PORTF		(BYTE)4
+;  146	#define MSKINDEX_PORTG		(BYTE)5
+;  147	#define MSKINDEX_PORTH		(BYTE)6
+;  148	
+;  149	/*!
+;  150	 * \brief The settings required to configure the GPIO Port.
+;  151	 */
+;  152	typedef struct
+;  153	{
+;  154		BYTE addr ;					//!< The address register.
+;  155		BYTE ctl ;					//!< The control register.
+;  156		BYTE out ;					//!< The output register (write-only).
+;  157		BYTE in ;					//!< The input register (read-only).
+;  158	
+;  159	} PORT ;
+.begrec "NONAME0",4
+.define "addr"
+.value 0
+.class 8
+.type 12
+.endef
+.define "ctl"
+.value 1
+.class 8
+.type 12
+.endef
+.define "out"
+.value 2
+.class 8
+.type 12
+.endef
+.define "in"
+.value 3
+.class 8
+.type 12
+.endef
+.endrec "NONAME0"
+	SEGMENT NEAR_BSS
+_pOut:
+	DS	1
+.define "pOut"
+.alias "_pOut"
+.class 147
+.value _pOut
+.type 130
+.endef
+_pBaseIn:
+	DS	1
+.define "pBaseIn"
+.alias "_pBaseIn"
+.class 147
+.value _pBaseIn
+.type 130
+.endef
+_pIn:
+	DS	1
+.define "pIn"
+.alias "_pIn"
+.class 147
+.value _pIn
+.type 130
+.endef
+_ByteBlock:
+	DS	1
+.define "ByteBlock"
+.alias "_ByteBlock"
+.class 147
+.value _ByteBlock
+.type 12
+.endef
+_Length:
+	DS	2*1
+.define "Length"
+.alias "_Length"
+.class 147
+.value _Length
+.type 13
+.endef
+_DataReady:
+	DS	1
+.define "DataReady"
+.alias "_DataReady"
+.class 147
+.value _DataReady
+.type 2
+.endef
+	SEGMENT ROM_DATA
+
+
+;**************************** _InitializeSPI ***************************
+;Name                         Addr/Register   Size   Type
+;_DataReady                          STATIC      1   variable
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+	.FRAME _n_InitializeSPI,?_n_InitializeSPI,RDATA
+;    1	/*********************************************SPISlave*********************************************
+;    2	These are the functions required for the SPI Slave.  The driver waits for an IRQ caused by the
+;    3	Slave Select going High.  The ISR for the Slave Select will loop until the SSEL is released by
+;    4	the master.
+;    5	**************************************************************************************************/
+;    6	
+;    7	#include <ez8.h>
+;    8	#include <defines.h>
+;    9	#include "spibase.h"
+;   10	
+;   11	extern char DataOut[];
+;   12	extern char DataIn[];
+;   13	
+;   14	char* pBaseOut;            // Out Base Pointer
+;   15	char* pOut;                // Out Pointer
+;   16	char* pBaseIn;             // In Base Pointer
+;   17	char* pIn;                 // In Pointer
+;   18	
+;   19	unsigned char ByteBlock;   // Flag Byte or Block mode
+;   20	unsigned short Length;     // Number of bytes to exchange (1 to 256)
+;   21	
+;   22	volatile char DataReady;   // Flag indicating that data is/are ready
+	SEGMENT spibase_TEXT
+;   23	
+;   24	
+;   25	/*********************************************InitSPI*********************************************
+;   26	Prepares the SPI driver.  Set the outputs needed and get the interrupt ready.  The clock interrupt
+;   27	is polled, so we won't need that turned on
+;   28	**************************************************************************************************/
+;   29	void InitializeSPI()
+;   30	{
+_InitializeSPI:
+.define "_InitializeSPI"
+.value _InitializeSPI
+.class 2
+.type 65
+.endef
+.begfunc "InitializeSPI",30,"_InitializeSPI"
+;   31	
+;   32	
+;   33	    PCDD &= ~MISObit;      // MISO is an output
+.line 33
+	LDX	4056,#1
+	ANDX	4057,#-33
+;   34	    IRQ2 &= ~SSELbit;      // Make sure it hasn't fired yet
+.line 34
+	ANDX	4038,#-5
+;   35	    IRQ2ENH |= SSELbit;    // Turn on SSEL interrupt
+.line 35
+	ORX	4039,#4
+;   36	    IRQ2 &= ~SCLKbit;      // Push the flag down
+.line 36
+	ANDX	4038,#-9
+;   37	    DataReady = FALSE;     // Nothing exchange	
+.line 37
+	CLR	_DataReady
+;   38	}
+.line 38
+	RET	
+.endfunc "InitializeSPI",38,"_InitializeSPI"
+	SEGMENT ROM_DATA
+
+
+;**************************** _SPI_Send ***************************
+;Name                         Addr/Register   Size   Type
+;_ByteBlock                          STATIC      1   variable
+;_Length                             STATIC      2   variable
+;_pIn                                STATIC      1   variable
+;_pBaseIn                            STATIC      1   variable
+;_pOut                               STATIC      1   variable
+;_pBaseOut                           STATIC      1   variable
+;_DataReady                          STATIC      1   variable
+;data_in                          _0data_in      1   variable
+;data                           _0_SPI_Send      1   parameter
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+	.FRAME _n_SPI_Send,?_n_SPI_Send,RDATA
+_0_SPI_Send:
+	DS	1
+_0data_in:
+	DS	1
+	SEGMENT spibase_TEXT
+;   39	
+;   40	
+;   41	void SPI_Send(char data)
+;   42	{
+_SPI_Send:
+.define "_SPI_Send"
+.value _SPI_Send
+.class 2
+.type 65
+.endef
+.begfunc "SPI_Send",42,"_SPI_Send"
+.define "data"
+.class 23
+.value _0_SPI_Send
+.alias "_0_SPI_Send"
+.type 2
+.endef
+.define "data_in"
+.class 22
+.value _0data_in
+.alias "_0data_in"
+.type 2
+.endef
+;   43	   char data_in;
+;   44	   DataReady = FALSE;
+.line 44
+	CLR	_DataReady
+;   45	   pOut = pBaseOut = &data;
+.line 45
+	LD	_pBaseOut,#_0_SPI_Send
+	LD	_pOut,#_0_SPI_Send
+;   46	   pIn = pBaseIn = &data_in;
+.line 46
+	LD	_pBaseIn,#_0data_in
+	LD	_pIn,#_0data_in
+;   47	   Length = 1;
+.line 47
+	CLR	_Length
+	LD	_Length+1,#1
+;   48	   ByteBlock = 0;
+.line 48
+	CLR	_ByteBlock
+;   49	
+;   50	   //took out the while loop here, as we want to just return
+;   51	}
+.line 51
+	RET	
+.endfunc "SPI_Send",51,"_SPI_Send"
+	SEGMENT ROM_DATA
+
+
+;**************************** _SPI_SendReceiveBlock ***************************
+;Name                         Addr/Register   Size   Type
+;_ByteBlock                          STATIC      1   variable
+;_Length                             STATIC      2   variable
+;_DataReady                          STATIC      1   variable
+;_pIn                                STATIC      1   variable
+;_pBaseIn                            STATIC      1   variable
+;_pOut                               STATIC      1   variable
+;_pBaseOut                           STATIC      1   variable
+;length                        _2_SPI_SendReceiveBlock      1   parameter
+;p_in                          _1_SPI_SendReceiveBlock      1   parameter
+;p_out                         _0_SPI_SendReceiveBlock      1   parameter
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+	.FRAME _n_SPI_SendReceiveBlock,?_n_SPI_SendReceiveBlock,RDATA
+_0_SPI_SendReceiveBlock:
+	DS	1
+_1_SPI_SendReceiveBlock:
+	DS	1
+_2_SPI_SendReceiveBlock:
+	DS	1
+	SEGMENT spibase_TEXT
+;   52	
+;   53	void SPI_SendReceiveBlock(char* p_out, char* p_in, unsigned char length)
+;   54	{
+_SPI_SendReceiveBlock:
+.define "_SPI_SendReceiveBlock"
+.value _SPI_SendReceiveBlock
+.class 2
+.type 65
+.endef
+.begfunc "SPI_SendReceiveBlock",54,"_SPI_SendReceiveBlock"
+.define "p_out"
+.class 23
+.value _0_SPI_SendReceiveBlock
+.alias "_0_SPI_SendReceiveBlock"
+.type 130
+.endef
+.define "p_in"
+.class 23
+.value _1_SPI_SendReceiveBlock
+.alias "_1_SPI_SendReceiveBlock"
+.type 130
+.endef
+.define "length"
+.class 23
+.value _2_SPI_SendReceiveBlock
+.alias "_2_SPI_SendReceiveBlock"
+.type 12
+.endef
+;   55	   pOut = pBaseOut = p_out;
+.line 55
+	LD	_pBaseOut,_0_SPI_SendReceiveBlock
+	LD	_pOut,_0_SPI_SendReceiveBlock
+;   56	   pIn = pBaseIn = p_in;
+.line 56
+	LD	_pBaseIn,_1_SPI_SendReceiveBlock
+	LD	_pIn,_1_SPI_SendReceiveBlock
+;   57	   DataReady = FALSE;
+.line 57
+	CLR	_DataReady
+;   58	
+;   59	   if (length)
+.line 59
+	CP	_2_SPI_SendReceiveBlock,#0
+	JR	Z,_3_L_3
+;   60	   {
+;   61	      Length = length;
+.line 61
+	CLR	_Length
+	LD	_Length+1,_2_SPI_SendReceiveBlock
+;   62	   }
+;   63	   else
+.line 63
+	JR	_3_L_4
+_3_L_3:
+;   64	   {
+;   65	      Length = 256;     // Zero = 256
+.line 65
+	LD	_Length,#1
+	CLR	_Length+1
+;   66	   }
+_3_L_4:
+.line 66
+;   67	
+;   68	   ByteBlock = 0xFF;    // Mode Block
+.line 68
+	LD	_ByteBlock,#255
+;   69		//took out the while loop here, as we want to just return
+;   70	}
+.line 70
+	RET	
+.endfunc "SPI_SendReceiveBlock",70,"_SPI_SendReceiveBlock"
+	SEGMENT ROM_DATA
+
+
+;**************************** _SSELISR ***************************
+;Name                         Addr/Register   Size   Type
+;_pBaseIn                            STATIC      1   variable
+;_pIn                                STATIC      1   variable
+;_Length                             STATIC      2   variable
+;_pBaseOut                           STATIC      1   variable
+;_DataReady                          STATIC      1   variable
+;_ByteBlock                          STATIC      1   variable
+;_pOut                               STATIC      1   variable
+;data_out                                R2      1   variable
+;bmout                                   R1      1   variable
+;bmin                                    R0      1   variable
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+	.FRAME _n_SSELISR,?_n_SSELISR,RDATA
+	SEGMENT spibase_TEXT
+;   71	
+;   72	
+;   73	/*********************************************SSELISR**********************************************
+;   74	This is the ISR for the Slave Select.  Once the Slave has been selected by the Master the Slave 
+;   75	will spend all of its resources communicating with the Master until the Select is released
+;   76	**************************************************************************************************/
+;   77	void interrupt SSELISR()            // Slave Select ISR
+;   78	{
+_SSELISR:
+.define "_SSELISR"
+.value _SSELISR
+.class 2
+.type 65
+.endef
+.begfunc "SSELISR",78,"_SSELISR"
+.define "bmin"
+.class 4
+.reg 1
+.type 12
+.endef
+.define "bmout"
+.class 4
+.reg 2
+.type 12
+.endef
+.define "data_out"
+.class 4
+.reg 3
+.type 12
+.endef
+	PUSHX	4093
+	LDX	4093,__intrp
+	ADDX	__intrp,#16
+;   79	   unsigned char data_out = *pOut;  // Temp used for easier compiler addressing
+.line 79
+	LD	R0,_pOut
+	LD	R2,@R0
+;   80	   unsigned char bmin = 0x80;       // bit mask for input
+.line 80
+	LD	R0,#128
+;   81	   unsigned char bmout = 0x80;      // bit mask for output
+.line 81
+	LD	R1,#128
+;   82	
+;   83	   while (1)
+_4_L_33:
+.line 83
+;   84	   {
+;   85	      if (ByteBlock)
+.line 85
+	CP	_ByteBlock,#0
+	JR	Z,_4_L_25
+;   86	      {
+;   87	         IRQ2 &= ~SCLKbit;          // Push the flag down
+.line 87
+	ANDX	4038,#-9
+;   88	   
+;   89	         while (!(IRQ2 & SCLKbit))  // Wait for clock to trip
+.line 89
+	JR	_4_L_7
+_4_L_8:
+;   90	         {
+;   91	            if (SSEL())             // But abort if /SS line goes high
+.line 91
+	TMX	4058,#4
+	JR	Z,_4_L_7
+;   92	            {
+;   93	               IRQ2 &= ~SSELbit;    // Turn off IRQ to prevent new ISR
+.line 93
+	ANDX	4038,#-5
+;   94	               DataReady = TRUE;    // Flag that data has been received
+.line 94
+	LD	_DataReady,#1
+;   95	               return;
+.line 95
+	JR	_4_L_34
+;   96	            }
+;   97	         }
+_4_L_7:
+.line 97
+.line 89
+	TMX	4038,#8
+	JR	Z,_4_L_8
+;   98	      }
+_4_L_25:
+.line 98
+;   99	
+;  100	      if (Transmitting())           // Clock ready to update transmitter
+.line 100
+	TMX	4058,#8
+	JR	Z,_4_L_24
+;  101	      {
+;  102	         if (data_out & bmout)
+.line 102
+	TM	R2,R1
+	JR	Z,_4_L_11
+;  103	         {
+;  104	            MISO_H();
+.line 104
+	ORX	4059,#32
+;  105	         }
+;  106	         else
+.line 106
+	JR	_4_L_12
+_4_L_11:
+;  107	         {
+;  108	            MISO_L();
+.line 108
+	ANDX	4059,#-33
+;  109	         }
+_4_L_12:
+.line 109
+;  110	
+;  111	         bmout = bmout >> 1;
+.line 111
+	SRL	R1
+;  112	
+;  113	         if (bmout == 0x00)         // Done with this character?
+.line 113
+	OR	R1,R1
+	JR	NE,_4_L_31
+;  114	         {
+;  115	            bmout = 0x80;           // Reset the mask
+.line 115
+	LD	R1,#128
+;  116	            data_out = *(++pOut);   // Advance the pointer and read the new value
+.line 116
+	INC	_pOut
+	LD	R3,_pOut
+	LD	R2,@R3
+;  117	
+;  118	            if (pOut >= pBaseOut + Length)   // Buffer empty?
+.line 118
+	LD	R3,_Length+1
+	ADD	R3,_pBaseOut
+	CP	R3,_pOut
+	JR	UGT,_4_L_31
+;  119	            {
+;  120	               pOut--;              // Resend last byte if requested to do so
+.line 120
+	DEC	_pOut
+;  121	            }
+;  122	         }
+;  123	      }
+;  124	      else                          // Receiving
+.line 124
+	JR	_4_L_31
+_4_L_24:
+;  125	      {
+;  126	         if (MOSI())                // Data High?
+.line 126
+	TMX	4058,#16
+	JR	Z,_4_L_17
+;  127	         {
+;  128	            *pIn |= bmin;           // Then OR into byte
+.line 128
+	LD	R4,_pIn
+	LD	R3,@R4
+	OR	R3,R0
+	LD	@R4,R3
+;  129	         }
+;  130	         else
+.line 130
+	JR	_4_L_18
+_4_L_17:
+;  131	         {
+;  132	            *pIn &= ~bmin;          // Else AND into byte
+.line 132
+	LD	R4,_pIn
+	LD	R3,R0
+	COM	R3
+	AND	R3,@R4
+	LD	@R4,R3
+;  133	         }
+_4_L_18:
+.line 133
+;  134	
+;  135	         bmin = bmin >> 1;          // Next bit
+.line 135
+	SRL	R0
+;  136	
+;  137	         if (bmin == 0)             // Byte finished?
+.line 137
+	OR	R0,R0
+	JR	NE,_4_L_31
+;  138	         {
+;  139	            bmin = 0x80;            // Reset the mask
+.line 139
+	LD	R0,#128
+;  140	            pIn++;                  // Advance the buffer pointer
+.line 140
+	INC	_pIn
+;  141	
+;  142	            if (pIn >= pBaseIn + Length)  // Over run?
+.line 142
+	LD	R3,_Length+1
+	ADD	R3,_pBaseIn
+	CP	R3,_pIn
+	JR	UGT,_4_L_31
+;  143	            {
+;  144	               pIn--;               // Last buffer byte will over run
+.line 144
+	DEC	_pIn
+;  145	            }
+;  146	         }
+;  147	      }
+_4_L_31:
+.line 147
+;  148	
+;  149	      if (!ByteBlock)               // Byte mode?
+.line 149
+	CP	_ByteBlock,#0
+	JR	NE,_4_L_33
+;  150	      {
+;  151	         IRQ2 &= ~SCLKbit;          // Push the flag down
+.line 151
+	ANDX	4038,#-9
+;  152	   
+;  153	         while (!(IRQ2 & SCLKbit))  // Wait for clock to trip
+.line 153
+	JR	_4_L_27
+_4_L_28:
+;  154	         {
+;  155	            if (SSEL())             // But abort if /SS line goes high
+.line 155
+	TMX	4058,#4
+	JR	Z,_4_L_27
+;  156	            {
+;  157	               IRQ2 &= ~SSELbit;    // Turn off IRQ to prevent new ISR
+.line 157
+	ANDX	4038,#-5
+;  158	               DataReady = TRUE;    // Flag that data has been received
+.line 158
+	LD	_DataReady,#1
+;  159	               return;
+.line 159
+	JR	_4_L_34
+;  160	            }
+;  161	         }
+_4_L_27:
+.line 161
+.line 153
+	TMX	4038,#8
+	JR	Z,_4_L_28
+;  162	
+;  163	         ByteBlock = 0xFF;          // Switch to byte mode
+.line 163
+	LD	_ByteBlock,#255
+.line 83
+	JR	_4_L_33
+;  164	      }
+;  165	   }
+;  166	}
+_4_L_34:
+.line 166
+	SUBX	__intrp,#16
+	POPX	4093
+	IRET	
+.endfunc "SSELISR",166,"_SSELISR"
+	SEGMENT ROM_DATA
+
+
+;**************************** _SetupVectors ***************************
+;Name                         Addr/Register   Size   Type
+;_SET_VECTOR                         IMPORT  -----   function
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+	.FRAME _n_SetupVectors,?_n_SetupVectors,RDATA
+	SEGMENT spibase_TEXT
+;  167	
+;  168	
+;  169	/*******************************************SetupVectors*******************************************
+;  170	Not a real function, but tells the compiler which vector to use
+;  171	**************************************************************************************************/
+;  172	void SetupVectors()
+;  173	{
+_SetupVectors:
+.define "_SetupVectors"
+.value _SetupVectors
+.class 2
+.type 65
+.endef
+.begfunc "SetupVectors",173,"_SetupVectors"
+;  174	    SET_VECTOR(C2, SSELISR);  // Setup vector
+;  175	}
+.line 175
+	RET	
+.endfunc "SetupVectors",175,"_SetupVectors"
+	VECTOR	C2=_SSELISR
+	XREF __intrp:RDATA
+	XDEF _SetupVectors
+	XDEF _SSELISR
+	XDEF _2_SPI_SendReceiveBlock
+	XDEF _1_SPI_SendReceiveBlock
+	XDEF _0_SPI_SendReceiveBlock
+	XDEF _SPI_SendReceiveBlock
+	XDEF _0_SPI_Send
+	XDEF _SPI_Send
+	XDEF _InitializeSPI
+	XDEF _DataReady
+	XDEF _Length
+	XDEF _ByteBlock
+	XDEF _pIn
+	XDEF _pBaseIn
+	XDEF _pOut
+	XDEF _pBaseOut
+	END

@@ -1,0 +1,400 @@
+; Z8 Encore! ANSI C Compiler Release 3.64
+; -nofastcall -const=ROM -listinc -model=S -optlink -regvar
+; -noreduceopt -debug -norevaa -peephole -localcse -optsize
+; -alias 
+	DEFINE sysclk_TEXT,SPACE=ROM
+	FILE	".\sysclk.c"
+.debug "C"
+	SEGMENT ROM_DATA
+
+
+;**************************** _sysclk_init ***************************
+;Name                         Addr/Register   Size   Type
+;delay                              _0delay      4   variable
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+	.FRAME _n_sysclk_init,?_n_sysclk_init,RDATA
+_0delay:
+	DS	4*1
+	SEGMENT sysclk_TEXT
+;    1	/*!\file gpio.h
+;    2	 * \brief Definition file for the Z8 Encore! GPIO Ports.
+;    3	 *
+;    4	 *  This file contains header information required by GPIO Port
+;    5	 *  driver implementations for Z8 Encore! microcontrollers.
+;    6	 *
+;    7	 *  This source file uses Doxygen-style comments to generate documentation
+;    8	 *  automatically.
+;    9	 *
+;   10	 *  Copyright (C) 1999-2004 by  ZiLOG, Inc.
+;   11	 *  All Rights Reserved.
+;   12	 */
+;   13	
+;   14	#pragma once // Include this file only once
+;   15	#ifndef _GPIO_H_
+;   16	#define _GPIO_H_
+;   17	
+;   18	#include <defines.h>
+;   19	
+;   20	
+;   21	#ifdef _DEBUG
+;   22	#define GPIOPARAMETER_CHECKING									//!< Parameter validation control macro.
+;   23	#endif
+;   24	
+;   25	
+;   26	/*! The GPIO ports available for particular target. Port A, B and C are available for all targets */
+;   27	#if (defined(EZ8_PORT4) && !defined(_Z8F04)) || defined(EZ8_PORT8)||defined(EZ8_PORT5)
+;   28	#define PORTD
+;   29	#endif
+;   30	
+;   31	#if defined(EZ8_PORT8)||defined(EZ8_PORT5)
+;   32	#define PORTE
+;   33	#endif
+;   34	#if defined(EZ8_PORT8)
+;   35	#define PORTF
+;   36	#define PORTG
+;   37	#define PORTH
+;   38	#endif
+;   39	
+;   40	#define GPIOERR_SUCCESS		(CHAR)0			//!< Error code for success returned by GPIO APIs.
+;   41	#define GPIOERR_INVALIDPINS	(CHAR)1			//!< Error code for invalid GPIO pin for the target.
+;   42	#define GPIOERR_FAILURE		(CHAR)(-1)		//!< Error code for failure returned by GPIO APIs.
+;   43	
+;   44	
+;   45	/*! all the ports bits are set to input mode */
+;   46	#define PORTA_ADDRVAL_DEF   0x01
+;   47	#define PORTA_CTLVAL_DEF    0xFF
+;   48	#define PORTA_OUTVAL_DEF    0x00
+;   49	
+;   50	#define PORTB_ADDRVAL_DEF   0x01
+;   51	#define PORTB_CTLVAL_DEF    0xFF
+;   52	#define PORTB_OUTVAL_DEF    0x00
+;   53	
+;   54	#define PORTC_ADDRVAL_DEF   0x01
+;   55	#define PORTC_CTLVAL_DEF    0xFF
+;   56	#define PORTC_OUTVAL_DEF    0x00
+;   57	
+;   58	#ifdef PORTD
+;   59	#define PORTD_ADDRVAL_DEF   0x01
+;   60	#define PORTD_CTLVAL_DEF    0xFF
+;   61	#define PORTD_OUTVAL_DEF    0x00
+;   62	#endif
+;   63	
+;   64	#ifdef PORTE
+;   65	#define PORTE_ADDRVAL_DEF   0x01
+;   66	#define PORTE_CTLVAL_DEF    0xFF
+;   67	#define PORTE_OUTVAL_DEF    0x00
+;   68	#endif
+;   69	
+;   70	#ifdef PORTF
+;   71	#define PORTF_ADDRVAL_DEF   0x01
+;   72	#define PORTF_CTLVAL_DEF    0xFF
+;   73	#define PORTF_OUTVAL_DEF    0x00
+;   74	#endif
+;   75	
+;   76	#ifdef PORTG
+;   77	#define PORTG_ADDRVAL_DEF   0x01
+;   78	#define PORTG_CTLVAL_DEF    0xFF
+;   79	#define PORTG_OUTVAL_DEF    0x00
+;   80	#endif
+;   81	
+;   82	#ifdef PORTH
+;   83	#define PORTH_ADDRVAL_DEF   0x01
+;   84	#define PORTH_CTLVAL_DEF    0xFF
+;   85	#define PORTH_OUTVAL_DEF    0x00
+;   86	#endif
+;   87	
+;   88	
+;   89	/*! Control Register access codes used in Address registers */
+;   90	#define PORTADDR_NOFUNC			0x00
+;   91	#define PORTADDR_DATADIR		0x01
+;   92	#define PORTADDR_ALTFUNC		0x02
+;   93	#if defined(_Z8FMC16) || defined(__ZSLBUILD)
+;   94	#define PORTADDR_ALTFUNC0		0x02
+;   95	#endif
+;   96	#define PORTADDR_OPENDRAIN		0x03
+;   97	#define PORTADDR_HIGHDRIVE		0x04
+;   98	#define PORTADDR_STPMDREC		0x05
+;   99	#if defined (_Z8F1680)||defined(_Z8F04) || defined(_Z8F04A) || defined(_Z8F04A_8PIN) || defined(_Z8F04_8PIN) || defined(_Z8F08) || defined(_Z8F0823_8PIN) || defined(_Z8F08A) || defined(_Z8FMC16) || defined(__ZSLBUILD)
+;  100	#define PORTADDR_PULLUP		0x06
+;  101	#endif
+;  102	#if defined (_Z8F1680)||defined(_Z8F04) || defined(_Z8F04A) || defined(_Z8F04A_8PIN) || defined(_Z8F04_8PIN) || defined(_Z8F0823_8PIN) || defined(_Z8F08A) || defined(__ZSLBUILD)
+;  103	#define PORTADDR_ALTFUNCSET1	0x07
+;  104	#define PORTADDR_ALTFUNCSET2	0x08
+;  105	#endif
+;  106	#if defined(_Z8FMC16) || defined(__ZSLBUILD)
+;  107	#define PORTADDR_ALTFUNC1		0x07
+;  108	#define PORTADDR_IRQES			0x08
+;  109	#define PORTADDR_IRQPS			0x09
+;  110	#endif
+;  111	
+;  112	
+;  113	/*! Definitions for Current Drive Levels used in LED Drive Mode */
+;  114	#if defined(_Z8F04A) ||defined (_Z8F1680)|| defined(__ZSLBUILD)
+;  115	#define DRIVELEVEL_3MA			0
+;  116	#define DRIVELEVEL_7MA			1
+;  117	#define DRIVELEVEL_13MA			2
+;  118	#define DRIVELEVEL_20MA			3
+;  119	#endif
+;  120	
+;  121	/*! Definitions for trigger edges */
+;  122	#define EDGE_FALLING			0
+;  123	#define EDGE_RISING				1
+;  124	
+;  125	/*! GPIO pin patterns */
+;  126	#define PORTPIN_ZERO		(BYTE)0x01			//!< The bit mask for Port bit 0.
+;  127	#define PORTPIN_ONE			(BYTE)0x02			//!< The bit mask for Port bit 1.
+;  128	#define PORTPIN_TWO			(BYTE)0x04			//!< The bit mask for Port bit 2.
+;  129	#define PORTPIN_THREE		(BYTE)0x08			//!< The bit mask for Port bit 3.
+;  130	#define PORTPIN_FOUR		(BYTE)0x10			//!< The bit mask for Port bit 4.
+;  131	#define PORTPIN_FIVE 		(BYTE)0x20			//!< The bit mask for Port bit 5.
+;  132	#define PORTPIN_SIX			(BYTE)0x40			//!< The bit mask for Port bit 6.
+;  133	#define PORTPIN_SEVEN		(BYTE)0x80			//!< The bit mask for Port bit 7.
+;  134	#define PORTPIN_FOURPINS_L	(BYTE)0x0F			//!< The bit mask for lower four Port bits.
+;  135	#define PORTPIN_FOURPINS_U	(BYTE)0xF0			//!< The bit mask for upper four Port bits.
+;  136	#define PORTPIN_PATTERN_AA	(BYTE)0xAA			//!< The bit mask for alternate bits (odd numbered pins).
+;  137	#define PORTPIN_PATTERN_55	(BYTE)0x55			//!< The bit mask for alternate bits (even numbered pins).
+;  138	#define PORTPIN_ALL			(BYTE)0xFF			//!< The bit mask for all Port bits.
+;  139	
+;  140	/*! Port mask index used for validating the port pins */
+;  141	#define MSKINDEX_PORTB		(BYTE)0
+;  142	#define MSKINDEX_PORTC		(BYTE)1
+;  143	#define MSKINDEX_PORTD		(BYTE)2
+;  144	#define MSKINDEX_PORTE		(BYTE)3
+;  145	#define MSKINDEX_PORTF		(BYTE)4
+;  146	#define MSKINDEX_PORTG		(BYTE)5
+;  147	#define MSKINDEX_PORTH		(BYTE)6
+;  148	
+;  149	/*!
+;  150	 * \brief The settings required to configure the GPIO Port.
+;  151	 */
+;  152	typedef struct
+;  153	{
+;  154		BYTE addr ;					//!< The address register.
+;  155		BYTE ctl ;					//!< The control register.
+;  156		BYTE out ;					//!< The output register (write-only).
+;  157		BYTE in ;					//!< The input register (read-only).
+;  158	
+;  159	} PORT ;
+.begrec "NONAME0",4
+.define "addr"
+.value 0
+.class 8
+.type 12
+.endef
+.define "ctl"
+.value 1
+.class 8
+.type 12
+.endef
+.define "out"
+.value 2
+.class 8
+.type 12
+.endef
+.define "in"
+.value 3
+.class 8
+.type 12
+.endef
+.endrec "NONAME0"
+;    1	/********************************************************************************************************
+;    2	 * File: sysclk.c
+;    3	 * Description:
+;    4	 * 		This file implements the oscillator initialization. The inilization also
+;    5	 * 		switches the oscialltor source if the seleted source does not match the runtime
+;    6	 * 		clock source.
+;    7	 *
+;    8	 * Last modified: 21 Apr 2006
+;    9	 ********************************************************************************************************
+;   10	 * Copyright (C) 2008 by Zilog, Inc.  All Rights Reserved.
+;   11	 ********************************************************************************************************/
+;   12	
+;   13	/********************************************************************************************************
+;   14	 *  header file includes
+;   15	 ********************************************************************************************************/
+;   16	#include <eZ8.h>
+;   17	#include "sysclk.h"
+;   18	#include "lampDriver.h"
+;   19	
+;   20	
+;   21	/*********************************************************************************************************
+;   22	 * local constant defintions
+;   23	 *********************************************************************************************************
+;   24	/*--------------------------------------------------------------------------------------
+;   25	 *  System clock selection
+;   26	 *
+;   27	 *  Instructions for enabling the external clock:
+;   28	 *      1. Select External clock and Frequency in the Debugger Setup Target dialog
+;   29	 *      2. Uncomment the following line; "#define CLOCK_SOURCE    CLOCK_EXTERNAL"
+;   30	 *--------------------------------------------------------------------------------------*/
+;   31	#define CLOCK_SOURCE    CLOCK_EXTERNAL        // external oscillator
+;   32	#ifndef CLOCK_SOURCE
+;   33	#define CLOCK_SOURCE    CLOCK_INTERNAL        // internal oscillator
+;   34	#endif
+;   35	
+;   36	#ifndef CLOCK_SOURCE
+;   37	#define CLOCK_SOURCE    CLOCK_SOURCE_DEFAULT
+;   38	#endif
+;   39	
+;   40	/*--------------------------------------------------------------------------------------
+;   41	 * The Osciallator control registers(OSCTL) is used to configure the clock source and select Internal 
+;   42	 * Precision Frequency.
+;   43	 *
+;   44	 * +--------+-------+-------+-------+-------+-------+-------+---+---+---+
+;   45	 * |        | BITS  |   7   |   6   |   5   |   4   |   3   | 2 | 1 | 0 |
+;   46	 * | OSCTL  | ------+-------+-------+-------+-------+-------+---+---+---+
+;   47	 * |        | FIELD | INTEN | XTLEN | WDTEN | POFEN | WDFEN |   SCKSEL  |
+;   48	 * +--------+-------+-------+-------+-------+-------+-------+-----------+
+;   49	 *                      |       |        |      |       |        |_ System clock oscillator select
+;   50	 *                      |	    |		 |      |       |            000 = Internal precision oscillator 
+;   51	 * 					    |	    |		 |	    |       |                  functions as system clock at 5.53MHz
+;   52	 *                      |       |        |      |       |            001 = Internal precision oscillator functions
+;   53	 *					    |	    |		 |	    |	    |  		          as system clock at 32KHz
+;   54	 *                      |       |        |      |       |            010 = Crystal oscillator or external RC 
+;   55	 *					    |	    |		 |	    |	    |	              oscillator functions as system clock
+;   56	 *                      |       |        |      |       |            011 = Watchdog timer oscillator functions as 
+;   57	 *    				    |	    |		 |	    |       | 		           system clock
+;   58	 *                      |       |        |      |       |            100 = External clock signal on PB3 functions
+;   59	 * 					    |	    |		 |	    |	    | 		          as system clock
+;   60	 *                      |       |        |      |       |            101 = Reserved
+;   61	 *                      |       |        |      |       |            110 = Reserved
+;   62	 *                      |       |        |      |       |            111 = Reserved
+;   63	 *                      |       |        |      |       |
+;   64	 *                      |       |        |      |       |_ Watchdog timer oscillator failure detection enable
+;   65	 *                      |       |        |      |          1 = Failure detection of Watchdog timer oscillator
+;   66	 *                      |       |        |      |              is enabled
+;   67	 *                      |       |        |      |          0 = Failure detection of Watchdog timer oscillator
+;   68	 *                      |       |        |      |              is disabled          
+;   69	 *                      |       |        |      |
+;   70	 *                      |       |        |      |_ Primary oscillator failure detection enable
+;   71	 *                      |       |        |         1 = Failure detection and recovery of primary oscillator 
+;   72	 *                      |       |        |             is enabled
+;   73	 *                      |       |        |         0 = Failure detection and recovery of primary oscillator 
+;   74	 *                      |       |        |             is disabled 
+;   75	 *                      |       |        |_ Watchdog timer oscillator enable
+;   76	 *                      |       |           1 = Watchdog timer oscillator is enabled
+;   77	 *                      |       |           0 = Watchdog timer oscillator is disabled
+;   78	 *                      |       |
+;   79	 *                      |       |_ Crystal oscillator enable * this setting overrides the GPIO register 
+;   80	 *                      |          control for PA0 and PA1
+;   81	 *                      |
+;   82	 *                      |_ Internal precision oscillator enable
+;   83	 *                         1 = Internal precision oscillator is enabled
+;   84	 *                         0 = Internal precision oscillator is disabled
+;   85	 *
+;   86	 -----------------------------------------------------------------------------------------------------------*/
+;   87	#if (CLOCK_SOURCE == CLOCK_EXTERNAL)
+;   88	#define SCKSEL          SCK_XTAL
+;   89	#define OSCEN           OSC_INTEN | OSC_XTLEN
+;   90	#elif (CLOCK_SOURCE == CLOCK_INTERNAL)
+;   91	/*--------------------------------------------------------------------------------------
+;   92	 *  Instructions to use 32 KHz IPO supported only with USB/Ethernet SmartCable
+;   93	 *      1. Enter 0.032 to Project settings->Debugger->Target\Setup->Internal\other
+;   94	 *      2. Ensure to comment out the above statement; "#define CLOCK_SOURCE    CLOCK_EXTERNAL"
+;   95	 *      3. Uncomment the following line ; "//#define SCKSEL          SCK_IPO_32K"
+;   96	 *--------------------------------------------------------------------------------------*/
+;   97	//#define SCKSEL          SCK_IPO_32K	// Select 32KHZ
+;   98	#ifndef SCKSEL
+;   99	#define SCKSEL          SCK_IPO			// Select 5.5926 MHZ
+;  100	#endif
+;  101	#define OSCEN           OSC_INTEN		// Enable IPO bit
+;  102	#endif
+;  103	
+;  104	/*********************************************************************************************************
+;  105	 * Function: sysclk_init
+;  106	 * Description: 
+;  107	 *     Initialize system clock source 
+;  108	 *
+;  109	 **********************************************************************************************************/
+;  110	void sysclk_init(void)
+;  111	{
+_sysclk_init:
+.define "_sysclk_init"
+.value _sysclk_init
+.class 2
+.type 65
+.endef
+.begfunc "sysclk_init",111,"_sysclk_init"
+.define "delay"
+.class 22
+.value _0delay
+.alias "_0delay"
+.type 15
+.endef
+;  112	    /*******
+;  113		 * If clock source is selected as external, enable it
+;  114		 */
+;  115	#if (SCKSEL & ~SCK_IPO_MASK) 
+;  116		unsigned long delay = 1000; 	// delay used for oscillator stabilization after enabled
+.line 116
+	CLR	_0delay
+	CLR	_0delay+1
+	LD	_0delay+2,#3
+	LD	_0delay+3,#232
+;  117	
+;  118	    /******
+;  119		 *  Enable external source if not yet enabled
+;  120		 */
+;  121	    if ((OSCCTL & 0x06) != SCKSEL)
+.line 121
+	LDX	R0,3974
+	AND	R0,#6
+	LD	R1,R0
+	CP	R0,#2
+	JR	Z,_1_L_4
+;  122	    {
+;  123	
+;  124			/******
+;  125			 *  Enable external oscillator source
+;  126			 */
+;  127	        OSCCTL = 0xE7;              // Unlock sequence for OSCTL write
+.line 127
+	LDX	3974,#231
+;  128	        OSCCTL = 0x18;              //
+.line 128
+	LDX	3974,#24
+;  129	        OSCCTL |= OSC_XTLEN;        // start external oscillator
+.line 129
+	ORX	3974,#64
+;  130	
+;  131	        while(delay--);				// wait for clock to stabilize
+_1_L_2:
+.line 131
+	LD	R0,_0delay
+	LD	R1,_0delay+1
+	LD	R2,_0delay+2
+	LD	R3,_0delay+3
+	SUB	_0delay+3,#1
+	SBC	_0delay+2,#0
+	SBC	_0delay+1,#0
+	SBC	_0delay,#0
+	OR	R0,R1
+	OR	R0,R2
+	OR	R0,R3
+	JR	NE,_1_L_2
+;  132		}
+_1_L_4:
+.line 132
+;  133	#endif
+;  134	 	/******
+;  135		 *  Switch to selected oscillator source
+;  136		 */	
+;  137		OSCCTL = 0xE7;              // Unlock sequence for OSCTL write
+.line 137
+	LDX	3974,#231
+;  138	    OSCCTL = 0x18;              //
+.line 138
+	LDX	3974,#24
+;  139	    OSCCTL = OSCEN | SCKSEL;    // switch to other clock source
+.line 139
+	LDX	3974,#194
+;  140	}
+.line 140
+	RET	
+.endfunc "sysclk_init",140,"_sysclk_init"
+	XDEF _sysclk_init
+	END

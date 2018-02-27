@@ -1,0 +1,407 @@
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 16-May-15     20:08:39     page:   1
+
+
+PC     Object              I  Line    Source 
+                           A     1    ; Z8 Encore! ANSI C Compiler Release 3.64
+                           A     2    ; -nofastcall -const=ROM -listinc -model=S -opt
+                           A     3    ; -noreduceopt -debug -norevaa -peephole -local
+                           A     4    ; -alias 
+                           A     5    	DEFINE nterrup_TEXT,SPACE=ROM
+                           A     6    	FILE	".\sda_interrup.c"
+                           A     7    .debug "C"
+                           A     8    	SEGMENT NEAR_BSS
+0000                       A     9    _edge_scl:
+0000                       A    10    	DS	1
+                           A    11    .define "edge_scl"
+                           A    12    .alias "_edge_scl"
+                           A    13    .class 147
+                           A    14    .value _edge_scl
+                           A    15    .type 12
+                           A    16    .endef
+                           A    17    	SEGMENT nterrup_TEXT
+                           A    18    ;    1	/*!\file gpio.h
+                           A    19    ;    2	 * \brief Definition file for the Z8 En
+                           A    20    ;    3	 *
+                           A    21    ;    4	 *  This file contains header informati
+                           A    22    ;    5	 *  driver implementations for Z8 Encor
+                           A    23    ;    6	 *
+                           A    24    ;    7	 *  This source file uses Doxygen-style
+                           A    25    ;    8	 *  automatically.
+                           A    26    ;    9	 *
+                           A    27    ;   10	 *  Copyright (C) 1999-2004 by  ZiLOG, 
+                           A    28    ;   11	 *  All Rights Reserved.
+                           A    29    ;   12	 */
+                           A    30    ;   13	
+                           A    31    ;   14	#pragma once // Include this file only 
+                           A    32    ;   15	#ifndef _GPIO_H_
+                           A    33    ;   16	#define _GPIO_H_
+                           A    34    ;   17	
+                           A    35    ;   18	#include <defines.h>
+                           A    36    ;   19	
+                           A    37    ;   20	
+                           A    38    ;   21	#ifdef _DEBUG
+                           A    39    ;   22	#define GPIOPARAMETER_CHECKING			                           A    40    ;   23	#endif
+                           A    41    ;   24	
+                           A    42    ;   25	
+                           A    43    ;   26	/*! The GPIO ports available for partic
+                           A    44    ;   27	#if (defined(EZ8_PORT4) && !defined(_Z8
+                           A    45    ;   28	#define PORTD
+                           A    46    ;   29	#endif
+                           A    47    ;   30	
+                           A    48    ;   31	#if defined(EZ8_PORT8)||defined(EZ8_POR
+                           A    49    ;   32	#define PORTE
+                           A    50    ;   33	#endif
+                           A    51    ;   34	#if defined(EZ8_PORT8)
+                           A    52    ;   35	#define PORTF
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 16-May-15     20:08:39     page:   2
+
+
+PC     Object              I  Line    Source sda_interrup.src
+                           A    53    ;   36	#define PORTG
+                           A    54    ;   37	#define PORTH
+                           A    55    ;   38	#endif
+                           A    56    ;   39	
+                           A    57    ;   40	#define GPIOERR_SUCCESS		(CHAR)0		                           A    58    ;   41	#define GPIOERR_INVALIDPINS	(CHAR)1		                           A    59    ;   42	#define GPIOERR_FAILURE		(CHAR)(-1)	                           A    60    ;   43	
+                           A    61    ;   44	
+                           A    62    ;   45	/*! all the ports bits are set to input
+                           A    63    ;   46	#define PORTA_ADDRVAL_DEF   0x01
+                           A    64    ;   47	#define PORTA_CTLVAL_DEF    0xFF
+                           A    65    ;   48	#define PORTA_OUTVAL_DEF    0x00
+                           A    66    ;   49	
+                           A    67    ;   50	#define PORTB_ADDRVAL_DEF   0x01
+                           A    68    ;   51	#define PORTB_CTLVAL_DEF    0xFF
+                           A    69    ;   52	#define PORTB_OUTVAL_DEF    0x00
+                           A    70    ;   53	
+                           A    71    ;   54	#define PORTC_ADDRVAL_DEF   0x01
+                           A    72    ;   55	#define PORTC_CTLVAL_DEF    0xFF
+                           A    73    ;   56	#define PORTC_OUTVAL_DEF    0x00
+                           A    74    ;   57	
+                           A    75    ;   58	#ifdef PORTD
+                           A    76    ;   59	#define PORTD_ADDRVAL_DEF   0x01
+                           A    77    ;   60	#define PORTD_CTLVAL_DEF    0xFF
+                           A    78    ;   61	#define PORTD_OUTVAL_DEF    0x00
+                           A    79    ;   62	#endif
+                           A    80    ;   63	
+                           A    81    ;   64	#ifdef PORTE
+                           A    82    ;   65	#define PORTE_ADDRVAL_DEF   0x01
+                           A    83    ;   66	#define PORTE_CTLVAL_DEF    0xFF
+                           A    84    ;   67	#define PORTE_OUTVAL_DEF    0x00
+                           A    85    ;   68	#endif
+                           A    86    ;   69	
+                           A    87    ;   70	#ifdef PORTF
+                           A    88    ;   71	#define PORTF_ADDRVAL_DEF   0x01
+                           A    89    ;   72	#define PORTF_CTLVAL_DEF    0xFF
+                           A    90    ;   73	#define PORTF_OUTVAL_DEF    0x00
+                           A    91    ;   74	#endif
+                           A    92    ;   75	
+                           A    93    ;   76	#ifdef PORTG
+                           A    94    ;   77	#define PORTG_ADDRVAL_DEF   0x01
+                           A    95    ;   78	#define PORTG_CTLVAL_DEF    0xFF
+                           A    96    ;   79	#define PORTG_OUTVAL_DEF    0x00
+                           A    97    ;   80	#endif
+                           A    98    ;   81	
+                           A    99    ;   82	#ifdef PORTH
+                           A   100    ;   83	#define PORTH_ADDRVAL_DEF   0x01
+                           A   101    ;   84	#define PORTH_CTLVAL_DEF    0xFF
+                           A   102    ;   85	#define PORTH_OUTVAL_DEF    0x00
+                           A   103    ;   86	#endif
+                           A   104    ;   87	
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 16-May-15     20:08:39     page:   3
+
+
+PC     Object              I  Line    Source sda_interrup.src
+                           A   105    ;   88	
+                           A   106    ;   89	/*! Control Register access codes used 
+                           A   107    ;   90	#define PORTADDR_NOFUNC			0x00
+                           A   108    ;   91	#define PORTADDR_DATADIR		0x01
+                           A   109    ;   92	#define PORTADDR_ALTFUNC		0x02
+                           A   110    ;   93	#if defined(_Z8FMC16) || defined(__ZSLB
+                           A   111    ;   94	#define PORTADDR_ALTFUNC0		0x02
+                           A   112    ;   95	#endif
+                           A   113    ;   96	#define PORTADDR_OPENDRAIN		0x03
+                           A   114    ;   97	#define PORTADDR_HIGHDRIVE		0x04
+                           A   115    ;   98	#define PORTADDR_STPMDREC		0x05
+                           A   116    ;   99	#if defined (_Z8F1680)||defined(_Z8F04)
+                           A   117    ;  100	#define PORTADDR_PULLUP		0x06
+                           A   118    ;  101	#endif
+                           A   119    ;  102	#if defined (_Z8F1680)||defined(_Z8F04)
+                           A   120    ;  103	#define PORTADDR_ALTFUNCSET1	0x07
+                           A   121    ;  104	#define PORTADDR_ALTFUNCSET2	0x08
+                           A   122    ;  105	#endif
+                           A   123    ;  106	#if defined(_Z8FMC16) || defined(__ZSLB
+                           A   124    ;  107	#define PORTADDR_ALTFUNC1		0x07
+                           A   125    ;  108	#define PORTADDR_IRQES			0x08
+                           A   126    ;  109	#define PORTADDR_IRQPS			0x09
+                           A   127    ;  110	#endif
+                           A   128    ;  111	
+                           A   129    ;  112	
+                           A   130    ;  113	/*! Definitions for Current Drive Level
+                           A   131    ;  114	#if defined(_Z8F04A) ||defined (_Z8F168
+                           A   132    ;  115	#define DRIVELEVEL_3MA			0
+                           A   133    ;  116	#define DRIVELEVEL_7MA			1
+                           A   134    ;  117	#define DRIVELEVEL_13MA			2
+                           A   135    ;  118	#define DRIVELEVEL_20MA			3
+                           A   136    ;  119	#endif
+                           A   137    ;  120	
+                           A   138    ;  121	/*! Definitions for trigger edges */
+                           A   139    ;  122	#define EDGE_FALLING			0
+                           A   140    ;  123	#define EDGE_RISING				1
+                           A   141    ;  124	
+                           A   142    ;  125	/*! GPIO pin patterns */
+                           A   143    ;  126	#define PORTPIN_ZERO		(BYTE)0x01	                           A   144    ;  127	#define PORTPIN_ONE			(BYTE)0x02	                           A   145    ;  128	#define PORTPIN_TWO			(BYTE)0x04	                           A   146    ;  129	#define PORTPIN_THREE		(BYTE)0x08	                           A   147    ;  130	#define PORTPIN_FOUR		(BYTE)0x10	                           A   148    ;  131	#define PORTPIN_FIVE 		(BYTE)0x20	                           A   149    ;  132	#define PORTPIN_SIX			(BYTE)0x40	                           A   150    ;  133	#define PORTPIN_SEVEN		(BYTE)0x80	                           A   151    ;  134	#define PORTPIN_FOURPINS_L	(BYTE)0x0F	                           A   152    ;  135	#define PORTPIN_FOURPINS_U	(BYTE)0xF0	                           A   153    ;  136	#define PORTPIN_PATTERN_AA	(BYTE)0xAA	                           A   154    ;  137	#define PORTPIN_PATTERN_55	(BYTE)0x55	                           A   155    ;  138	#define PORTPIN_ALL			(BYTE)0xFF	                           A   156    ;  139	
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 16-May-15     20:08:39     page:   4
+
+
+PC     Object              I  Line    Source sda_interrup.src
+                           A   157    ;  140	/*! Port mask index used for validating
+                           A   158    ;  141	#define MSKINDEX_PORTB		(BYTE)0
+                           A   159    ;  142	#define MSKINDEX_PORTC		(BYTE)1
+                           A   160    ;  143	#define MSKINDEX_PORTD		(BYTE)2
+                           A   161    ;  144	#define MSKINDEX_PORTE		(BYTE)3
+                           A   162    ;  145	#define MSKINDEX_PORTF		(BYTE)4
+                           A   163    ;  146	#define MSKINDEX_PORTG		(BYTE)5
+                           A   164    ;  147	#define MSKINDEX_PORTH		(BYTE)6
+                           A   165    ;  148	
+                           A   166    ;  149	/*!
+                           A   167    ;  150	 * \brief The settings required to conf
+                           A   168    ;  151	 */
+                           A   169    ;  152	typedef struct
+                           A   170    ;  153	{
+                           A   171    ;  154		BYTE addr ;					//!< Th
+                           A   172    ;  155		BYTE ctl ;					//!< Th
+                           A   173    ;  156		BYTE out ;					//!< Th
+                           A   174    ;  157		BYTE in ;					//!< Th
+                           A   175    ;  158	
+                           A   176    ;  159	} PORT ;
+                           A   177    .begrec "NONAME0",4
+                           A   178    .define "addr"
+                           A   179    .value 0
+                           A   180    .class 8
+                           A   181    .type 12
+                           A   182    .endef
+                           A   183    .define "ctl"
+                           A   184    .value 1
+                           A   185    .class 8
+                           A   186    .type 12
+                           A   187    .endef
+                           A   188    .define "out"
+                           A   189    .value 2
+                           A   190    .class 8
+                           A   191    .type 12
+                           A   192    .endef
+                           A   193    .define "in"
+                           A   194    .value 3
+                           A   195    .class 8
+                           A   196    .type 12
+                           A   197    .endef
+                           A   198    .endrec "NONAME0"
+                           A   199    	SEGMENT NEAR_BSS
+0001                       A   200    _edge1:
+0001                       A   201    	DS	1
+                           A   202    .define "edge1"
+                           A   203    .alias "_edge1"
+                           A   204    .class 147
+                           A   205    .value _edge1
+                           A   206    .type 12
+                           A   207    .endef
+                           A   208    	SEGMENT ROM_DATA
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 16-May-15     20:08:39     page:   5
+
+
+PC     Object              I  Line    Source sda_interrup.src
+                           A   209    
+                           A   210    
+                           A   211    ;**************************** _SDA_interrupt **
+                           A   212    ;Name                         Addr/Register   S
+                           A   213    ;_rising_edge_counter                IMPORT    
+                           A   214    ;_bit_counter                        IMPORT    
+                           A   215    ;_i2c_flag                           IMPORT    
+                           A   216    ;_bus_status                         IMPORT    
+                           A   217    ;_edge1                              STATIC    
+                           A   218    ;_edge_scl                           STATIC    
+                           A   219    ;_SET_VECTOR                         IMPORT  --
+                           A   220    
+                           A   221    
+                           A   222    ; Aggregate Stack Size: 0 (words)
+                           A   223    
+                           A   224    
+                           A   225    	.FRAME _n_SDA_interrupt,?_n_SDA_interrupt,R
+                           A   226    ;    1	/*
+                           A   227    ;    2	***************************************
+                           A   228    ;    3	* File : sda_interrupt.c
+                           A   229    ;    4	* Description : Codes for I2C slave fun
+                           A   230    ;    5	* 
+                           A   231    ;    6	* Copyright 2004 ZiLOG Inc. ALL RIGHTS 
+                           A   232    ;    7	*
+                           A   233    ;    8	* The source code in this file was writ
+                           A   234    ;    9	* authorized ZiLOG employee or a licens
+                           A   235    ;   10	* The source code has been verified to 
+                           A   236    ;   11	* extent possible.
+                           A   237    ;   12	*
+                           A   238    ;   13	* Permission to use this code is grante
+                           A   239    ;   14	* basis. However users are cautioned to
+                           A   240    ;   15	* code contained herein.
+                           A   241    ;   16	*
+                           A   242    ;   17	* ZiLOG DOES NOT GUARANTEE THE VERACITY
+                           A   243    ;   18	***************************************
+                           A   244    ;   19	*/
+                           A   245    ;   20	
+                           A   246    ;   21	#include <ez8.h>
+                           A   247    ;   22	#include "scl_interrupt.h"
+                           A   248    ;   23	
+                           A   249    ;   24	
+                           A   250    ;   25	extern unsigned char i2c_flag;
+                           A   251    ;   26	extern unsigned char bus_status;
+                           A   252    ;   27	extern unsigned char bit_counter;
+                           A   253    ;   28	extern unsigned char rising_edge_counte
+                           A   254    ;   29											                           A   255    ;   30	unsigned char volatile edge_scl;	// 
+                           A   256    ;   31	unsigned char  volatile edge1;		//T
+                           A   257    	SEGMENT nterrup_TEXT
+                           A   258    ;   32	/**************************************
+                           A   259    ;   33	This is an interrupt service routine. T
+                           A   260    ;   34	rising and falling edges of SDA(on I2C 
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 16-May-15     20:08:39     page:   6
+
+
+PC     Object              I  Line    Source sda_interrup.src
+                           A   261    ;   35	detecting the start condition .The SDA 
+                           A   262    ;   36	the stop condition
+                           A   263    ;   37	***************************************
+                           A   264    ;   38	
+                           A   265    ;   39	/*JAF Notes:
+                           A   266    ;   40	C0 = SDA = Rasp Pi Pin 3
+                           A   267    ;   41	C1 = SCL = Rasp Pi Pin 5
+                           A   268    ;   42	
+                           A   269    ;   43	START condition (S)	SCL = 1, SDA fallin
+                           A   270    ;   44	STOP condition (P)	SCL = 1, SDA rising
+                           A   271    ;   45	*/
+                           A   272    ;   46	
+                           A   273    ;   47	#pragma interrupt
+                           A   274    ;   48	 void SDA_interrupt(void)
+                           A   275    ;   49	 {	
+0000                       A   276    _SDA_interrupt:
+                           A   277    .define "_SDA_interrupt"
+                           A   278    .value _SDA_interrupt
+                           A   279    .class 2
+                           A   280    .type 65
+                           A   281    .endef
+                           A   282    .begfunc "SDA_interrupt",49,"_SDA_interrupt"
+0000 C8FFD0                A   283    	PUSHX	4093
+0003 E8 000FFD             A   284    	LDX	4093,__intrp
+0007 09100000              A   285    	ADDX	__intrp,#16
+                           A   286    ;   50		SET_VECTOR(C0 ,SDA_interrupt);	
+                           A   287    ;   51	 	edge_scl = PCIN & SCL_READ;
+                           A   288    .line 51
+000B 840FDA                A   289    	LDX	R0,4058
+000E 56E002                A   290    	AND	R0,#2
+0011 E4E0 00               A   291    	LD	_edge_scl,R0
+                           A   292    ;   52		if (edge_scl != 0x02)  	// If SCL i
+                           A   293    .line 52
+0014 A6 00 02              A   294    	CP	_edge_scl,#2
+0017 6B 0E                 A   295    	JR	Z,_1_L_5
+                           A   296    ;   53		{	
+                           A   297    ;   54			IRQ2 &= 0XFE; // DISABLE ANY IN
+                           A   298    .line 54
+0019 59FE0FC6              A   299    	ANDX	4038,#254
+                           A   300    ;   55			IRQ2ENH &= SDA_INTR_DISABLE;   
+                           A   301    .line 55
+001D 59FE0FC7              A   302    	ANDX	4039,#254
+                           A   303    ;   56	  		IRQ2ENL &= SDA_INTR_DISABLE;   
+                           A   304    .line 56
+0021 59FE0FC8              A   305    	ANDX	4040,#254
+                           A   306    ;   57			return;	
+                           A   307    .line 57
+0025 8B 3B                 A   308    	JR	_1_L_6
+                           A   309    ;   58		
+                           A   310    ;   59		}
+                           A   311    ;   60		else if (edge_scl == 0x02)			0027                       A   312    _1_L_5:
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 16-May-15     20:08:39     page:   7
+
+
+PC     Object              I  Line    Source sda_interrup.src
+                           A   313    .line 60
+0027 A6 00 02              A   314    	CP	_edge_scl,#2
+002A EB 36                 A   315    	JR	NE,_1_L_6
+                           A   316    ;   61		{
+                           A   317    ;   62			edge1 = PCIN & SDA_READ;	//R
+                           A   318    .line 62
+002C 840FDA                A   319    	LDX	R0,4058
+002F 56E001                A   320    	AND	R0,#1
+0032 E4E0 01               A   321    	LD	_edge1,R0
+                           A   322    ;   63			if(edge1 == 0x01)			//I
+                           A   323    .line 63
+0035 A6 01 01              A   324    	CP	_edge1,#1
+0038 EB 12                 A   325    	JR	NE,_1_L_2
+                           A   326    ;   64			  { 
+                           A   327    ;   65			     bus_status = I2C_BUS_FREE;
+                           A   328    .line 65
+003A B0 00                 A   329    	CLR	_bus_status
+                           A   330    ;   66			     i2c_flag = I2C_ADDRESS_REC
+                           A   331    .line 66
+003C B0 00                 A   332    	CLR	_i2c_flag
+                           A   333    ;   67				 IRQ2 &= 0XFE; // DISABLE A
+                           A   334    .line 67
+003E 59FE0FC6              A   335    	ANDX	4038,#254
+                           A   336    ;   68			     IRQ2ENH |= SDA_INTR_ENABLE
+                           A   337    .line 68
+0042 49010FC7              A   338    	ORX	4039,#1
+                           A   339    ;   69	  			 IRQ2ENL |= SDA_INTR_ENABLE
+                           A   340    .line 69
+0046 49010FC8              A   341    	ORX	4040,#1
+                           A   342    ;   70				 return;
+                           A   343    .line 70
+004A 8B 16                 A   344    	JR	_1_L_6
+                           A   345    ;   71		 	  }
+                           A   346    ;   72			 else if(edge1 == 0x00)		// 
+004C                       A   347    _1_L_2:
+                           A   348    .line 72
+004C A6 01 00              A   349    	CP	_edge1,#0
+004F EB 11                 A   350    	JR	NE,_1_L_6
+                           A   351    ;   73			  {							// 
+                           A   352    ;   74			        bus_status = I2C_BUS_BU
+                           A   353    .line 74
+0051 E6 00 01              A   354    	LD	_bus_status,#1
+                           A   355    ;   75		  			i2c_flag = I2C_ADDRESS_
+                           A   356    .line 75
+0054 B0 00                 A   357    	CLR	_i2c_flag
+                           A   358    ;   76					IRQ2ENH &= SDA_INTR_DIS
+                           A   359    .line 76
+0056 59FE0FC7              A   360    	ANDX	4039,#254
+                           A   361    ;   77	  				IRQ2ENL &= SDA_INTR_DIS
+                           A   362    .line 77
+005A 59FE0FC8              A   363    	ANDX	4040,#254
+                           A   364    ;   78				    bit_counter =0x00;		Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 16-May-15     20:08:39     page:   8
+
+
+PC     Object              I  Line    Source sda_interrup.src
+                           A   365    .line 78
+005E B0 00                 A   366    	CLR	_bit_counter
+                           A   367    ;   79					rising_edge_counter =0x
+                           A   368    .line 79
+0060 B0 00                 A   369    	CLR	_rising_edge_counter
+                           A   370    ;   80											                           A   371    ;   81											                           A   372    ;   82			  }
+                           A   373    ;   83		   
+                           A   374    ;   84	    }
+                           A   375    ;   85	
+                           A   376    ;   86	 }
+0062                       A   377    _1_L_6:
+                           A   378    .line 86
+0062 29100000              A   379    	SUBX	__intrp,#16
+0066 D8FFD0                A   380    	POPX	4093
+0069 BF                    A   381    	IRET	
+                           A   382    .endfunc "SDA_interrupt",86,"_SDA_interrupt"
+0036 0000                  A   383    	VECTOR	C0=_SDA_interrupt
+                           A   384    	XREF _rising_edge_counter:RDATA
+                           A   385    	XREF _bit_counter:RDATA
+                           A   386    	XREF _bus_status:RDATA
+                           A   387    	XREF _i2c_flag:RDATA
+                           A   388    	XREF __intrp:RDATA
+                           A   389    	XDEF _SDA_interrupt
+                           A   390    	XDEF _edge1
+                           A   391    	XDEF _edge_scl
+                           A   392    	END
+
+
+Errors: 0
+Warnings: 0
+Lines Assembled: 393

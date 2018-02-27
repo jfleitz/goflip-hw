@@ -1,0 +1,11 @@
+/* Compiler optimization directives used in previous ZDS version */
+
+-JMPOPT
+-SDIOPT
+-LOOPOPT
+-LOCALCSE
+-GLOBALCSE
+-LOCALFOLD
+-NOGLOBALFOLD
+-LOCALCOPY
+-NOGLOBALCOPY

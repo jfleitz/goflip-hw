@@ -1,0 +1,970 @@
+; Z8 Encore! ANSI C Compiler Release 3.64
+; -nofastcall -const=ROM -listinc -model=S -optlink -regvar
+; -noreduceopt -debug -norevaa -peephole -localcse -optsize
+; -alias 
+	DEFINE timer_TEXT,SPACE=ROM
+	FILE	".\timer.c"
+.debug "C"
+	SEGMENT ROM_DATA
+
+
+;**************************** _lamp_timer ***************************
+;Name                         Addr/Register   Size   Type
+;_lampISR                            IMPORT  -----   function
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+	.FRAME _n_lamp_timer,?_n_lamp_timer,RDATA
+	.FCALL _n_lampISR
+	SEGMENT timer_TEXT
+;    1	/*!\file gpio.h
+;    2	 * \brief Definition file for the Z8 Encore! GPIO Ports.
+;    3	 *
+;    4	 *  This file contains header information required by GPIO Port
+;    5	 *  driver implementations for Z8 Encore! microcontrollers.
+;    6	 *
+;    7	 *  This source file uses Doxygen-style comments to generate documentation
+;    8	 *  automatically.
+;    9	 *
+;   10	 *  Copyright (C) 1999-2004 by  ZiLOG, Inc.
+;   11	 *  All Rights Reserved.
+;   12	 */
+;   13	
+;   14	#pragma once // Include this file only once
+;   15	#ifndef _GPIO_H_
+;   16	#define _GPIO_H_
+;   17	
+;   18	#include <defines.h>
+;   19	
+;   20	
+;   21	#ifdef _DEBUG
+;   22	#define GPIOPARAMETER_CHECKING									//!< Parameter validation control macro.
+;   23	#endif
+;   24	
+;   25	
+;   26	/*! The GPIO ports available for particular target. Port A, B and C are available for all targets */
+;   27	#if (defined(EZ8_PORT4) && !defined(_Z8F04)) || defined(EZ8_PORT8)||defined(EZ8_PORT5)
+;   28	#define PORTD
+;   29	#endif
+;   30	
+;   31	#if defined(EZ8_PORT8)||defined(EZ8_PORT5)
+;   32	#define PORTE
+;   33	#endif
+;   34	#if defined(EZ8_PORT8)
+;   35	#define PORTF
+;   36	#define PORTG
+;   37	#define PORTH
+;   38	#endif
+;   39	
+;   40	#define GPIOERR_SUCCESS		(CHAR)0			//!< Error code for success returned by GPIO APIs.
+;   41	#define GPIOERR_INVALIDPINS	(CHAR)1			//!< Error code for invalid GPIO pin for the target.
+;   42	#define GPIOERR_FAILURE		(CHAR)(-1)		//!< Error code for failure returned by GPIO APIs.
+;   43	
+;   44	
+;   45	/*! all the ports bits are set to input mode */
+;   46	#define PORTA_ADDRVAL_DEF   0x01
+;   47	#define PORTA_CTLVAL_DEF    0xFF
+;   48	#define PORTA_OUTVAL_DEF    0x00
+;   49	
+;   50	#define PORTB_ADDRVAL_DEF   0x01
+;   51	#define PORTB_CTLVAL_DEF    0xFF
+;   52	#define PORTB_OUTVAL_DEF    0x00
+;   53	
+;   54	#define PORTC_ADDRVAL_DEF   0x01
+;   55	#define PORTC_CTLVAL_DEF    0xFF
+;   56	#define PORTC_OUTVAL_DEF    0x00
+;   57	
+;   58	#ifdef PORTD
+;   59	#define PORTD_ADDRVAL_DEF   0x01
+;   60	#define PORTD_CTLVAL_DEF    0xFF
+;   61	#define PORTD_OUTVAL_DEF    0x00
+;   62	#endif
+;   63	
+;   64	#ifdef PORTE
+;   65	#define PORTE_ADDRVAL_DEF   0x01
+;   66	#define PORTE_CTLVAL_DEF    0xFF
+;   67	#define PORTE_OUTVAL_DEF    0x00
+;   68	#endif
+;   69	
+;   70	#ifdef PORTF
+;   71	#define PORTF_ADDRVAL_DEF   0x01
+;   72	#define PORTF_CTLVAL_DEF    0xFF
+;   73	#define PORTF_OUTVAL_DEF    0x00
+;   74	#endif
+;   75	
+;   76	#ifdef PORTG
+;   77	#define PORTG_ADDRVAL_DEF   0x01
+;   78	#define PORTG_CTLVAL_DEF    0xFF
+;   79	#define PORTG_OUTVAL_DEF    0x00
+;   80	#endif
+;   81	
+;   82	#ifdef PORTH
+;   83	#define PORTH_ADDRVAL_DEF   0x01
+;   84	#define PORTH_CTLVAL_DEF    0xFF
+;   85	#define PORTH_OUTVAL_DEF    0x00
+;   86	#endif
+;   87	
+;   88	
+;   89	/*! Control Register access codes used in Address registers */
+;   90	#define PORTADDR_NOFUNC			0x00
+;   91	#define PORTADDR_DATADIR		0x01
+;   92	#define PORTADDR_ALTFUNC		0x02
+;   93	#if defined(_Z8FMC16) || defined(__ZSLBUILD)
+;   94	#define PORTADDR_ALTFUNC0		0x02
+;   95	#endif
+;   96	#define PORTADDR_OPENDRAIN		0x03
+;   97	#define PORTADDR_HIGHDRIVE		0x04
+;   98	#define PORTADDR_STPMDREC		0x05
+;   99	#if defined (_Z8F1680)||defined(_Z8F04) || defined(_Z8F04A) || defined(_Z8F04A_8PIN) || defined(_Z8F04_8PIN) || defined(_Z8F08) || defined(_Z8F0823_8PIN) || defined(_Z8F08A) || defined(_Z8FMC16) || defined(__ZSLBUILD)
+;  100	#define PORTADDR_PULLUP		0x06
+;  101	#endif
+;  102	#if defined (_Z8F1680)||defined(_Z8F04) || defined(_Z8F04A) || defined(_Z8F04A_8PIN) || defined(_Z8F04_8PIN) || defined(_Z8F0823_8PIN) || defined(_Z8F08A) || defined(__ZSLBUILD)
+;  103	#define PORTADDR_ALTFUNCSET1	0x07
+;  104	#define PORTADDR_ALTFUNCSET2	0x08
+;  105	#endif
+;  106	#if defined(_Z8FMC16) || defined(__ZSLBUILD)
+;  107	#define PORTADDR_ALTFUNC1		0x07
+;  108	#define PORTADDR_IRQES			0x08
+;  109	#define PORTADDR_IRQPS			0x09
+;  110	#endif
+;  111	
+;  112	
+;  113	/*! Definitions for Current Drive Levels used in LED Drive Mode */
+;  114	#if defined(_Z8F04A) ||defined (_Z8F1680)|| defined(__ZSLBUILD)
+;  115	#define DRIVELEVEL_3MA			0
+;  116	#define DRIVELEVEL_7MA			1
+;  117	#define DRIVELEVEL_13MA			2
+;  118	#define DRIVELEVEL_20MA			3
+;  119	#endif
+;  120	
+;  121	/*! Definitions for trigger edges */
+;  122	#define EDGE_FALLING			0
+;  123	#define EDGE_RISING				1
+;  124	
+;  125	/*! GPIO pin patterns */
+;  126	#define PORTPIN_ZERO		(BYTE)0x01			//!< The bit mask for Port bit 0.
+;  127	#define PORTPIN_ONE			(BYTE)0x02			//!< The bit mask for Port bit 1.
+;  128	#define PORTPIN_TWO			(BYTE)0x04			//!< The bit mask for Port bit 2.
+;  129	#define PORTPIN_THREE		(BYTE)0x08			//!< The bit mask for Port bit 3.
+;  130	#define PORTPIN_FOUR		(BYTE)0x10			//!< The bit mask for Port bit 4.
+;  131	#define PORTPIN_FIVE 		(BYTE)0x20			//!< The bit mask for Port bit 5.
+;  132	#define PORTPIN_SIX			(BYTE)0x40			//!< The bit mask for Port bit 6.
+;  133	#define PORTPIN_SEVEN		(BYTE)0x80			//!< The bit mask for Port bit 7.
+;  134	#define PORTPIN_FOURPINS_L	(BYTE)0x0F			//!< The bit mask for lower four Port bits.
+;  135	#define PORTPIN_FOURPINS_U	(BYTE)0xF0			//!< The bit mask for upper four Port bits.
+;  136	#define PORTPIN_PATTERN_AA	(BYTE)0xAA			//!< The bit mask for alternate bits (odd numbered pins).
+;  137	#define PORTPIN_PATTERN_55	(BYTE)0x55			//!< The bit mask for alternate bits (even numbered pins).
+;  138	#define PORTPIN_ALL			(BYTE)0xFF			//!< The bit mask for all Port bits.
+;  139	
+;  140	/*! Port mask index used for validating the port pins */
+;  141	#define MSKINDEX_PORTB		(BYTE)0
+;  142	#define MSKINDEX_PORTC		(BYTE)1
+;  143	#define MSKINDEX_PORTD		(BYTE)2
+;  144	#define MSKINDEX_PORTE		(BYTE)3
+;  145	#define MSKINDEX_PORTF		(BYTE)4
+;  146	#define MSKINDEX_PORTG		(BYTE)5
+;  147	#define MSKINDEX_PORTH		(BYTE)6
+;  148	
+;  149	/*!
+;  150	 * \brief The settings required to configure the GPIO Port.
+;  151	 */
+;  152	typedef struct
+;  153	{
+;  154		BYTE addr ;					//!< The address register.
+;  155		BYTE ctl ;					//!< The control register.
+;  156		BYTE out ;					//!< The output register (write-only).
+;  157		BYTE in ;					//!< The input register (read-only).
+;  158	
+;  159	} PORT ;
+.begrec "NONAME0",4
+.define "addr"
+.value 0
+.class 8
+.type 12
+.endef
+.define "ctl"
+.value 1
+.class 8
+.type 12
+.endef
+.define "out"
+.value 2
+.class 8
+.type 12
+.endef
+.define "in"
+.value 3
+.class 8
+.type 12
+.endef
+.endrec "NONAME0"
+;    1	/*************************************************
+;    2	 *  Copyright (C) 1999-2012 by  ZiLOG, Inc.
+;    3	 *  All Rights Reserved
+;    4	 *************************************************
+;    5	 *
+;    6	 * This header is for internal use only. It is NOT
+;    7	 * an ANSI standard header file.						
+;    8	 *
+;    9	 *************************************************/
+;   10	
+;   11	#pragma once // Include this file only once
+;   12	#ifndef FORMAT_H
+;   13	#define FORMAT_H
+;   14	
+;   15	#include <zconst.h>
+;   16	#include <stdarg.h>
+;   17	
+;   18	/* Note: 24 bits times log(2) is 7.224 decimal digits.
+;   19	   We only need 14 if and when we support doubles. */
+;   20	#define MAXDIGITS 10
+;   21	#define MINEXP -4
+;   22	#define DEFAULT_PRECISION 6
+;   23	
+;   24	
+;   25	/*  Sizes allowed for various data */
+;   26	/*  For small model, we must restrict the allowed input */
+;   27	#if (defined(__MODEL__) && (__MODEL__ == 0)) && !defined(__ACCLAIM__)
+;   28	#define FLT_CHARS 20  // Only need FLT_DIG+7, but allow for extra data
+;   29	#define PTR_CHARS 11
+;   30	#define INT_CHARS 9
+;   31	#else
+;   32	#define FLT_CHARS 127
+;   33	#define PTR_CHARS 127
+;   34	#define INT_CHARS 127
+;   35	#endif
+;   36	
+;   37	/*	structures and defines for format routines	                 */
+;   38	/*      NOTE: Some fields in this structure, and the bits in flags, are  */
+;   39	/*            known to the optimizer,  If you change this, check out the */
+;   40	/*            code in optimizer/genprintfs.c                             */
+;   41	struct fmt_type {
+;   42	  char flags;		/* flags bit mask */
+;   43	  char size;		/* size character h,l or L */
+;   44	  char space;		/* space character N,F or R */
+;   45	  char type;		/* type of argument d,i,o,u,x ... */
+;   46	  char field_width;	/* field width */
+;   47	  char precision;	/* precision */
+;   48	  char print_leading_char;  // Initial +, -, or space for number
+;   49	     /* several print helper functions end by clearing the above fields. 
+;   50	      * The following need to be preserved across calls to the print
+;   51	      * utilities.
+;   52	      */
+;   53	  far char* dest;       /* Destination for sprintf, NULL for printf */
+;   54	  unsigned char print_len;
+;   55	};
+.begrec "fmt_type",10
+.define "flags"
+.value 0
+.class 8
+.type 2
+.endef
+.define "size"
+.value 1
+.class 8
+.type 2
+.endef
+.define "space"
+.value 2
+.class 8
+.type 2
+.endef
+.define "type"
+.value 3
+.class 8
+.type 2
+.endef
+.define "field_width"
+.value 4
+.class 8
+.type 2
+.endef
+.define "precision"
+.value 5
+.class 8
+.type 2
+.endef
+.define "print_leading_char"
+.value 6
+.class 8
+.type 2
+.endef
+.define "dest"
+.value 7
+.class 8
+.type 162
+.endef
+.define "print_len"
+.value 9
+.class 8
+.type 12
+.endef
+.endrec "fmt_type"
+;   56	
+;   57	/* Some additional data for formatting of floating point values: */
+;   58	
+;   59	struct flt_fmt_data
+;   60	{
+;   61	  unsigned char pad_whole;
+;   62	  unsigned char pad_pre_fract;
+;   63	  unsigned char pad_post_fract;
+;   64	  char * pad_at;
+;   65	};
+.begrec "flt_fmt_data",4
+.define "pad_whole"
+.value 0
+.class 8
+.type 12
+.endef
+.define "pad_pre_fract"
+.value 1
+.class 8
+.type 12
+.endef
+.define "pad_post_fract"
+.value 2
+.class 8
+.type 12
+.endef
+.define "pad_at"
+.value 3
+.class 8
+.type 130
+.endef
+.endrec "flt_fmt_data"
+;   66	
+;   67	/* Data passed between top level driver and scanning routines, not needed
+;   68	 * when printf's are generated inline */
+;   69	struct fmt_control_data
+;   70	{
+;   71	  char status;		/* status, OK, ERR, or PASS_THRU */
+;   72	  char chr;		/* pass thru character */
+;   73	};
+.begrec "fmt_control_data",2
+.define "status"
+.value 0
+.class 8
+.type 2
+.endef
+.define "chr"
+.value 1
+.class 8
+.type 2
+.endef
+.endrec "fmt_control_data"
+;   74	
+;   75	
+;   76	struct _set_type{ char * begin; char *end; };
+.begrec "_set_type",2
+.define "begin"
+.value 0
+.class 8
+.type 130
+.endef
+.define "end"
+.value 1
+.class 8
+.type 130
+.endef
+.endrec "_set_type"
+;   77	struct near_set_type{ char near * begin; char near *end; };
+.begrec "near_set_type",2
+.define "begin"
+.value 0
+.class 8
+.type 130
+.endef
+.define "end"
+.value 1
+.class 8
+.type 130
+.endef
+.endrec "near_set_type"
+;   78	struct far_set_type{ char far * begin; char far *end; };
+.begrec "far_set_type",4
+.define "begin"
+.value 0
+.class 8
+.type 162
+.endef
+.define "end"
+.value 2
+.class 8
+.type 162
+.endef
+.endrec "far_set_type"
+;   79	struct rom_set_type{ char rom * begin; char rom *end; };
+.begrec "rom_set_type",4
+.define "begin"
+.value 0
+.class 8
+.type 194
+.endef
+.define "end"
+.value 2
+.class 8
+.type 194
+.endef
+.endrec "rom_set_type"
+;   80	
+;   81	/* info flags */
+;   82	#define FLT_INFO_SIGN	(1<<0)
+;   83	#define FLT_INFO_INF	(1<<1)
+;   84	#define FLT_INFO_NAN	(1<<2)
+;   85	
+;   86	
+;   87	struct flt_info {
+;   88	  unsigned char flags;			/* 1=sign, 2=inf, 4=nan        */
+;   89	  char exp;				/* (signed) exponent (base 10) */
+;   90	  unsigned char digits[MAXDIGITS];	/* max significant digits      */
+;   91	};
+.begrec "flt_info",12
+.define "flags"
+.value 0
+.class 8
+.type 12
+.endef
+.define "exp"
+.value 1
+.class 8
+.type 2
+.endef
+.define "digits"
+.value 2
+.class 8
+.dim 10
+.type 108
+.endef
+.endrec "flt_info"
+;    1	/*!\file uart.h
+;    2	 * \brief Header file for Z8 Encore! UART Devices.
+;    3	 *
+;    4	 *  This file contains header information required by UART driver
+;    5	 *  implementations for Z8 Encore! microcontrollers.
+;    6	 *
+;    7	 *  This source file uses Doxygen-style comments to generate documentation
+;    8	 *  automatically.
+;    9	 *
+;   10	 *  Copyright (C) 1999-2004 by  ZiLOG, Inc.
+;   11	 *  All Rights Reserved.
+;   12	 */
+;   13	
+;   14	#pragma once // Include this file only once
+;   15	#ifndef _UART_H_
+;   16	#define _UART_H_
+;   17	
+;   18	#include <defines.h>
+;   19	#include <uartdefs.h>
+;   20	
+;   21	
+;   22	
+;   23	/*! UART interrupt enable definitions used */
+;   24	#if defined(_Z8FMC16)
+;   25	#define IRQ_U0RXI						(BYTE)0x04
+;   26	#define IRQ_U0TXI						(BYTE)0x02
+;   27	#else
+;   28	#define IRQ_U0RXI						(BYTE)0x10
+;   29	#define IRQ_U0TXI						(BYTE)0x08
+;   30	#endif
+;   31	
+;   32	#ifdef EZ8_UART1
+;   33	#define IRQ_U1RXI						(BYTE)0x40
+;   34	#define IRQ_U1TXI						(BYTE)0x20
+;   35	#endif
+;   36	
+;   37	#define REGFILEADDR_U0TXD				0xF40
+;   38	#define REGFILEADDR_U1TXD				0xF48
+;   39	
+;   40	#define CLOCK_DIVISOR					16				//!< The default clock divisor used.
+;   41		
+;   42	#define BAUD_9600						9600UL			//!< Baud rate 9600.
+;   43	#define BAUD_19200						19200UL			//!< Baud rate 19200.
+;   44	#define BAUD_38400						38400UL			//!< Baud rate 38400.
+;   45	#define BAUD_57600						57600UL			//!< Baud rate 57600.
+;   46	#define BAUD_115200						115200UL		//!< Baud rate 115200.										
+;   47	
+;   48	#define DATABITS_8						8				//!< 8-bit single processor mode used with UARTs.
+;   49	#define DATABITS_9						9				//!< 9-bit multiprocessor mode used with UARTs (not supported in this release).
+;   50	
+;   51	#define STOPBITS_1						1				//!< The number of stop bits used in the driver.
+;   52	#define STOPBITS_2						2				
+;   53															
+;   54	#define PAR_NOPARITY					0	    			//!< No parity.
+;   55	#define PAR_ODPARITY					3	    			//!< Odd parity.
+;   56	#define PAR_EVPARITY					2	    			//!< Even parity.
+;   57	
+;   58	
+;   59	/*!
+;   60	 * The error codes consists of both the errors reported by the UART device
+;   61	 * (through status registers), and the errors that occur in the UART driver
+;   62	 * software.
+;   63	 */
+;   64	#define UART_ERR_NONE					((BYTE)0x00)		//!< The error code for success.
+;   65	#define UART_ERR_KBHIT					((BYTE)0x01)		//!< The error code for keyboard hit.
+;   66	#define UART_ERR_FRAMINGERR				((BYTE)0x02)		//!< The error code returned when Framing error occurs in the character received.
+;   67	#define UART_ERR_PARITYERR				((BYTE)0x03)		//!< The error code returned when Parity error occurs in the character received.
+;   68	#define UART_ERR_OVERRUNERR				((BYTE)0x04)		//!< The error code returned when Overrun error occurs in the receive buffer register.
+;   69	#define UART_ERR_BREAKINDICATIONERR		((BYTE)0x05)		//!< The error code returned when Break Indication Error occurs.
+;   70	#define UART_ERR_INVBAUDRATE			((BYTE)0x06)		//!< The error code returned when baud rate specified is invalid.
+;   71	#define UART_ERR_INVPARITY				((BYTE)0x07)		//!< The error code returned when parity option specified is invalid.
+;   72	#define UART_ERR_INVSTOPBITS			((BYTE)0x08)		//!< The error code returned when stop bits specified is invalid.
+;   73	#define UART_ERR_INVDATABITS			((BYTE)0x09)		//!< The error code returned when data bits per character specified is invalid.
+;   74	#define UART_ERR_BUSY					((BYTE)0x0A)		//!< Definition for 'UART busy'.
+;   75	#define UART_ERR_NULLPOINTER			((BYTE)0x0B)		//!< The error code returned when a null pointer is passed by user application.
+;   76	
+;   77	#define UART_ERR_FAILURE				((BYTE)-1)		//!< The error code for failures.
+;   78	
+;   79	#define UART_ERR_USERBASE				((BYTE)0xF0)		//!< The error code base value for user applications. Usable values 0xF0 to 0xFE
+;   80	
+;   81	
+;   82	#define UART_IO_PENDING					((BYTE)1)		//!< Definition for 'IO Pending'.
+;   83	#define UART_IO_COMPLETE				((BYTE)0)		//!< Definition for 'IO complete'.
+;   84	
+;   85	
+;   86	/*!
+;   87	 * \brief The settings required to configure the UART driver.
+;   88	 *
+;   89	 * This structure will contain all the information required to
+;   90	 * configure the UART device. This structure is used for opening
+;   91	 * (initializing) the UART device as well as for re-configuring
+;   92	 * the UART device.
+;   93	 */
+;   94	typedef struct
+;   95	{
+;   96	   INT32 baudRate ;						//!< The baudrate.
+;   97	   BYTE stopBits ;							//!< The number of stopbits.
+;   98	   BYTE parity ;							//!< The parity bit option.
+;   99	
+;  100	} UART ;
+.begrec "NONAME1",6
+.define "baudRate"
+.value 0
+.class 8
+.type 5
+.endef
+.define "stopBits"
+.value 4
+.class 8
+.type 12
+.endef
+.define "parity"
+.value 5
+.class 8
+.type 12
+.endef
+.endrec "NONAME1"
+;  101	
+;  102	typedef UINT8 BUFFSIZE_T ;
+;  103	
+;  104	/*!
+;  105	 * \brief The FIFO structure.
+;  106	 *
+;  107	 * This structure is used to hold information about the software
+;  108	 * transmit/receive FIFO buffers implemented in interrupt mode.
+;  109	 */
+;  110	typedef struct
+;  111	{
+;  112		UCHAR *pBuffer ;						//!< The FIFO buffer
+;  113		BUFFSIZE_T next_in ;					//!< The in-pointer
+;  114		BUFFSIZE_T next_out ;					//!< The out-pointer
+;  115		BUFFSIZE_T size ;						//!< The FIFO buffer size
+;  116	
+;  117	} FIFO ;
+.begrec "NONAME2",4
+.define "pBuffer"
+.value 0
+.class 8
+.type 140
+.endef
+.define "next_in"
+.value 1
+.class 8
+.type 12
+.endef
+.define "next_out"
+.value 2
+.class 8
+.type 12
+.endef
+.define "size"
+.value 3
+.class 8
+.type 12
+.endef
+.endrec "NONAME2"
+;    1	/********************************************************************************************************
+;    2	 * File: timer.c
+;    3	 * Description:
+;    4	 ********************************************************************************************************/
+;    5	
+;    6	 /********************************************************************************************************* 
+;    7	 *  header file includes
+;    8	 *********************************************************************************************************/
+;    9	 #include <eZ8.h>
+;   10	#include <sio.h>
+;   11	#include "lampDriver.h"
+;   12	#include "timer.h"
+;   13	
+;   14	/********************************************************************************************************* 
+;   15	 * constants defintion and global variables
+;   16	 *********************************************************************************************************/
+;   17	
+;   18	#define STARTCOUNT 1
+;   19	#define BLINK_RELOAD 0xffff
+;   20	//#define LAMP_RELOAD 0xB400	//should be about 10msec
+;   21	#define LAMP_RELOAD 0x3fff	//should be about 10msec
+;   22	
+;   23	void setupBlinkInterruptTimer1();
+;   24	void setupLampInterruptTimer0();
+;   25	
+;   26	/********************************************************************************************************* 
+;   27	 * Global variables
+;   28	 *********************************************************************************************************/
+;   29	
+;   30	
+;   31	/*********************************************************************************************************
+;   32	 * Function: isr_timer
+;   33	 * Description: 
+;   34	 *    Interrupt occurs when timer timeouts and the interrupt handler updates the execution status to Run state
+;   35	 *
+;   36	 **********************************************************************************************************/
+;   37	void interrupt lamp_timer(void) 
+;   38	{
+_lamp_timer:
+.define "_lamp_timer"
+.value _lamp_timer
+.class 2
+.type 65
+.endef
+.begfunc "lamp_timer",38,"_lamp_timer"
+	PUSHX	4093
+	LDX	4093,__intrp
+	ADDX	__intrp,#16
+;   39			lampISR();
+.line 39
+	CALL	_lampISR
+;   40	}
+.line 40
+	SUBX	__intrp,#16
+	POPX	4093
+	IRET	
+.endfunc "lamp_timer",40,"_lamp_timer"
+	SEGMENT ROM_DATA
+
+
+;**************************** _blink_timer ***************************
+;Name                         Addr/Register   Size   Type
+;_blinkISR                           IMPORT  -----   function
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+	.FRAME _n_blink_timer,?_n_blink_timer,RDATA
+	.FCALL _n_blinkISR
+	SEGMENT timer_TEXT
+;   41	
+;   42	void interrupt blink_timer(void) 
+;   43	{
+_blink_timer:
+.define "_blink_timer"
+.value _blink_timer
+.class 2
+.type 65
+.endef
+.begfunc "blink_timer",43,"_blink_timer"
+	PUSHX	4093
+	LDX	4093,__intrp
+	ADDX	__intrp,#16
+;   44			blinkISR();
+.line 44
+	CALL	_blinkISR
+;   45	}
+.line 45
+	SUBX	__intrp,#16
+	POPX	4093
+	IRET	
+.endfunc "blink_timer",45,"_blink_timer"
+	SEGMENT ROM_DATA
+
+
+;**************************** _timer_init ***************************
+;Name                         Addr/Register   Size   Type
+;_setupLampInterruptTimer0           IMPORT  -----   function
+;_setupBlinkInterruptTimer1          IMPORT  -----   function
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+	.FRAME _n_timer_init,?_n_timer_init,RDATA
+	.FCALL _n_setupBlinkInterruptTimer1
+	.FCALL _n_setupLampInterruptTimer0
+	SEGMENT timer_TEXT
+;   46	
+;   47	/*********************************************************************************************************
+;   48	 * Function: timer_init
+;   49	 * Description: 
+;   50	 *    Intialize timer0 and  timer interrupt
+;   51	 *
+;   52	 **********************************************************************************************************/
+;   53	void timer_init(void)
+;   54	{
+_timer_init:
+.define "_timer_init"
+.value _timer_init
+.class 2
+.type 65
+.endef
+.begfunc "timer_init",54,"_timer_init"
+;   55	
+;   56		/*--------------------------------------------------------------------------------------------------------
+;   57		 * The timer control registers(TxTCL0 and TxTCL1) are used to configure timer before the timer is started.
+;   58		 * 
+;   59		 * +--------+-------+-------+-----+-----+-----+---+---+---+------+
+;   60		 * |        | BITS  |   7   |  6  |  5  |  4  | 3 | 2 | 1 |   0  |
+;   61		 * | TxTCL0 | ------+-------+-----+-----+-----+---+---+---+------+
+;   62		 * |        | FIELD | TMODE | TICONFIG  | CSC |    PWMD   |INPCAP|
+;   63		 * +--------+-------+-------+-----------+-----+-----------+------+
+;   64		 *                      |         |        |        |         |_ Input Capture Event
+;   65		 *                      |         |        |        |            0 = Previous timer interrupt is not
+;   66		 *                      |         |        |        |                a result of Timer Input Capture Event
+;   67		 *                      |         |        |        |            1 = Previous timer interrupt is a result 
+;   68		 *                      |         |        |        |                of Timer Input Capture Event
+;   69		 *                      |         |        |        |_ PWM Delay Value
+;   70		 *                      |         |        |           000 = No delay
+;   71		 *                      |         |        |           001 = 2 cycles delay
+;   72		 *                      |         |        |           010 = 4 cycles delay
+;   73		 *                      |         |        |           011 = 8 cycles delay
+;   74		 *                      |         |        |           100 = 16 cycles delay
+;   75		 *                      |         |        |           101 = 32 cycles delay
+;   76		 *                      |         |        |           110 = 64 cycles delay
+;   77		 *                      |         |        |           111 = 128 cycles delay
+;   78		 *                      |         |        |_ Cascade Timers
+;   79		 *                      |         |           0 = Timer Input signal comes from the pin.
+;   80		 *                      |         |           1 = Input signal is connected to Timer  output.
+;   81		 *                      |         |
+;   82		 *                      |         |_ Timer Interrupt Configuration
+;   83		 *                      |            0x = Timer Interrupt occurs on all defined Reload, Compare and Input Events
+;   84		 *                      |            10 = Timer Interrupt only on defined Input Capture/Deassertion Events
+;   85		 *                      |            11 = Timer Interrupt only on defined Reload/Compare Events
+;   86		 *                      |
+;   87		 *                      |_ Timer Mode High Bit
+;   88		 *                         used along with the TMODE[2:0] field in TxCTL1 register determines the operating
+;   89		 *                         mode of the timer
+;   90		 *
+;   91		 * +--------+-------+-----+------+----+---+----+----+---+---+
+;   92		 * |        | BITS  |  7  |   6  |  5 | 4 | 3  |  2 | 1 | 0 |
+;   93		 * | TxTCL1 | ------+-----+------+----+---+----+----+-------|
+;   94		 * |        | FIELD | TEN | TPOL |    PRES     |    TMODE   |
+;   95		 * +--------+-------+-----+------+-------------+------------+
+;   96		 *                     |      |         |           |__ Timer mode
+;   97		 *                     |      |         |               TMODEHI-TMODE[2:0] selects among the following modes:
+;   98		 *                     |      |         |               0000 = One-Shot mode
+;   99		 *                     |      |         |               0001 = Continuous mode
+;  100		 *                     |      |         |               0010 = Counter mode
+;  101		 *                     |      |         |               0011 = PWM Single Output mode
+;  102		 *                     |      |         |               0100 = Capture mode
+;  103		 *                     |      |         |               0101 = Compare mode
+;  104		 *                     |      |         |               0110 = Gated mode
+;  105		 *                     |      |         |               0111 = Capture/Compare mode
+;  106		 *                     |      |         |               1000 = PWM Dual Output mode
+;  107		 *                     |      |         |               1001 = Capture Restart mode
+;  108		 *                     |      |         |               1010 = Comparator Counter mode
+;  109		 *                     |      |         |               1011 = Triggered One-Shot mode
+;  110		 *                     |      |         |
+;  111		 *                     |      |         |__ Prescale value
+;  112		 *                     |      |                         000 = Divide by 1
+;  113		 *                     |      |                         001 = Divide by 2
+;  114		 *                     |      |                         010 = Divide by 4
+;  115		 *                     |      |                         011 = Divide by 8
+;  116		 *                     |      |                         100 = Divide by 16
+;  117		 *                     |      |                         101 = Divide by 32
+;  118		 *                     |      |                         110 = Divide by 64
+;  119		 *                     |      |                         111 = Divide by 128                                                    
+;  120		 *                     |      |__ Timer Input/Output Polarity
+;  121		 *                     |          For Continuous mode
+;  122		 *                     |          When the timer is disabled, the Timer Output signal is set to the value of this bit.
+;  123		 *                     |          When the timer is enabled, the Timer Output signal is complemented upon timer Reload.
+;  124		 *                     |__ Timer Enable
+;  125		 *                         0 = Timer is disabled.
+;  126		 *                         1 = Timer enabled to count.
+;  127		 *
+;  128		 *
+;  129		 *
+;  130		 *------------------------------------------------------------------------------------------------------------*/
+;  131	
+;  132	
+;  133		/*---------------------------------------------------------------------------------------------
+;  134		 * Enable timer 0 interrupt via IRQ0ENH and IRQ0ENL. 
+;  135		 *
+;  136		 * +---------+-------+-------+-------+-------+--------+--------+--------+--------+--------+
+;  137		 * |         | BITS  |   7   |   6   |   5   |   4    |   3    |   2    |    1   |    0   |
+;  138		 * | IRQ0ENH | ------+-------+-------+------ +--------+--------+--------|--------+--------+
+;  139		 * |         | FIELD | T2ENH | T1ENH | T0ENH | U0RENH | U0TENH | I2CENH | SPIENH | ADCENH |
+;  140		 * +---------+-------+-------+-------+-------+--------+--------+--------+--------+--------+
+;  141		 *                                     |          
+;  142		 *                                     |__  T0ENH—Timer 0 Interrupt Request Enable High Bit       
+;  143		 *
+;  144		 * +---------+-------+-------+-------+-------+--------+--------+--------+--------+--------+
+;  145		 * |         | BITS  |   7   |   6   |   5   |   4    |   3    |   2    |    1   |    0   |
+;  146		 * | IRQ0ENL | ------+-------+-------+------ +--------+--------+--------|--------+--------+
+;  147		 * |         | FIELD | T2ENL | T1ENL | T0ENL | U0RENL | U0TENL | I2CENL | SPIENL | ADCENL |
+;  148		 * +---------+-------+-------+-------+-------+--------+--------+--------+--------+--------+
+;  149		 *                                     |          
+;  150		 *                                     |__  T0ENH—Timer 0 Interrupt Request Enable Low Bit    
+;  151		 *
+;  152		 *
+;  153		 *	IRQ0ENH[x] IRQ0ENL[x]    Priority Description
+;  154		 *	     0          0        Disabled Disabled
+;  155		 *	     0          1        Level 1 Low
+;  156		 * 	     1          0        Level 2 Nominal
+;  157		 *	     1          1        Level 3 High
+;  158		 *	where x indicates the register bits from 0–7.
+;  159		 *----------------------------------------------------------------------------------------------*/
+;  160	
+;  161		/*********
+;  162		 * enabled timer interrupts
+;  163		 */
+;  164		 
+;  165		setupBlinkInterruptTimer1();
+.line 165
+	CALL	_setupBlinkInterruptTimer1
+;  166		setupLampInterruptTimer0();
+.line 166
+	CALL	_setupLampInterruptTimer0
+;  167		
+;  168	    IRQ0ENH |= 0x60;	    // Nominal priority, T0ENH(bit5), T1ENH(bit6) = 1 
+.line 168
+	ORX	4033,#96
+;  169	    IRQ0ENL &= ~0x60;       // 					 T0ENL(bit5), T1ENH(bit6) = 0
+.line 169
+	ANDX	4034,#-97
+;  170	}
+.line 170
+	RET	
+.endfunc "timer_init",170,"_timer_init"
+	SEGMENT ROM_DATA
+
+
+;**************************** _setupBlinkInterruptTimer1 ***************************
+;Name                         Addr/Register   Size   Type
+;_SET_VECTOR                         IMPORT  -----   function
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+	.FRAME _n_setupBlinkInterruptTimer1,?_n_setupBlinkInterruptTimer1,RDATA
+	SEGMENT timer_TEXT
+;  171	
+;  172		
+;  173	void setupBlinkInterruptTimer1(){
+_setupBlinkInterruptTimer1:
+.define "_setupBlinkInterruptTimer1"
+.value _setupBlinkInterruptTimer1
+.class 2
+.type 65
+.endef
+.begfunc "setupBlinkInterruptTimer1",173,"_setupBlinkInterruptTimer1"
+;  174			unsigned char timerPres;	
+;  175			timerPres = 7;
+;  176		
+;  177			SET_VECTOR(TIMER1, blink_timer);  
+;  178	
+;  179			//Reload value = (1 sec * system clock frequency) / prescalar
+;  180			//Reload value = (1 * 20000000) / 128 = 78125	(about 1/4 slower)
+;  181			T1CTL1 |= 0x1;  // CONTINUOUS mode
+.line 181
+	ORX	3855,#1
+;  182			T1CTL1 |= (timerPres<<3); //set the prescale
+.line 182
+	ORX	3855,#56
+;  183		
+;  184			T1H = (STARTCOUNT >> 8);
+.line 184
+	LDX	3848,#-0
+;  185			T1L = (STARTCOUNT & 0x00FF);
+.line 185
+	LDX	3849,#1
+;  186			T1RH = (BLINK_RELOAD >> 8);
+.line 186
+	LDX	3850,#255
+;  187			T1RL = (BLINK_RELOAD & 0x00FF);
+.line 187
+	LDX	3851,#255
+;  188			
+;  189			T1CTL1 |= 0x80; // Enable timer
+.line 189
+	ORX	3855,#128
+;  190		}
+.line 190
+	RET	
+.endfunc "setupBlinkInterruptTimer1",190,"_setupBlinkInterruptTimer1"
+	SEGMENT ROM_DATA
+
+
+;**************************** _setupLampInterruptTimer0 ***************************
+;Name                         Addr/Register   Size   Type
+;_SET_VECTOR                         IMPORT  -----   function
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+	.FRAME _n_setupLampInterruptTimer0,?_n_setupLampInterruptTimer0,RDATA
+	SEGMENT timer_TEXT
+;  191		
+;  192	void setupLampInterruptTimer0(){		
+_setupLampInterruptTimer0:
+.define "_setupLampInterruptTimer0"
+.value _setupLampInterruptTimer0
+.class 2
+.type 65
+.endef
+.begfunc "setupLampInterruptTimer0",192,"_setupLampInterruptTimer0"
+;  193			unsigned char timerPres;
+;  194			SET_VECTOR(TIMER0, lamp_timer);  	
+;  195			timerPres = 4;
+;  196			//Reload value = (1 sec * system clock frequency) / prescalar
+;  197			//Reload value = (1 * 20000000) / 128 = 78125	(about 1/4 slower)
+;  198			T0CTL1 |= 0x1;  // CONTINUOUS mode
+.line 198
+	ORX	3847,#1
+;  199			T0CTL1 |= (timerPres<<3); //set the prescale
+.line 199
+	ORX	3847,#32
+;  200		
+;  201			T0H = (STARTCOUNT >> 8);
+.line 201
+	LDX	3840,#-0
+;  202			T0L = (STARTCOUNT & 0x00FF);
+.line 202
+	LDX	3841,#1
+;  203			T0RH = (LAMP_RELOAD >> 8);
+.line 203
+	LDX	3842,#63
+;  204			T0RL = (LAMP_RELOAD & 0x00FF);
+.line 204
+	LDX	3843,#255
+;  205			
+;  206			T0CTL1 |= 0x80; // Enable timer
+.line 206
+	ORX	3847,#128
+;  207		}
+.line 207
+	RET	
+.endfunc "setupLampInterruptTimer0",207,"_setupLampInterruptTimer0"
+	VECTOR	TIMER0=_lamp_timer
+	VECTOR	TIMER1=_blink_timer
+	XREF _blinkISR:ROM
+	XREF _lampISR:ROM
+	XREF __intrp:RDATA
+	XDEF _setupLampInterruptTimer0
+	XDEF _setupBlinkInterruptTimer1
+	XDEF _timer_init
+	XDEF _blink_timer
+	XDEF _lamp_timer
+	END

@@ -1,0 +1,875 @@
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 24-Aug-15     21:23:41     page:   1
+
+
+PC     Object              I  Line    Source 
+                           A     1    ; Z8 Encore! ANSI C Compiler Release 3.64
+                           A     2    ; -nofastcall -const=ROM -listinc -model=S -opt
+                           A     3    ; -noreduceopt -debug -norevaa -peephole -local
+                           A     4    ; -alias 
+                           A     5    	DEFINE spibase_TEXT,SPACE=ROM
+                           A     6    	FILE	".\spibase.c"
+                           A     7    .debug "C"
+                           A     8    	SEGMENT NEAR_BSS
+0000                       A     9    _pBaseOut:
+0000                       A    10    	DS	1
+                           A    11    .define "pBaseOut"
+                           A    12    .alias "_pBaseOut"
+                           A    13    .class 147
+                           A    14    .value _pBaseOut
+                           A    15    .type 130
+                           A    16    .endef
+                           A    17    	SEGMENT spibase_TEXT
+                           A    18    ;    1	/*!\file gpio.h
+                           A    19    ;    2	 * \brief Definition file for the Z8 En
+                           A    20    ;    3	 *
+                           A    21    ;    4	 *  This file contains header informati
+                           A    22    ;    5	 *  driver implementations for Z8 Encor
+                           A    23    ;    6	 *
+                           A    24    ;    7	 *  This source file uses Doxygen-style
+                           A    25    ;    8	 *  automatically.
+                           A    26    ;    9	 *
+                           A    27    ;   10	 *  Copyright (C) 1999-2004 by  ZiLOG, 
+                           A    28    ;   11	 *  All Rights Reserved.
+                           A    29    ;   12	 */
+                           A    30    ;   13	
+                           A    31    ;   14	#pragma once // Include this file only 
+                           A    32    ;   15	#ifndef _GPIO_H_
+                           A    33    ;   16	#define _GPIO_H_
+                           A    34    ;   17	
+                           A    35    ;   18	#include <defines.h>
+                           A    36    ;   19	
+                           A    37    ;   20	
+                           A    38    ;   21	#ifdef _DEBUG
+                           A    39    ;   22	#define GPIOPARAMETER_CHECKING			                           A    40    ;   23	#endif
+                           A    41    ;   24	
+                           A    42    ;   25	
+                           A    43    ;   26	/*! The GPIO ports available for partic
+                           A    44    ;   27	#if (defined(EZ8_PORT4) && !defined(_Z8
+                           A    45    ;   28	#define PORTD
+                           A    46    ;   29	#endif
+                           A    47    ;   30	
+                           A    48    ;   31	#if defined(EZ8_PORT8)||defined(EZ8_POR
+                           A    49    ;   32	#define PORTE
+                           A    50    ;   33	#endif
+                           A    51    ;   34	#if defined(EZ8_PORT8)
+                           A    52    ;   35	#define PORTF
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 24-Aug-15     21:23:41     page:   2
+
+
+PC     Object              I  Line    Source spibase.src
+                           A    53    ;   36	#define PORTG
+                           A    54    ;   37	#define PORTH
+                           A    55    ;   38	#endif
+                           A    56    ;   39	
+                           A    57    ;   40	#define GPIOERR_SUCCESS		(CHAR)0		                           A    58    ;   41	#define GPIOERR_INVALIDPINS	(CHAR)1		                           A    59    ;   42	#define GPIOERR_FAILURE		(CHAR)(-1)	                           A    60    ;   43	
+                           A    61    ;   44	
+                           A    62    ;   45	/*! all the ports bits are set to input
+                           A    63    ;   46	#define PORTA_ADDRVAL_DEF   0x01
+                           A    64    ;   47	#define PORTA_CTLVAL_DEF    0xFF
+                           A    65    ;   48	#define PORTA_OUTVAL_DEF    0x00
+                           A    66    ;   49	
+                           A    67    ;   50	#define PORTB_ADDRVAL_DEF   0x01
+                           A    68    ;   51	#define PORTB_CTLVAL_DEF    0xFF
+                           A    69    ;   52	#define PORTB_OUTVAL_DEF    0x00
+                           A    70    ;   53	
+                           A    71    ;   54	#define PORTC_ADDRVAL_DEF   0x01
+                           A    72    ;   55	#define PORTC_CTLVAL_DEF    0xFF
+                           A    73    ;   56	#define PORTC_OUTVAL_DEF    0x00
+                           A    74    ;   57	
+                           A    75    ;   58	#ifdef PORTD
+                           A    76    ;   59	#define PORTD_ADDRVAL_DEF   0x01
+                           A    77    ;   60	#define PORTD_CTLVAL_DEF    0xFF
+                           A    78    ;   61	#define PORTD_OUTVAL_DEF    0x00
+                           A    79    ;   62	#endif
+                           A    80    ;   63	
+                           A    81    ;   64	#ifdef PORTE
+                           A    82    ;   65	#define PORTE_ADDRVAL_DEF   0x01
+                           A    83    ;   66	#define PORTE_CTLVAL_DEF    0xFF
+                           A    84    ;   67	#define PORTE_OUTVAL_DEF    0x00
+                           A    85    ;   68	#endif
+                           A    86    ;   69	
+                           A    87    ;   70	#ifdef PORTF
+                           A    88    ;   71	#define PORTF_ADDRVAL_DEF   0x01
+                           A    89    ;   72	#define PORTF_CTLVAL_DEF    0xFF
+                           A    90    ;   73	#define PORTF_OUTVAL_DEF    0x00
+                           A    91    ;   74	#endif
+                           A    92    ;   75	
+                           A    93    ;   76	#ifdef PORTG
+                           A    94    ;   77	#define PORTG_ADDRVAL_DEF   0x01
+                           A    95    ;   78	#define PORTG_CTLVAL_DEF    0xFF
+                           A    96    ;   79	#define PORTG_OUTVAL_DEF    0x00
+                           A    97    ;   80	#endif
+                           A    98    ;   81	
+                           A    99    ;   82	#ifdef PORTH
+                           A   100    ;   83	#define PORTH_ADDRVAL_DEF   0x01
+                           A   101    ;   84	#define PORTH_CTLVAL_DEF    0xFF
+                           A   102    ;   85	#define PORTH_OUTVAL_DEF    0x00
+                           A   103    ;   86	#endif
+                           A   104    ;   87	
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 24-Aug-15     21:23:41     page:   3
+
+
+PC     Object              I  Line    Source spibase.src
+                           A   105    ;   88	
+                           A   106    ;   89	/*! Control Register access codes used 
+                           A   107    ;   90	#define PORTADDR_NOFUNC			0x00
+                           A   108    ;   91	#define PORTADDR_DATADIR		0x01
+                           A   109    ;   92	#define PORTADDR_ALTFUNC		0x02
+                           A   110    ;   93	#if defined(_Z8FMC16) || defined(__ZSLB
+                           A   111    ;   94	#define PORTADDR_ALTFUNC0		0x02
+                           A   112    ;   95	#endif
+                           A   113    ;   96	#define PORTADDR_OPENDRAIN		0x03
+                           A   114    ;   97	#define PORTADDR_HIGHDRIVE		0x04
+                           A   115    ;   98	#define PORTADDR_STPMDREC		0x05
+                           A   116    ;   99	#if defined (_Z8F1680)||defined(_Z8F04)
+                           A   117    ;  100	#define PORTADDR_PULLUP		0x06
+                           A   118    ;  101	#endif
+                           A   119    ;  102	#if defined (_Z8F1680)||defined(_Z8F04)
+                           A   120    ;  103	#define PORTADDR_ALTFUNCSET1	0x07
+                           A   121    ;  104	#define PORTADDR_ALTFUNCSET2	0x08
+                           A   122    ;  105	#endif
+                           A   123    ;  106	#if defined(_Z8FMC16) || defined(__ZSLB
+                           A   124    ;  107	#define PORTADDR_ALTFUNC1		0x07
+                           A   125    ;  108	#define PORTADDR_IRQES			0x08
+                           A   126    ;  109	#define PORTADDR_IRQPS			0x09
+                           A   127    ;  110	#endif
+                           A   128    ;  111	
+                           A   129    ;  112	
+                           A   130    ;  113	/*! Definitions for Current Drive Level
+                           A   131    ;  114	#if defined(_Z8F04A) ||defined (_Z8F168
+                           A   132    ;  115	#define DRIVELEVEL_3MA			0
+                           A   133    ;  116	#define DRIVELEVEL_7MA			1
+                           A   134    ;  117	#define DRIVELEVEL_13MA			2
+                           A   135    ;  118	#define DRIVELEVEL_20MA			3
+                           A   136    ;  119	#endif
+                           A   137    ;  120	
+                           A   138    ;  121	/*! Definitions for trigger edges */
+                           A   139    ;  122	#define EDGE_FALLING			0
+                           A   140    ;  123	#define EDGE_RISING				1
+                           A   141    ;  124	
+                           A   142    ;  125	/*! GPIO pin patterns */
+                           A   143    ;  126	#define PORTPIN_ZERO		(BYTE)0x01	                           A   144    ;  127	#define PORTPIN_ONE			(BYTE)0x02	                           A   145    ;  128	#define PORTPIN_TWO			(BYTE)0x04	                           A   146    ;  129	#define PORTPIN_THREE		(BYTE)0x08	                           A   147    ;  130	#define PORTPIN_FOUR		(BYTE)0x10	                           A   148    ;  131	#define PORTPIN_FIVE 		(BYTE)0x20	                           A   149    ;  132	#define PORTPIN_SIX			(BYTE)0x40	                           A   150    ;  133	#define PORTPIN_SEVEN		(BYTE)0x80	                           A   151    ;  134	#define PORTPIN_FOURPINS_L	(BYTE)0x0F	                           A   152    ;  135	#define PORTPIN_FOURPINS_U	(BYTE)0xF0	                           A   153    ;  136	#define PORTPIN_PATTERN_AA	(BYTE)0xAA	                           A   154    ;  137	#define PORTPIN_PATTERN_55	(BYTE)0x55	                           A   155    ;  138	#define PORTPIN_ALL			(BYTE)0xFF	                           A   156    ;  139	
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 24-Aug-15     21:23:41     page:   4
+
+
+PC     Object              I  Line    Source spibase.src
+                           A   157    ;  140	/*! Port mask index used for validating
+                           A   158    ;  141	#define MSKINDEX_PORTB		(BYTE)0
+                           A   159    ;  142	#define MSKINDEX_PORTC		(BYTE)1
+                           A   160    ;  143	#define MSKINDEX_PORTD		(BYTE)2
+                           A   161    ;  144	#define MSKINDEX_PORTE		(BYTE)3
+                           A   162    ;  145	#define MSKINDEX_PORTF		(BYTE)4
+                           A   163    ;  146	#define MSKINDEX_PORTG		(BYTE)5
+                           A   164    ;  147	#define MSKINDEX_PORTH		(BYTE)6
+                           A   165    ;  148	
+                           A   166    ;  149	/*!
+                           A   167    ;  150	 * \brief The settings required to conf
+                           A   168    ;  151	 */
+                           A   169    ;  152	typedef struct
+                           A   170    ;  153	{
+                           A   171    ;  154		BYTE addr ;					//!< Th
+                           A   172    ;  155		BYTE ctl ;					//!< Th
+                           A   173    ;  156		BYTE out ;					//!< Th
+                           A   174    ;  157		BYTE in ;					//!< Th
+                           A   175    ;  158	
+                           A   176    ;  159	} PORT ;
+                           A   177    .begrec "NONAME0",4
+                           A   178    .define "addr"
+                           A   179    .value 0
+                           A   180    .class 8
+                           A   181    .type 12
+                           A   182    .endef
+                           A   183    .define "ctl"
+                           A   184    .value 1
+                           A   185    .class 8
+                           A   186    .type 12
+                           A   187    .endef
+                           A   188    .define "out"
+                           A   189    .value 2
+                           A   190    .class 8
+                           A   191    .type 12
+                           A   192    .endef
+                           A   193    .define "in"
+                           A   194    .value 3
+                           A   195    .class 8
+                           A   196    .type 12
+                           A   197    .endef
+                           A   198    .endrec "NONAME0"
+                           A   199    	SEGMENT NEAR_BSS
+0001                       A   200    _pOut:
+0001                       A   201    	DS	1
+                           A   202    .define "pOut"
+                           A   203    .alias "_pOut"
+                           A   204    .class 147
+                           A   205    .value _pOut
+                           A   206    .type 130
+                           A   207    .endef
+0002                       A   208    _pBaseIn:
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 24-Aug-15     21:23:41     page:   5
+
+
+PC     Object              I  Line    Source spibase.src
+0002                       A   209    	DS	1
+                           A   210    .define "pBaseIn"
+                           A   211    .alias "_pBaseIn"
+                           A   212    .class 147
+                           A   213    .value _pBaseIn
+                           A   214    .type 130
+                           A   215    .endef
+0003                       A   216    _pIn:
+0003                       A   217    	DS	1
+                           A   218    .define "pIn"
+                           A   219    .alias "_pIn"
+                           A   220    .class 147
+                           A   221    .value _pIn
+                           A   222    .type 130
+                           A   223    .endef
+0004                       A   224    _ByteBlock:
+0004                       A   225    	DS	1
+                           A   226    .define "ByteBlock"
+                           A   227    .alias "_ByteBlock"
+                           A   228    .class 147
+                           A   229    .value _ByteBlock
+                           A   230    .type 12
+                           A   231    .endef
+0005                       A   232    _Length:
+0005                       A   233    	DS	2*1
+                           A   234    .define "Length"
+                           A   235    .alias "_Length"
+                           A   236    .class 147
+                           A   237    .value _Length
+                           A   238    .type 13
+                           A   239    .endef
+0007                       A   240    _DataReady:
+0007                       A   241    	DS	1
+                           A   242    .define "DataReady"
+                           A   243    .alias "_DataReady"
+                           A   244    .class 147
+                           A   245    .value _DataReady
+                           A   246    .type 2
+                           A   247    .endef
+                           A   248    	SEGMENT ROM_DATA
+                           A   249    
+                           A   250    
+                           A   251    ;**************************** _InitializeSPI **
+                           A   252    ;Name                         Addr/Register   S
+                           A   253    ;_DataReady                          STATIC    
+                           A   254    
+                           A   255    
+                           A   256    ; Aggregate Stack Size: 0 (words)
+                           A   257    
+                           A   258    
+                           A   259    	.FRAME _n_InitializeSPI,?_n_InitializeSPI,R
+                           A   260    ;    1	/**************************************
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 24-Aug-15     21:23:41     page:   6
+
+
+PC     Object              I  Line    Source spibase.src
+                           A   261    ;    2	These are the functions required for th
+                           A   262    ;    3	Slave Select going High.  The ISR for t
+                           A   263    ;    4	the master.
+                           A   264    ;    5	***************************************
+                           A   265    ;    6	
+                           A   266    ;    7	#include <ez8.h>
+                           A   267    ;    8	#include <defines.h>
+                           A   268    ;    9	#include "spibase.h"
+                           A   269    ;   10	
+                           A   270    ;   11	extern char DataOut[];
+                           A   271    ;   12	extern char DataIn[];
+                           A   272    ;   13	
+                           A   273    ;   14	char* pBaseOut;            // Out Base 
+                           A   274    ;   15	char* pOut;                // Out Point
+                           A   275    ;   16	char* pBaseIn;             // In Base P
+                           A   276    ;   17	char* pIn;                 // In Pointe
+                           A   277    ;   18	
+                           A   278    ;   19	unsigned char ByteBlock;   // Flag Byte
+                           A   279    ;   20	unsigned short Length;     // Number of
+                           A   280    ;   21	
+                           A   281    ;   22	volatile char DataReady;   // Flag indi
+                           A   282    	SEGMENT spibase_TEXT
+                           A   283    ;   23	
+                           A   284    ;   24	
+                           A   285    ;   25	/**************************************
+                           A   286    ;   26	Prepares the SPI driver.  Set the outpu
+                           A   287    ;   27	is polled, so we won't need that turned
+                           A   288    ;   28	***************************************
+                           A   289    ;   29	void InitializeSPI()
+                           A   290    ;   30	{
+0000                       A   291    _InitializeSPI:
+                           A   292    .define "_InitializeSPI"
+                           A   293    .value _InitializeSPI
+                           A   294    .class 2
+                           A   295    .type 65
+                           A   296    .endef
+                           A   297    .begfunc "InitializeSPI",30,"_InitializeSPI"
+                           A   298    ;   31	
+                           A   299    ;   32	
+                           A   300    ;   33	    PCDD &= ~MISObit;      // MISO is a
+                           A   301    .line 33
+0000 E9010FD8              A   302    	LDX	4056,#1
+0004 59DF0FD9              A   303    	ANDX	4057,#-33
+                           A   304    ;   34	    IRQ2 &= ~SSELbit;      // Make sure
+                           A   305    .line 34
+0008 59FB0FC6              A   306    	ANDX	4038,#-5
+                           A   307    ;   35	    IRQ2ENH |= SSELbit;    // Turn on S
+                           A   308    .line 35
+000C 49040FC7              A   309    	ORX	4039,#4
+                           A   310    ;   36	    IRQ2 &= ~SCLKbit;      // Push the 
+                           A   311    .line 36
+0010 59F70FC6              A   312    	ANDX	4038,#-9
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 24-Aug-15     21:23:41     page:   7
+
+
+PC     Object              I  Line    Source spibase.src
+                           A   313    ;   37	    DataReady = FALSE;     // Nothing e
+                           A   314    .line 37
+0014 B0 07                 A   315    	CLR	_DataReady
+                           A   316    ;   38	}
+                           A   317    .line 38
+0016 AF                    A   318    	RET	
+                           A   319    .endfunc "InitializeSPI",38,"_InitializeSPI"
+                           A   320    	SEGMENT ROM_DATA
+                           A   321    
+                           A   322    
+                           A   323    ;**************************** _SPI_Send *******
+                           A   324    ;Name                         Addr/Register   S
+                           A   325    ;_ByteBlock                          STATIC    
+                           A   326    ;_Length                             STATIC    
+                           A   327    ;_pIn                                STATIC    
+                           A   328    ;_pBaseIn                            STATIC    
+                           A   329    ;_pOut                               STATIC    
+                           A   330    ;_pBaseOut                           STATIC    
+                           A   331    ;_DataReady                          STATIC    
+                           A   332    ;data_in                          _0data_in    
+                           A   333    ;data                           _0_SPI_Send    
+                           A   334    
+                           A   335    
+                           A   336    ; Aggregate Stack Size: 0 (words)
+                           A   337    
+                           A   338    
+                           A   339    	.FRAME _n_SPI_Send,?_n_SPI_Send,RDATA
+0000                       A   340    _0_SPI_Send:
+0000                       A   341    	DS	1
+0001                       A   342    _0data_in:
+0001                       A   343    	DS	1
+                           A   344    	SEGMENT spibase_TEXT
+                           A   345    ;   39	
+                           A   346    ;   40	
+                           A   347    ;   41	void SPI_Send(char data)
+                           A   348    ;   42	{
+0017                       A   349    _SPI_Send:
+                           A   350    .define "_SPI_Send"
+                           A   351    .value _SPI_Send
+                           A   352    .class 2
+                           A   353    .type 65
+                           A   354    .endef
+                           A   355    .begfunc "SPI_Send",42,"_SPI_Send"
+                           A   356    .define "data"
+                           A   357    .class 23
+                           A   358    .value _0_SPI_Send
+                           A   359    .alias "_0_SPI_Send"
+                           A   360    .type 2
+                           A   361    .endef
+                           A   362    .define "data_in"
+                           A   363    .class 22
+                           A   364    .value _0data_in
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 24-Aug-15     21:23:41     page:   8
+
+
+PC     Object              I  Line    Source spibase.src
+                           A   365    .alias "_0data_in"
+                           A   366    .type 2
+                           A   367    .endef
+                           A   368    ;   43	   char data_in;
+                           A   369    ;   44	   DataReady = FALSE;
+                           A   370    .line 44
+0017 B0 07                 A   371    	CLR	_DataReady
+                           A   372    ;   45	   pOut = pBaseOut = &data;
+                           A   373    .line 45
+0019 E6 00 00              A   374    	LD	_pBaseOut,#_0_SPI_Send
+001C E6 01 00              A   375    	LD	_pOut,#_0_SPI_Send
+                           A   376    ;   46	   pIn = pBaseIn = &data_in;
+                           A   377    .line 46
+001F E6 02 01              A   378    	LD	_pBaseIn,#_0data_in
+0022 E6 03 01              A   379    	LD	_pIn,#_0data_in
+                           A   380    ;   47	   Length = 1;
+                           A   381    .line 47
+0025 B0 05                 A   382    	CLR	_Length
+0027 E6 06 01              A   383    	LD	_Length+1,#1
+                           A   384    ;   48	   ByteBlock = 0;
+                           A   385    .line 48
+002A B0 04                 A   386    	CLR	_ByteBlock
+                           A   387    ;   49	
+                           A   388    ;   50	   //took out the while loop here, as w
+                           A   389    ;   51	}
+                           A   390    .line 51
+002C AF                    A   391    	RET	
+                           A   392    .endfunc "SPI_Send",51,"_SPI_Send"
+                           A   393    	SEGMENT ROM_DATA
+                           A   394    
+                           A   395    
+                           A   396    ;**************************** _SPI_SendReceiveB
+                           A   397    ;Name                         Addr/Register   S
+                           A   398    ;_ByteBlock                          STATIC    
+                           A   399    ;_Length                             STATIC    
+                           A   400    ;_DataReady                          STATIC    
+                           A   401    ;_pIn                                STATIC    
+                           A   402    ;_pBaseIn                            STATIC    
+                           A   403    ;_pOut                               STATIC    
+                           A   404    ;_pBaseOut                           STATIC    
+                           A   405    ;length                        _2_SPI_SendRecei
+                           A   406    ;p_in                          _1_SPI_SendRecei
+                           A   407    ;p_out                         _0_SPI_SendRecei
+                           A   408    
+                           A   409    
+                           A   410    ; Aggregate Stack Size: 0 (words)
+                           A   411    
+                           A   412    
+                           A   413    	.FRAME _n_SPI_SendReceiveBlock,?_n_SPI_Send
+0000                       A   414    _0_SPI_SendReceiveBlock:
+0000                       A   415    	DS	1
+0001                       A   416    _1_SPI_SendReceiveBlock:
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 24-Aug-15     21:23:41     page:   9
+
+
+PC     Object              I  Line    Source spibase.src
+0001                       A   417    	DS	1
+0002                       A   418    _2_SPI_SendReceiveBlock:
+0002                       A   419    	DS	1
+                           A   420    	SEGMENT spibase_TEXT
+                           A   421    ;   52	
+                           A   422    ;   53	void SPI_SendReceiveBlock(char* p_out, 
+                           A   423    ;   54	{
+002D                       A   424    _SPI_SendReceiveBlock:
+                           A   425    .define "_SPI_SendReceiveBlock"
+                           A   426    .value _SPI_SendReceiveBlock
+                           A   427    .class 2
+                           A   428    .type 65
+                           A   429    .endef
+                           A   430    .begfunc "SPI_SendReceiveBlock",54,"_SPI_SendRe
+                           A   431    .define "p_out"
+                           A   432    .class 23
+                           A   433    .value _0_SPI_SendReceiveBlock
+                           A   434    .alias "_0_SPI_SendReceiveBlock"
+                           A   435    .type 130
+                           A   436    .endef
+                           A   437    .define "p_in"
+                           A   438    .class 23
+                           A   439    .value _1_SPI_SendReceiveBlock
+                           A   440    .alias "_1_SPI_SendReceiveBlock"
+                           A   441    .type 130
+                           A   442    .endef
+                           A   443    .define "length"
+                           A   444    .class 23
+                           A   445    .value _2_SPI_SendReceiveBlock
+                           A   446    .alias "_2_SPI_SendReceiveBlock"
+                           A   447    .type 12
+                           A   448    .endef
+                           A   449    ;   55	   pOut = pBaseOut = p_out;
+                           A   450    .line 55
+002D E4 00 00              A   451    	LD	_pBaseOut,_0_SPI_SendReceiveBlock
+0030 E4 00 01              A   452    	LD	_pOut,_0_SPI_SendReceiveBlock
+                           A   453    ;   56	   pIn = pBaseIn = p_in;
+                           A   454    .line 56
+0033 E4 01 02              A   455    	LD	_pBaseIn,_1_SPI_SendReceiveBlock
+0036 E4 01 03              A   456    	LD	_pIn,_1_SPI_SendReceiveBlock
+                           A   457    ;   57	   DataReady = FALSE;
+                           A   458    .line 57
+0039 B0 07                 A   459    	CLR	_DataReady
+                           A   460    ;   58	
+                           A   461    ;   59	   if (length)
+                           A   462    .line 59
+003B A6 02 00              A   463    	CP	_2_SPI_SendReceiveBlock,#0
+003E 6B 07                 A   464    	JR	Z,_3_L_3
+                           A   465    ;   60	   {
+                           A   466    ;   61	      Length = length;
+                           A   467    .line 61
+0040 B0 05                 A   468    	CLR	_Length
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 24-Aug-15     21:23:41     page:  10
+
+
+PC     Object              I  Line    Source spibase.src
+0042 E4 02 06              A   469    	LD	_Length+1,_2_SPI_SendReceiveBlock
+                           A   470    ;   62	   }
+                           A   471    ;   63	   else
+                           A   472    .line 63
+0045 8B 05                 A   473    	JR	_3_L_4
+0047                       A   474    _3_L_3:
+                           A   475    ;   64	   {
+                           A   476    ;   65	      Length = 256;     // Zero = 256
+                           A   477    .line 65
+0047 E6 05 01              A   478    	LD	_Length,#1
+004A B0 06                 A   479    	CLR	_Length+1
+                           A   480    ;   66	   }
+004C                       A   481    _3_L_4:
+                           A   482    .line 66
+                           A   483    ;   67	
+                           A   484    ;   68	   ByteBlock = 0xFF;    // Mode Block
+                           A   485    .line 68
+004C E6 04 FF              A   486    	LD	_ByteBlock,#255
+                           A   487    ;   69		//took out the while loop here, as 
+                           A   488    ;   70	}
+                           A   489    .line 70
+004F AF                    A   490    	RET	
+                           A   491    .endfunc "SPI_SendReceiveBlock",70,"_SPI_SendRe
+                           A   492    	SEGMENT ROM_DATA
+                           A   493    
+                           A   494    
+                           A   495    ;**************************** _SSELISR ********
+                           A   496    ;Name                         Addr/Register   S
+                           A   497    ;_pBaseIn                            STATIC    
+                           A   498    ;_pIn                                STATIC    
+                           A   499    ;_Length                             STATIC    
+                           A   500    ;_pBaseOut                           STATIC    
+                           A   501    ;_DataReady                          STATIC    
+                           A   502    ;_ByteBlock                          STATIC    
+                           A   503    ;_pOut                               STATIC    
+                           A   504    ;data_out                                R2    
+                           A   505    ;bmout                                   R1    
+                           A   506    ;bmin                                    R0    
+                           A   507    
+                           A   508    
+                           A   509    ; Aggregate Stack Size: 0 (words)
+                           A   510    
+                           A   511    
+                           A   512    	.FRAME _n_SSELISR,?_n_SSELISR,RDATA
+                           A   513    	SEGMENT spibase_TEXT
+                           A   514    ;   71	
+                           A   515    ;   72	
+                           A   516    ;   73	/**************************************
+                           A   517    ;   74	This is the ISR for the Slave Select.  
+                           A   518    ;   75	will spend all of its resources communi
+                           A   519    ;   76	***************************************
+                           A   520    ;   77	void interrupt SSELISR()            // 
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 24-Aug-15     21:23:41     page:  11
+
+
+PC     Object              I  Line    Source spibase.src
+                           A   521    ;   78	{
+0050                       A   522    _SSELISR:
+                           A   523    .define "_SSELISR"
+                           A   524    .value _SSELISR
+                           A   525    .class 2
+                           A   526    .type 65
+                           A   527    .endef
+                           A   528    .begfunc "SSELISR",78,"_SSELISR"
+                           A   529    .define "bmin"
+                           A   530    .class 4
+                           A   531    .reg 1
+                           A   532    .type 12
+                           A   533    .endef
+                           A   534    .define "bmout"
+                           A   535    .class 4
+                           A   536    .reg 2
+                           A   537    .type 12
+                           A   538    .endef
+                           A   539    .define "data_out"
+                           A   540    .class 4
+                           A   541    .reg 3
+                           A   542    .type 12
+                           A   543    .endef
+0050 C8FFD0                A   544    	PUSHX	4093
+0053 E8 000FFD             A   545    	LDX	4093,__intrp
+0057 09100000              A   546    	ADDX	__intrp,#16
+                           A   547    ;   79	   unsigned char data_out = *pOut;  // 
+                           A   548    .line 79
+005B E4 01 E0              A   549    	LD	R0,_pOut
+005E E320                  A   550    	LD	R2,@R0
+                           A   551    ;   80	   unsigned char bmin = 0x80;       // 
+                           A   552    .line 80
+0060 0C80                  A   553    	LD	R0,#128
+                           A   554    ;   81	   unsigned char bmout = 0x80;      // 
+                           A   555    .line 81
+0062 1C80                  A   556    	LD	R1,#128
+                           A   557    ;   82	
+                           A   558    ;   83	   while (1)
+0064                       A   559    _4_L_33:
+                           A   560    .line 83
+                           A   561    ;   84	   {
+                           A   562    ;   85	      if (ByteBlock)
+                           A   563    .line 85
+0064 A6 04 00              A   564    	CP	_ByteBlock,#0
+0067 6B 1C                 A   565    	JR	Z,_4_L_25
+                           A   566    ;   86	      {
+                           A   567    ;   87	         IRQ2 &= ~SCLKbit;          // 
+                           A   568    .line 87
+0069 59F70FC6              A   569    	ANDX	4038,#-9
+                           A   570    ;   88	   
+                           A   571    ;   89	         while (!(IRQ2 & SCLKbit))  // 
+                           A   572    .line 89
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 24-Aug-15     21:23:41     page:  12
+
+
+PC     Object              I  Line    Source spibase.src
+006D 8B 10                 A   573    	JR	_4_L_7
+006F                       A   574    _4_L_8:
+                           A   575    ;   90	         {
+                           A   576    ;   91	            if (SSEL())             // 
+                           A   577    .line 91
+006F 79040FDA              A   578    	TMX	4058,#4
+0073 6B 0A                 A   579    	JR	Z,_4_L_7
+                           A   580    ;   92	            {
+                           A   581    ;   93	               IRQ2 &= ~SSELbit;    // 
+                           A   582    .line 93
+0075 59FB0FC6              A   583    	ANDX	4038,#-5
+                           A   584    ;   94	               DataReady = TRUE;    // 
+                           A   585    .line 94
+0079 E6 07 01              A   586    	LD	_DataReady,#1
+                           A   587    ;   95	               return;
+                           A   588    .line 95
+007C 8D 01 14              A   589    	JR	_4_L_34
+                           A   590    ;   96	            }
+                           A   591    ;   97	         }
+007F                       A   592    _4_L_7:
+                           A   593    .line 97
+                           A   594    .line 89
+007F 79080FC6              A   595    	TMX	4038,#8
+0083 6B EA                 A   596    	JR	Z,_4_L_8
+                           A   597    ;   98	      }
+0085                       A   598    _4_L_25:
+                           A   599    .line 98
+                           A   600    ;   99	
+                           A   601    ;  100	      if (Transmitting())           // 
+                           A   602    .line 100
+0085 79080FDA              A   603    	TMX	4058,#8
+0089 6B 2D                 A   604    	JR	Z,_4_L_24
+                           A   605    ;  101	      {
+                           A   606    ;  102	         if (data_out & bmout)
+                           A   607    .line 102
+008B 7221                  A   608    	TM	R2,R1
+008D 6B 06                 A   609    	JR	Z,_4_L_11
+                           A   610    ;  103	         {
+                           A   611    ;  104	            MISO_H();
+                           A   612    .line 104
+008F 49200FDB              A   613    	ORX	4059,#32
+                           A   614    ;  105	         }
+                           A   615    ;  106	         else
+                           A   616    .line 106
+0093 8B 04                 A   617    	JR	_4_L_12
+0095                       A   618    _4_L_11:
+                           A   619    ;  107	         {
+                           A   620    ;  108	            MISO_L();
+                           A   621    .line 108
+0095 59DF0FDB              A   622    	ANDX	4059,#-33
+                           A   623    ;  109	         }
+0099                       A   624    _4_L_12:
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 24-Aug-15     21:23:41     page:  13
+
+
+PC     Object              I  Line    Source spibase.src
+                           A   625    .line 109
+                           A   626    ;  110	
+                           A   627    ;  111	         bmout = bmout >> 1;
+                           A   628    .line 111
+0099 1FC0E1                A   629    	SRL	R1
+                           A   630    ;  112	
+                           A   631    ;  113	         if (bmout == 0x00)         // 
+                           A   632    .line 113
+009C 4211                  A   633    	OR	R1,R1
+009E EB 4D                 A   634    	JR	NE,_4_L_31
+                           A   635    ;  114	         {
+                           A   636    ;  115	            bmout = 0x80;           // 
+                           A   637    .line 115
+00A0 1C80                  A   638    	LD	R1,#128
+                           A   639    ;  116	            data_out = *(++pOut);   // 
+                           A   640    .line 116
+00A2 20 01                 A   641    	INC	_pOut
+00A4 E4 01 E3              A   642    	LD	R3,_pOut
+00A7 E323                  A   643    	LD	R2,@R3
+                           A   644    ;  117	
+                           A   645    ;  118	            if (pOut >= pBaseOut + Leng
+                           A   646    .line 118
+00A9 E4 06 E3              A   647    	LD	R3,_Length+1
+00AC 04 00 E3              A   648    	ADD	R3,_pBaseOut
+00AF A4 01 E3              A   649    	CP	R3,_pOut
+00B2 BB 39                 A   650    	JR	UGT,_4_L_31
+                           A   651    ;  119	            {
+                           A   652    ;  120	               pOut--;              // 
+                           A   653    .line 120
+00B4 30 01                 A   654    	DEC	_pOut
+                           A   655    ;  121	            }
+                           A   656    ;  122	         }
+                           A   657    ;  123	      }
+                           A   658    ;  124	      else                          // 
+                           A   659    .line 124
+00B6 8B 35                 A   660    	JR	_4_L_31
+00B8                       A   661    _4_L_24:
+                           A   662    ;  125	      {
+                           A   663    ;  126	         if (MOSI())                // 
+                           A   664    .line 126
+00B8 79100FDA              A   665    	TMX	4058,#16
+00BC 6B 0B                 A   666    	JR	Z,_4_L_17
+                           A   667    ;  127	         {
+                           A   668    ;  128	            *pIn |= bmin;           // 
+                           A   669    .line 128
+00BE E4 03 E4              A   670    	LD	R4,_pIn
+00C1 E334                  A   671    	LD	R3,@R4
+00C3 4230                  A   672    	OR	R3,R0
+00C5 F343                  A   673    	LD	@R4,R3
+                           A   674    ;  129	         }
+                           A   675    ;  130	         else
+                           A   676    .line 130
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 24-Aug-15     21:23:41     page:  14
+
+
+PC     Object              I  Line    Source spibase.src
+00C7 8B 0C                 A   677    	JR	_4_L_18
+00C9                       A   678    _4_L_17:
+                           A   679    ;  131	         {
+                           A   680    ;  132	            *pIn &= ~bmin;          // 
+                           A   681    .line 132
+00C9 E4 03 E4              A   682    	LD	R4,_pIn
+00CC E4E0E3                A   683    	LD	R3,R0
+00CF 60E3                  A   684    	COM	R3
+00D1 5334                  A   685    	AND	R3,@R4
+00D3 F343                  A   686    	LD	@R4,R3
+                           A   687    ;  133	         }
+00D5                       A   688    _4_L_18:
+                           A   689    .line 133
+                           A   690    ;  134	
+                           A   691    ;  135	         bmin = bmin >> 1;          // 
+                           A   692    .line 135
+00D5 1FC0E0                A   693    	SRL	R0
+                           A   694    ;  136	
+                           A   695    ;  137	         if (bmin == 0)             // 
+                           A   696    .line 137
+00D8 4200                  A   697    	OR	R0,R0
+00DA EB 11                 A   698    	JR	NE,_4_L_31
+                           A   699    ;  138	         {
+                           A   700    ;  139	            bmin = 0x80;            // 
+                           A   701    .line 139
+00DC 0C80                  A   702    	LD	R0,#128
+                           A   703    ;  140	            pIn++;                  // 
+                           A   704    .line 140
+00DE 20 03                 A   705    	INC	_pIn
+                           A   706    ;  141	
+                           A   707    ;  142	            if (pIn >= pBaseIn + Length
+                           A   708    .line 142
+00E0 E4 06 E3              A   709    	LD	R3,_Length+1
+00E3 04 02 E3              A   710    	ADD	R3,_pBaseIn
+00E6 A4 03 E3              A   711    	CP	R3,_pIn
+00E9 BB 02                 A   712    	JR	UGT,_4_L_31
+                           A   713    ;  143	            {
+                           A   714    ;  144	               pIn--;               // 
+                           A   715    .line 144
+00EB 30 03                 A   716    	DEC	_pIn
+                           A   717    ;  145	            }
+                           A   718    ;  146	         }
+                           A   719    ;  147	      }
+00ED                       A   720    _4_L_31:
+                           A   721    .line 147
+                           A   722    ;  148	
+                           A   723    ;  149	      if (!ByteBlock)               // 
+                           A   724    .line 149
+00ED A6 04 00              A   725    	CP	_ByteBlock,#0
+00F0 ED 00 64              A   726    	JR	NE,_4_L_33
+                           A   727    ;  150	      {
+                           A   728    ;  151	         IRQ2 &= ~SCLKbit;          // 
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 24-Aug-15     21:23:41     page:  15
+
+
+PC     Object              I  Line    Source spibase.src
+                           A   729    .line 151
+00F3 59F70FC6              A   730    	ANDX	4038,#-9
+                           A   731    ;  152	   
+                           A   732    ;  153	         while (!(IRQ2 & SCLKbit))  // 
+                           A   733    .line 153
+00F7 8B 0F                 A   734    	JR	_4_L_27
+00F9                       A   735    _4_L_28:
+                           A   736    ;  154	         {
+                           A   737    ;  155	            if (SSEL())             // 
+                           A   738    .line 155
+00F9 79040FDA              A   739    	TMX	4058,#4
+00FD 6B 09                 A   740    	JR	Z,_4_L_27
+                           A   741    ;  156	            {
+                           A   742    ;  157	               IRQ2 &= ~SSELbit;    // 
+                           A   743    .line 157
+00FF 59FB0FC6              A   744    	ANDX	4038,#-5
+                           A   745    ;  158	               DataReady = TRUE;    // 
+                           A   746    .line 158
+0103 E6 07 01              A   747    	LD	_DataReady,#1
+                           A   748    ;  159	               return;
+                           A   749    .line 159
+0106 8B 0C                 A   750    	JR	_4_L_34
+                           A   751    ;  160	            }
+                           A   752    ;  161	         }
+0108                       A   753    _4_L_27:
+                           A   754    .line 161
+                           A   755    .line 153
+0108 79080FC6              A   756    	TMX	4038,#8
+010C 6B EB                 A   757    	JR	Z,_4_L_28
+                           A   758    ;  162	
+                           A   759    ;  163	         ByteBlock = 0xFF;          // 
+                           A   760    .line 163
+010E E6 04 FF              A   761    	LD	_ByteBlock,#255
+                           A   762    .line 83
+0111 8D 00 64              A   763    	JR	_4_L_33
+                           A   764    ;  164	      }
+                           A   765    ;  165	   }
+                           A   766    ;  166	}
+0114                       A   767    _4_L_34:
+                           A   768    .line 166
+0114 29100000              A   769    	SUBX	__intrp,#16
+0118 D8FFD0                A   770    	POPX	4093
+011B BF                    A   771    	IRET	
+                           A   772    .endfunc "SSELISR",166,"_SSELISR"
+                           A   773    	SEGMENT ROM_DATA
+                           A   774    
+                           A   775    
+                           A   776    ;**************************** _SetupVectors ***
+                           A   777    ;Name                         Addr/Register   S
+                           A   778    ;_SET_VECTOR                         IMPORT  --
+                           A   779    
+                           A   780    
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 24-Aug-15     21:23:41     page:  16
+
+
+PC     Object              I  Line    Source spibase.src
+                           A   781    ; Aggregate Stack Size: 0 (words)
+                           A   782    
+                           A   783    
+                           A   784    	.FRAME _n_SetupVectors,?_n_SetupVectors,RDA
+                           A   785    	SEGMENT spibase_TEXT
+                           A   786    ;  167	
+                           A   787    ;  168	
+                           A   788    ;  169	/**************************************
+                           A   789    ;  170	Not a real function, but tells the comp
+                           A   790    ;  171	***************************************
+                           A   791    ;  172	void SetupVectors()
+                           A   792    ;  173	{
+011C                       A   793    _SetupVectors:
+                           A   794    .define "_SetupVectors"
+                           A   795    .value _SetupVectors
+                           A   796    .class 2
+                           A   797    .type 65
+                           A   798    .endef
+                           A   799    .begfunc "SetupVectors",173,"_SetupVectors"
+                           A   800    ;  174	    SET_VECTOR(C2, SSELISR);  // Setup 
+                           A   801    ;  175	}
+                           A   802    .line 175
+011C AF                    A   803    	RET	
+                           A   804    .endfunc "SetupVectors",175,"_SetupVectors"
+0032 0050                  A   805    	VECTOR	C2=_SSELISR
+                           A   806    	XREF __intrp:RDATA
+                           A   807    	XDEF _SetupVectors
+                           A   808    	XDEF _SSELISR
+                           A   809    	XDEF _2_SPI_SendReceiveBlock
+                           A   810    	XDEF _1_SPI_SendReceiveBlock
+                           A   811    	XDEF _0_SPI_SendReceiveBlock
+                           A   812    	XDEF _SPI_SendReceiveBlock
+                           A   813    	XDEF _0_SPI_Send
+                           A   814    	XDEF _SPI_Send
+                           A   815    	XDEF _InitializeSPI
+                           A   816    	XDEF _DataReady
+                           A   817    	XDEF _Length
+                           A   818    	XDEF _ByteBlock
+                           A   819    	XDEF _pIn
+                           A   820    	XDEF _pBaseIn
+                           A   821    	XDEF _pOut
+                           A   822    	XDEF _pBaseOut
+                           A   823    	END
+
+
+Errors: 0
+Warnings: 0
+Lines Assembled: 824

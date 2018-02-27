@@ -1,0 +1,1590 @@
+; Z8 Encore! ANSI C Compiler Release 3.64
+; -nofastcall -const=ROM -listinc -model=S -optlink -regvar
+; -noreduceopt -debug -norevaa -peephole -localcse -optsize
+; -alias 
+	DEFINE hmatrix_TEXT,SPACE=ROM
+	FILE	".\switchmatrix.c"
+.debug "C"
+	SEGMENT ROM_DATA
+_NOOUTPUT:
+	DB	0
+.define "NOOUTPUT"
+.alias "_NOOUTPUT"
+.class 52
+.value _NOOUTPUT
+.type 12
+.endef
+	SEGMENT hmatrix_TEXT
+;    1	/*!\file gpio.h
+;    2	 * \brief Definition file for the Z8 Encore! GPIO Ports.
+;    3	 *
+;    4	 *  This file contains header information required by GPIO Port
+;    5	 *  driver implementations for Z8 Encore! microcontrollers.
+;    6	 *
+;    7	 *  This source file uses Doxygen-style comments to generate documentation
+;    8	 *  automatically.
+;    9	 *
+;   10	 *  Copyright (C) 1999-2004 by  ZiLOG, Inc.
+;   11	 *  All Rights Reserved.
+;   12	 */
+;   13	
+;   14	#pragma once // Include this file only once
+;   15	#ifndef _GPIO_H_
+;   16	#define _GPIO_H_
+;   17	
+;   18	#include <defines.h>
+;   19	
+;   20	
+;   21	#ifdef _DEBUG
+;   22	#define GPIOPARAMETER_CHECKING									//!< Parameter validation control macro.
+;   23	#endif
+;   24	
+;   25	
+;   26	/*! The GPIO ports available for particular target. Port A, B and C are available for all targets */
+;   27	#if (defined(EZ8_PORT4) && !defined(_Z8F04)) || defined(EZ8_PORT8)||defined(EZ8_PORT5)
+;   28	#define PORTD
+;   29	#endif
+;   30	
+;   31	#if defined(EZ8_PORT8)||defined(EZ8_PORT5)
+;   32	#define PORTE
+;   33	#endif
+;   34	#if defined(EZ8_PORT8)
+;   35	#define PORTF
+;   36	#define PORTG
+;   37	#define PORTH
+;   38	#endif
+;   39	
+;   40	#define GPIOERR_SUCCESS		(CHAR)0			//!< Error code for success returned by GPIO APIs.
+;   41	#define GPIOERR_INVALIDPINS	(CHAR)1			//!< Error code for invalid GPIO pin for the target.
+;   42	#define GPIOERR_FAILURE		(CHAR)(-1)		//!< Error code for failure returned by GPIO APIs.
+;   43	
+;   44	
+;   45	/*! all the ports bits are set to input mode */
+;   46	#define PORTA_ADDRVAL_DEF   0x01
+;   47	#define PORTA_CTLVAL_DEF    0xFF
+;   48	#define PORTA_OUTVAL_DEF    0x00
+;   49	
+;   50	#define PORTB_ADDRVAL_DEF   0x01
+;   51	#define PORTB_CTLVAL_DEF    0xFF
+;   52	#define PORTB_OUTVAL_DEF    0x00
+;   53	
+;   54	#define PORTC_ADDRVAL_DEF   0x01
+;   55	#define PORTC_CTLVAL_DEF    0xFF
+;   56	#define PORTC_OUTVAL_DEF    0x00
+;   57	
+;   58	#ifdef PORTD
+;   59	#define PORTD_ADDRVAL_DEF   0x01
+;   60	#define PORTD_CTLVAL_DEF    0xFF
+;   61	#define PORTD_OUTVAL_DEF    0x00
+;   62	#endif
+;   63	
+;   64	#ifdef PORTE
+;   65	#define PORTE_ADDRVAL_DEF   0x01
+;   66	#define PORTE_CTLVAL_DEF    0xFF
+;   67	#define PORTE_OUTVAL_DEF    0x00
+;   68	#endif
+;   69	
+;   70	#ifdef PORTF
+;   71	#define PORTF_ADDRVAL_DEF   0x01
+;   72	#define PORTF_CTLVAL_DEF    0xFF
+;   73	#define PORTF_OUTVAL_DEF    0x00
+;   74	#endif
+;   75	
+;   76	#ifdef PORTG
+;   77	#define PORTG_ADDRVAL_DEF   0x01
+;   78	#define PORTG_CTLVAL_DEF    0xFF
+;   79	#define PORTG_OUTVAL_DEF    0x00
+;   80	#endif
+;   81	
+;   82	#ifdef PORTH
+;   83	#define PORTH_ADDRVAL_DEF   0x01
+;   84	#define PORTH_CTLVAL_DEF    0xFF
+;   85	#define PORTH_OUTVAL_DEF    0x00
+;   86	#endif
+;   87	
+;   88	
+;   89	/*! Control Register access codes used in Address registers */
+;   90	#define PORTADDR_NOFUNC			0x00
+;   91	#define PORTADDR_DATADIR		0x01
+;   92	#define PORTADDR_ALTFUNC		0x02
+;   93	#if defined(_Z8FMC16) || defined(__ZSLBUILD)
+;   94	#define PORTADDR_ALTFUNC0		0x02
+;   95	#endif
+;   96	#define PORTADDR_OPENDRAIN		0x03
+;   97	#define PORTADDR_HIGHDRIVE		0x04
+;   98	#define PORTADDR_STPMDREC		0x05
+;   99	#if defined (_Z8F1680)||defined(_Z8F04) || defined(_Z8F04A) || defined(_Z8F04A_8PIN) || defined(_Z8F04_8PIN) || defined(_Z8F08) || defined(_Z8F0823_8PIN) || defined(_Z8F08A) || defined(_Z8FMC16) || defined(__ZSLBUILD)
+;  100	#define PORTADDR_PULLUP		0x06
+;  101	#endif
+;  102	#if defined (_Z8F1680)||defined(_Z8F04) || defined(_Z8F04A) || defined(_Z8F04A_8PIN) || defined(_Z8F04_8PIN) || defined(_Z8F0823_8PIN) || defined(_Z8F08A) || defined(__ZSLBUILD)
+;  103	#define PORTADDR_ALTFUNCSET1	0x07
+;  104	#define PORTADDR_ALTFUNCSET2	0x08
+;  105	#endif
+;  106	#if defined(_Z8FMC16) || defined(__ZSLBUILD)
+;  107	#define PORTADDR_ALTFUNC1		0x07
+;  108	#define PORTADDR_IRQES			0x08
+;  109	#define PORTADDR_IRQPS			0x09
+;  110	#endif
+;  111	
+;  112	
+;  113	/*! Definitions for Current Drive Levels used in LED Drive Mode */
+;  114	#if defined(_Z8F04A) ||defined (_Z8F1680)|| defined(__ZSLBUILD)
+;  115	#define DRIVELEVEL_3MA			0
+;  116	#define DRIVELEVEL_7MA			1
+;  117	#define DRIVELEVEL_13MA			2
+;  118	#define DRIVELEVEL_20MA			3
+;  119	#endif
+;  120	
+;  121	/*! Definitions for trigger edges */
+;  122	#define EDGE_FALLING			0
+;  123	#define EDGE_RISING				1
+;  124	
+;  125	/*! GPIO pin patterns */
+;  126	#define PORTPIN_ZERO		(BYTE)0x01			//!< The bit mask for Port bit 0.
+;  127	#define PORTPIN_ONE			(BYTE)0x02			//!< The bit mask for Port bit 1.
+;  128	#define PORTPIN_TWO			(BYTE)0x04			//!< The bit mask for Port bit 2.
+;  129	#define PORTPIN_THREE		(BYTE)0x08			//!< The bit mask for Port bit 3.
+;  130	#define PORTPIN_FOUR		(BYTE)0x10			//!< The bit mask for Port bit 4.
+;  131	#define PORTPIN_FIVE 		(BYTE)0x20			//!< The bit mask for Port bit 5.
+;  132	#define PORTPIN_SIX			(BYTE)0x40			//!< The bit mask for Port bit 6.
+;  133	#define PORTPIN_SEVEN		(BYTE)0x80			//!< The bit mask for Port bit 7.
+;  134	#define PORTPIN_FOURPINS_L	(BYTE)0x0F			//!< The bit mask for lower four Port bits.
+;  135	#define PORTPIN_FOURPINS_U	(BYTE)0xF0			//!< The bit mask for upper four Port bits.
+;  136	#define PORTPIN_PATTERN_AA	(BYTE)0xAA			//!< The bit mask for alternate bits (odd numbered pins).
+;  137	#define PORTPIN_PATTERN_55	(BYTE)0x55			//!< The bit mask for alternate bits (even numbered pins).
+;  138	#define PORTPIN_ALL			(BYTE)0xFF			//!< The bit mask for all Port bits.
+;  139	
+;  140	/*! Port mask index used for validating the port pins */
+;  141	#define MSKINDEX_PORTB		(BYTE)0
+;  142	#define MSKINDEX_PORTC		(BYTE)1
+;  143	#define MSKINDEX_PORTD		(BYTE)2
+;  144	#define MSKINDEX_PORTE		(BYTE)3
+;  145	#define MSKINDEX_PORTF		(BYTE)4
+;  146	#define MSKINDEX_PORTG		(BYTE)5
+;  147	#define MSKINDEX_PORTH		(BYTE)6
+;  148	
+;  149	/*!
+;  150	 * \brief The settings required to configure the GPIO Port.
+;  151	 */
+;  152	typedef struct
+;  153	{
+;  154		BYTE addr ;					//!< The address register.
+;  155		BYTE ctl ;					//!< The control register.
+;  156		BYTE out ;					//!< The output register (write-only).
+;  157		BYTE in ;					//!< The input register (read-only).
+;  158	
+;  159	} PORT ;
+.begrec "NONAME0",4
+.define "addr"
+.value 0
+.class 8
+.type 12
+.endef
+.define "ctl"
+.value 1
+.class 8
+.type 12
+.endef
+.define "out"
+.value 2
+.class 8
+.type 12
+.endef
+.define "in"
+.value 3
+.class 8
+.type 12
+.endef
+.endrec "NONAME0"
+;    1	/*************************************************
+;    2	 *  Copyright (C) 1999-2012 by  ZiLOG, Inc.
+;    3	 *  All Rights Reserved
+;    4	 *************************************************
+;    5	 *
+;    6	 * This header is for internal use only. It is NOT
+;    7	 * an ANSI standard header file.						
+;    8	 *
+;    9	 *************************************************/
+;   10	
+;   11	#pragma once // Include this file only once
+;   12	#ifndef FORMAT_H
+;   13	#define FORMAT_H
+;   14	
+;   15	#include <zconst.h>
+;   16	#include <stdarg.h>
+;   17	
+;   18	/* Note: 24 bits times log(2) is 7.224 decimal digits.
+;   19	   We only need 14 if and when we support doubles. */
+;   20	#define MAXDIGITS 10
+;   21	#define MINEXP -4
+;   22	#define DEFAULT_PRECISION 6
+;   23	
+;   24	
+;   25	/*  Sizes allowed for various data */
+;   26	/*  For small model, we must restrict the allowed input */
+;   27	#if (defined(__MODEL__) && (__MODEL__ == 0)) && !defined(__ACCLAIM__)
+;   28	#define FLT_CHARS 20  // Only need FLT_DIG+7, but allow for extra data
+;   29	#define PTR_CHARS 11
+;   30	#define INT_CHARS 9
+;   31	#else
+;   32	#define FLT_CHARS 127
+;   33	#define PTR_CHARS 127
+;   34	#define INT_CHARS 127
+;   35	#endif
+;   36	
+;   37	/*	structures and defines for format routines	                 */
+;   38	/*      NOTE: Some fields in this structure, and the bits in flags, are  */
+;   39	/*            known to the optimizer,  If you change this, check out the */
+;   40	/*            code in optimizer/genprintfs.c                             */
+;   41	struct fmt_type {
+;   42	  char flags;		/* flags bit mask */
+;   43	  char size;		/* size character h,l or L */
+;   44	  char space;		/* space character N,F or R */
+;   45	  char type;		/* type of argument d,i,o,u,x ... */
+;   46	  char field_width;	/* field width */
+;   47	  char precision;	/* precision */
+;   48	  char print_leading_char;  // Initial +, -, or space for number
+;   49	     /* several print helper functions end by clearing the above fields. 
+;   50	      * The following need to be preserved across calls to the print
+;   51	      * utilities.
+;   52	      */
+;   53	  far char* dest;       /* Destination for sprintf, NULL for printf */
+;   54	  unsigned char print_len;
+;   55	};
+.begrec "fmt_type",10
+.define "flags"
+.value 0
+.class 8
+.type 2
+.endef
+.define "size"
+.value 1
+.class 8
+.type 2
+.endef
+.define "space"
+.value 2
+.class 8
+.type 2
+.endef
+.define "type"
+.value 3
+.class 8
+.type 2
+.endef
+.define "field_width"
+.value 4
+.class 8
+.type 2
+.endef
+.define "precision"
+.value 5
+.class 8
+.type 2
+.endef
+.define "print_leading_char"
+.value 6
+.class 8
+.type 2
+.endef
+.define "dest"
+.value 7
+.class 8
+.type 162
+.endef
+.define "print_len"
+.value 9
+.class 8
+.type 12
+.endef
+.endrec "fmt_type"
+;   56	
+;   57	/* Some additional data for formatting of floating point values: */
+;   58	
+;   59	struct flt_fmt_data
+;   60	{
+;   61	  unsigned char pad_whole;
+;   62	  unsigned char pad_pre_fract;
+;   63	  unsigned char pad_post_fract;
+;   64	  char * pad_at;
+;   65	};
+.begrec "flt_fmt_data",4
+.define "pad_whole"
+.value 0
+.class 8
+.type 12
+.endef
+.define "pad_pre_fract"
+.value 1
+.class 8
+.type 12
+.endef
+.define "pad_post_fract"
+.value 2
+.class 8
+.type 12
+.endef
+.define "pad_at"
+.value 3
+.class 8
+.type 130
+.endef
+.endrec "flt_fmt_data"
+;   66	
+;   67	/* Data passed between top level driver and scanning routines, not needed
+;   68	 * when printf's are generated inline */
+;   69	struct fmt_control_data
+;   70	{
+;   71	  char status;		/* status, OK, ERR, or PASS_THRU */
+;   72	  char chr;		/* pass thru character */
+;   73	};
+.begrec "fmt_control_data",2
+.define "status"
+.value 0
+.class 8
+.type 2
+.endef
+.define "chr"
+.value 1
+.class 8
+.type 2
+.endef
+.endrec "fmt_control_data"
+;   74	
+;   75	
+;   76	struct _set_type{ char * begin; char *end; };
+.begrec "_set_type",2
+.define "begin"
+.value 0
+.class 8
+.type 130
+.endef
+.define "end"
+.value 1
+.class 8
+.type 130
+.endef
+.endrec "_set_type"
+;   77	struct near_set_type{ char near * begin; char near *end; };
+.begrec "near_set_type",2
+.define "begin"
+.value 0
+.class 8
+.type 130
+.endef
+.define "end"
+.value 1
+.class 8
+.type 130
+.endef
+.endrec "near_set_type"
+;   78	struct far_set_type{ char far * begin; char far *end; };
+.begrec "far_set_type",4
+.define "begin"
+.value 0
+.class 8
+.type 162
+.endef
+.define "end"
+.value 2
+.class 8
+.type 162
+.endef
+.endrec "far_set_type"
+;   79	struct rom_set_type{ char rom * begin; char rom *end; };
+.begrec "rom_set_type",4
+.define "begin"
+.value 0
+.class 8
+.type 194
+.endef
+.define "end"
+.value 2
+.class 8
+.type 194
+.endef
+.endrec "rom_set_type"
+;   80	
+;   81	/* info flags */
+;   82	#define FLT_INFO_SIGN	(1<<0)
+;   83	#define FLT_INFO_INF	(1<<1)
+;   84	#define FLT_INFO_NAN	(1<<2)
+;   85	
+;   86	
+;   87	struct flt_info {
+;   88	  unsigned char flags;			/* 1=sign, 2=inf, 4=nan        */
+;   89	  char exp;				/* (signed) exponent (base 10) */
+;   90	  unsigned char digits[MAXDIGITS];	/* max significant digits      */
+;   91	};
+.begrec "flt_info",12
+.define "flags"
+.value 0
+.class 8
+.type 12
+.endef
+.define "exp"
+.value 1
+.class 8
+.type 2
+.endef
+.define "digits"
+.value 2
+.class 8
+.dim 10
+.type 108
+.endef
+.endrec "flt_info"
+	SEGMENT ROM_DATA
+_NUMBER_OF_SWITCH_SAMPLES:
+	DW	1
+.define "NUMBER_OF_SWITCH_SAMPLES"
+.alias "_NUMBER_OF_SWITCH_SAMPLES"
+.class 52
+.value _NUMBER_OF_SWITCH_SAMPLES
+.type 3
+.endef
+	SEGMENT NEAR_BSS
+_i2c_flag:
+	DS	1
+.define "i2c_flag"
+.alias "_i2c_flag"
+.class 147
+.value _i2c_flag
+.type 12
+.endef
+_bit_counter:
+	DS	1
+.define "bit_counter"
+.alias "_bit_counter"
+.class 147
+.value _bit_counter
+.type 12
+.endef
+_data_receive_byte:
+	DS	1
+.define "data_receive_byte"
+.alias "_data_receive_byte"
+.class 147
+.value _data_receive_byte
+.type 12
+.endef
+_data_transmit_byte:
+	DS	1
+.define "data_transmit_byte"
+.alias "_data_transmit_byte"
+.class 147
+.value _data_transmit_byte
+.type 12
+.endef
+_sda_bit:
+	DS	1
+.define "sda_bit"
+.alias "_sda_bit"
+.class 147
+.value _sda_bit
+.type 12
+.endef
+_bus_status:
+	DS	1
+.define "bus_status"
+.alias "_bus_status"
+.class 147
+.value _bus_status
+.type 12
+.endef
+_rising_edge_counter:
+	DS	1
+.define "rising_edge_counter"
+.alias "_rising_edge_counter"
+.class 147
+.value _rising_edge_counter
+.type 12
+.endef
+_address_received:
+	DS	1
+.define "address_received"
+.alias "_address_received"
+.class 147
+.value _address_received
+.type 12
+.endef
+_data_byte:
+	DS	1
+.define "data_byte"
+.alias "_data_byte"
+.class 147
+.value _data_byte
+.type 12
+.endef
+_edge:
+	DS	1
+.define "edge"
+.alias "_edge"
+.class 147
+.value _edge
+.type 12
+.endef
+_temp1:
+	DS	1
+.define "temp1"
+.alias "_temp1"
+.class 147
+.value _temp1
+.type 12
+.endef
+_send_bit:
+	DS	1
+.define "send_bit"
+.alias "_send_bit"
+.class 147
+.value _send_bit
+.type 12
+.endef
+_byte_count:
+	DS	1
+.define "byte_count"
+.alias "_byte_count"
+.class 147
+.value _byte_count
+.type 12
+.endef
+__slowBlink:
+	DS	1
+.define "_slowBlink"
+.alias "__slowBlink"
+.class 147
+.value __slowBlink
+.type 12
+.endef
+__fastBlink:
+	DS	1
+.define "_fastBlink"
+.alias "__fastBlink"
+.class 147
+.value __fastBlink
+.type 12
+.endef
+__timerControl:
+	DS	2*1
+.define "_timerControl"
+.alias "__timerControl"
+.class 147
+.value __timerControl
+.type 3
+.endef
+	SEGMENT NEAR_DATA
+__swStrobe:
+	DB	0
+.define "_swStrobe"
+.alias "__swStrobe"
+.class 133
+.value __swStrobe
+.type 12
+.endef
+__downLED:
+	DB	0
+.define "_downLED"
+.alias "__downLED"
+.class 133
+.value __downLED
+.type 12
+.endef
+__upLED:
+	DB	0
+.define "_upLED"
+.alias "__upLED"
+.class 133
+.value __upLED
+.type 12
+.endef
+	SEGMENT ROM_DATA
+_PB_DOWN_LED:
+	DB	8
+.define "PB_DOWN_LED"
+.alias "_PB_DOWN_LED"
+.class 52
+.value _PB_DOWN_LED
+.type 12
+.endef
+_PB_UP_LED:
+	DB	16
+.define "PB_UP_LED"
+.alias "_PB_UP_LED"
+.class 52
+.value _PB_UP_LED
+.type 12
+.endef
+	SEGMENT NEAR_BSS
+_ledIsOn:
+	DS	2*1
+.define "ledIsOn"
+.alias "_ledIsOn"
+.class 147
+.value _ledIsOn
+.type 3
+.endef
+	SEGMENT ROM_DATA
+
+
+;**************************** _main ***************************
+;Name                         Addr/Register   Size   Type
+;_SwitchLoop                         IMPORT  -----   function
+;_Initialize                         IMPORT  -----   function
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+	.FRAME _n_main,?_n_main,RDATA
+	.FCALL _n_Initialize
+	.FCALL _n_SwitchLoop
+;    1	/*
+;    2	********************************************************
+;    3	* File : switchMatrix.c
+;    4	* Based on scl_interrupt.c (from AN0139-SC02 and LampDriver)
+;    5	* Description : Drives a switch Matrix and reports back by SPI
+;    6	*  PC0 and PC1 have to be used for the i2c pins, as these have interrupt triggering
+;    7	**************************************************************
+;    8	*/
+;    9	
+;   10	
+;   11	/*From ~/DropBox/Bossy/Workspace/pinsupport.cpp (2012 ish?)
+;   12	Description: Interrupt Timer handler that will take in the values from the input buffer, compare to the previous values. New values stored. Anything changed, then switch buffer will be added to.
+;   13	
+;   14	explanation is at: http://www.compuphase.com/electronics/debouncing.htm
+;   15	*/
+;   16	
+;   17	
+;   18	#define PROTOTYPE_BOARD 1 //Define this for the proto board
+;   19	
+;   20	
+;   21	#include <ez8.h>
+;   22	#include <stdio.h>
+;   23	#include "spibase.h"
+;   24	#include "sysclk.h"
+;   25	#include "timer.h"
+;   26	#include "switchmatrix.h"
+;   27	/*
+;   28	PB0-PB2 = Strobe Select (outputs)
+;   29	PA0-PA7 = Switch Inputs (inputs)
+;   30	PB3, PB4 = LED indicators (outputs)
+;   31	
+;   32	PC0, PC1 = Switch Inputs
+;   33	PC2 = SS
+;   34	PC3 = SCLK
+;   35	PC4 = MOSI
+;   36	PC5 = MISO
+;   37	*/
+;   38	
+;   39	unsigned char const NOOUTPUT = 0x00;
+;   40	const int NUMBER_OF_SWITCH_SAMPLES = 1;
+;   41	
+;   42	
+;   43	/*i2c variables*/ 
+;   44	
+;   45	unsigned char  i2c_flag;		// To hold the Different status of I2C
+;   46	
+;   47	unsigned char bit_counter;	// To keep count of no of bits received 
+;   48								// This counter will reset when the count ==9
+;   49	unsigned char data_receive_byte; // To store the data byte received.
+;   50	
+;   51	unsigned char data_transmit_byte; // To store the data to be transmitted
+;   52	
+;   53	unsigned char volatile sda_bit;	 //Read the SDA bit
+;   54	unsigned char bus_status; // To set bus busy or free flag
+;   55	unsigned char rising_edge_counter;  // Keeps counts of no of SCL rising edges 
+;   56										// in a byte.
+;   57	unsigned char volatile address_received;		//Store the address received
+;   58	unsigned char volatile data_byte;        	// Store the data received.
+;   59	unsigned char volatile edge;
+;   60	unsigned char volatile temp1;
+;   61	unsigned char volatile send_bit;  // Stores the MSB to be transmitted
+;   62	unsigned char byte_count; // Count no of bytes received.
+;   63	
+;   64	
+;   65	/*Switch Specific Variables*/
+;   66	unsigned char _slowBlink;
+;   67	unsigned char _fastBlink;
+;   68	int  _timerControl;
+;   69	
+;   70	unsigned char _swStrobe = 0;
+;   71	
+;   72	unsigned char _downLED = 0; //0 = off, 1=turn on, 2=on (so turn off next time around) PB3
+;   73	unsigned char _upLED = 0; //0 = off, 1=turn on, 2=on (so turn off next time around) PB4
+;   74	
+;   75	unsigned char const PB_DOWN_LED = 0x08; //0000 1000
+;   76	unsigned char const PB_UP_LED =0x10; //0001 0000
+;   77	
+;   78	void Initialize(void);
+;   79	void SwitchLoop(void);
+;   80	void ReportSwitchChange(unsigned char, unsigned char, unsigned char);
+;   81	int ledIsOn;
+	SEGMENT hmatrix_TEXT
+;   82	
+;   83	
+;   84	/* *******************************************************************************
+;   85	The main routine ,sets the Port pins PC0 and PC1 to work as either input or output
+;   86	with open drain.The I2C bus status is set to free(No Transaction on the I2C bus).
+;   87	Sets the interrupt PC0 and PC1 to highist priority.Enables the interrupt.
+;   88	/*********************************************************************************/ 
+;   89	
+;   90	
+;   91	void main()
+;   92	{
+_main:
+.define "_main"
+.value _main
+.class 2
+.type 65
+.endef
+.begfunc "main",92,"_main"
+;   93	  Initialize();	
+.line 93
+	CALL	_Initialize
+;   94	  SwitchLoop();
+.line 94
+	CALL	_SwitchLoop
+;   95	 }
+.line 95
+	RET	
+.endfunc "main",95,"_main"
+	SEGMENT ROM_DATA
+
+
+;**************************** _Initialize ***************************
+;Name                         Addr/Register   Size   Type
+;_EI                                 IMPORT  -----   function
+;_timer_init                         IMPORT  -----   function
+;_sysclk_init                        IMPORT  -----   function
+;_DI                                 IMPORT  -----   function
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+	.FRAME _n_Initialize,?_n_Initialize,RDATA
+	.FCALL _n_sysclk_init
+	.FCALL _n_timer_init
+	SEGMENT hmatrix_TEXT
+;   96	
+;   97	void Initialize(void){
+_Initialize:
+.define "_Initialize"
+.value _Initialize
+.class 2
+.type 65
+.endef
+.begfunc "Initialize",97,"_Initialize"
+;   98	    DI();				// Globally disable all interrupts    
+.line 98
+	DI
+;   99	    sysclk_init();		// Initialize system clock per the selected clock source/frequency from project
+.line 99
+	CALL	_sysclk_init
+;  100		                    // setting and in the sysclk.c	
+;  101	    timer_init();		// Intialize timer
+.line 101
+	CALL	_timer_init
+;  102		
+;  103		
+;  104		//JAF TEMPORARY InitializeSPI();	//initialize SPI routines
+;  105		
+;  106		/*
+;  107		PB0-PB2 = Strobe Select (outputs)
+;  108		PA0-PA7 = Switch Inputs (inputs)
+;  109		PB3, PB4 = LED indicators (outputs)
+;  110	
+;  111		PC0, PC1 = Switch Inputs (need to do this still)
+;  112		PC2 = SS
+;  113		PC3 = SCLK
+;  114		PC4 = MOSI
+;  115		PC5 = MISO
+;  116		*/
+;  117		
+;  118		
+;  119	  //PB0-2 are TTL Output for Strobe control to the 74ls138
+;  120	  //PB3-4 are open drain outputs for LEDs
+;  121	  PBADDR = 0x01; // Direction
+.line 121
+	LDX	4052,#1
+;  122	  PBCTL = 0xE0; //1110 - 0000 all putputs are zeros
+.line 122
+	LDX	4053,#224
+;  123	  PBADDR = 0x03; //output control
+.line 123
+	LDX	4052,#3
+;  124	  PBCTL = 0x18;     //0001-1000 (open drain on PB3-PB4 for the LEDs)
+.line 124
+	LDX	4053,#24
+;  125	  PBADDR = 0x00;
+.line 125
+	LDX	4052,#-0
+;  126	
+;  127	  //PA0-7 are TTL input (from the 339 comparators)
+;  128	  PAADDR = 0x01; //Data Direction
+.line 128
+	LDX	4048,#1
+;  129	  PACTL = 0xFF; //1111 - 1111 all inputa
+.line 129
+	LDX	4049,#255
+;  130	  PAADDR = 0x00;
+.line 130
+	LDX	4048,#-0
+;  131	
+;  132	  //SPI Setup
+;  133	  PCADDR = 0x01;	//Set the  Value to select DATA direction
+.line 133
+	LDX	4056,#1
+;  134	  PCCTL  = 0x1f;   // Change SDA to INPUT PC0-PC4 are all In, PC5 is an out, so 0x1f
+.line 134
+	LDX	4057,#31
+;  135	  PCADDR = 0x00;
+.line 135
+	LDX	4056,#-0
+;  136	
+;  137		
+;  138	
+;  139	EI();				//Enable all interrupts
+.line 139
+	EI
+;  140	  
+;  141	}
+.line 141
+	RET	
+.endfunc "Initialize",141,"_Initialize"
+	SEGMENT ROM_DATA
+
+
+;**************************** _SwitchStrobeIncAndSet ***************************
+;Name                         Addr/Register   Size   Type
+;__swStrobe                          STATIC      1   variable
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+	.FRAME _n_SwitchStrobeIncAndSet,?_n_SwitchStrobeIncAndSet,RDATA
+	SEGMENT hmatrix_TEXT
+;  142	 
+;  143	
+;  144	
+;  145	void SwitchStrobeIncAndSet()
+;  146	{
+_SwitchStrobeIncAndSet:
+.define "_SwitchStrobeIncAndSet"
+.value _SwitchStrobeIncAndSet
+.class 2
+.type 65
+.endef
+.begfunc "SwitchStrobeIncAndSet",146,"_SwitchStrobeIncAndSet"
+;  147	    int outputValue = 0x00;
+;  148	
+;  149	    if(_swStrobe>=8)
+.line 149
+	CP	__swStrobe,#8
+	JR	C,_3_L_3
+;  150	    {
+;  151	        _swStrobe = 0;
+.line 151
+	CLR	__swStrobe
+;  152	    }
+_3_L_3:
+.line 152
+;  153	
+;  154		//PBOUT |= _swStrobe & 0x07;
+;  155		//PBOUT |= 0x01; //setting bit 0
+;  156		PBOUT &= 0xF8; //clearing Bit 0, 1 and 2 
+.line 156
+	ANDX	4055,#248
+;  157	    _swStrobe++;
+.line 157
+	INC	__swStrobe
+;  158	}
+.line 158
+	RET	
+.endfunc "SwitchStrobeIncAndSet",158,"_SwitchStrobeIncAndSet"
+	SEGMENT ROM_DATA
+
+
+;**************************** _debounce ***************************
+;Name                         Addr/Register   Size   Type
+;_2clock_A                           STATIC      8   variable
+;_1clock_B                           STATIC      8   variable
+;_0debounced_state                   STATIC      8   variable
+;delta                                   R0      1   variable
+;toggle                         _2_debounce      1   parameter
+;strobe                         <optimized>      2   parameter
+;strobeSample                   _0_debounce      1   parameter
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+	.FRAME _n_debounce,?_n_debounce,RDATA
+_0_debounce:
+	DS	1
+_1_debounce:
+	DS	2*1
+_2_debounce:
+	DS	1
+	SEGMENT NEAR_BSS
+_0debounced_state:
+	DS	8
+_1clock_B:
+	DS	8
+_2clock_A:
+	DS	8
+	SEGMENT hmatrix_TEXT
+;  159	
+;  160	
+;  161	
+;  162	/*Switch Matrix Handling routines*/
+;  163	
+;  164	/*
+;  165	Description: Interrupt Timer handler that will take in the values from the input buffer, compare to the previous values. New values stored. Anything changed, then switch buffer will be added to.
+;  166	
+;  167	explanation is at: http://www.compuphase.com/electronics/debouncing.htm
+;  168	
+;  169	*/
+;  170	
+;  171	//This will debounce the strobe sample passed in, as well as update the debounced state when necessary (after 4 vertical counter cycles)
+;  172	//Needs to be called every 5 ms per strobe. Therefore 8 strobes = 5ms/8 = every 625uSec
+;  173	//Returns changes after they have been debounced.
+;  174	unsigned char debounce(unsigned char strobeSample, int strobe, unsigned char *toggle)
+;  175	{
+_debounce:
+.define "_debounce"
+.value _debounce
+.class 2
+.type 76
+.endef
+.begfunc "debounce",175,"_debounce"
+.define "strobeSample"
+.class 23
+.value _0_debounce
+.alias "_0_debounce"
+.type 12
+.endef
+.line 175
+.define "strobe"
+.class 17
+.reg -1
+.type 3
+.endef
+.define "toggle"
+.class 23
+.value _2_debounce
+.alias "_2_debounce"
+.type 140
+.endef
+.define "delta"
+.class 4
+.reg 1
+.type 12
+.endef
+;  176	    static unsigned char debounced_state[8], clock_B[8],clock_A[8];
+.define "debounced_state"
+.alias "_0debounced_state"
+.class 147
+.value _0debounced_state
+.dim 8
+.type 108
+.endef
+.define "clock_B"
+.alias "_1clock_B"
+.class 147
+.value _1clock_B
+.dim 8
+.type 108
+.endef
+.define "clock_A"
+.alias "_2clock_A"
+.class 147
+.value _2clock_A
+.dim 8
+.type 108
+.endef
+;  177	    unsigned char delta;
+;  178	    \
+;  179	
+;  180	    delta = strobeSample ^ debounced_state[strobe];
+.line 180
+	LD	R2,#_0debounced_state
+	ADD	R2,_1_debounce+1
+	LD	R0,@R2
+	XOR	R0,_0_debounce
+;  181	    clock_B[strobe] = (clock_B[strobe] ^ clock_A[strobe]) & delta;
+.line 181
+	LD	R4,#_1clock_B
+	ADD	R4,_1_debounce+1
+	LD	R1,@R4
+	LD	R3,#_2clock_A
+	ADD	R3,_1_debounce+1
+	XOR	R1,@R3
+	AND	R1,R0
+	LD	@R4,R1
+;  182	    clock_A[strobe] = ~clock_A[strobe] & delta;
+.line 182
+	LD	R1,@R3
+	COM	R1
+	AND	R1,R0
+	LD	@R3,R1
+;  183	
+;  184	    *toggle = delta & ~(clock_A[strobe] | clock_B[strobe]);
+.line 184
+	OR	R1,@R4
+	COM	R1
+	LD	R3,_2_debounce
+	AND	R1,R0
+	LD	@R3,R1
+;  185	    debounced_state[strobe] ^= *toggle;
+.line 185
+	LD	R1,_2_debounce
+	LD	R0,@R2
+	XOR	R0,@R1
+	LD	@R2,R0
+;  186	
+;  187	    return debounced_state[strobe]; //debounced_state[strobe];
+.line 187
+;  188	}
+.line 188
+	RET	
+.endfunc "debounce",188,"_debounce"
+	SEGMENT ROM_DATA
+
+
+;**************************** _SwitchLoop ***************************
+;Name                         Addr/Register   Size   Type
+;_ReportSwitchChange                 IMPORT  -----   function
+;__swStrobe                          STATIC      1   variable
+;__downLED                           STATIC      1   variable
+;__upLED                             STATIC      1   variable
+;sample                            _6sample      1   variable
+;curSwitches                   _5curSwitches      1   variable
+;toggle                            _4toggle      1   variable
+;count                              _3count      2   variable
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+	.FRAME _n_SwitchLoop,?_n_SwitchLoop,RDATA
+_3count:
+	DS	2*1
+_4toggle:
+	DS	1
+_5curSwitches:
+	DS	1
+_6sample:
+	DS	1
+	.FCALL _n_SwitchStrobeIncAndSet
+	.FCALL _n_debounce
+	.FCALL _n_ReportSwitchChange
+	SEGMENT hmatrix_TEXT
+;  189	
+;  190	
+;  191	
+;  192	void SwitchLoop(void){
+_SwitchLoop:
+.define "_SwitchLoop"
+.value _SwitchLoop
+.class 2
+.type 65
+.endef
+.begfunc "SwitchLoop",192,"_SwitchLoop"
+.define "count"
+.class 22
+.value _3count
+.alias "_3count"
+.type 13
+.endef
+.define "toggle"
+.class 22
+.value _4toggle
+.alias "_4toggle"
+.type 12
+.endef
+.define "curSwitches"
+.class 22
+.value _5curSwitches
+.alias "_5curSwitches"
+.type 2
+.endef
+.define "sample"
+.class 22
+.value _6sample
+.alias "_6sample"
+.type 12
+.endef
+;  193		int i;
+;  194		unsigned int count =60;
+.line 194
+	CLR	_3count
+	LD	_3count+1,#60
+;  195		//unsigned long int count = 60;  //about 86 clock cycles per while loop, so this should be 260 usec?  
+;  196	
+;  197		/*
+;  198		PB0-PB2 = Strobe Select (outputs)
+;  199		PA0-PA7 = Switch Inputs (inputs)
+;  200		PB3, PB4 = LED indicators (outputs)
+;  201	
+;  202		PC0, PC1 = Switch Inputs (need to do this still)
+;  203		PC2 = SS	
+;  204		PC3 = SCLK
+;  205		PC4 = MOSI
+;  206		PC5 = MISO
+;  207		
+;  208		What we will send:
+;  209		Bits 2-7 = Switch ID (64 switch combinations)
+;  210		Bits 0-1 = 
+;  211			00 = now open
+;  212			01 = now closed
+;  213			10 = 
+;  214			11 = 
+;  215		*/
+;  216		unsigned char sample;
+;  217		char curSwitches;
+;  218		unsigned char toggle;
+;  219		
+;  220		_upLED = 1;
+.line 220
+	LD	__upLED,#1
+;  221		_downLED = 1;
+.line 221
+	LD	__downLED,#1
+;  222	
+;  223		while(1){
+_5_L_14:
+.line 223
+;  224			SwitchStrobeIncAndSet();
+.line 224
+	CALL	_SwitchStrobeIncAndSet
+;  225			
+;  226	
+;  227	#if defined(PROTOTYPE_BOARD)		
+;  228			//need to set _reg3		
+;  229			//sample = PCIN&0x01; --This is for the hardwired button
+;  230			sample = PAIN & 0xC0; //PA6 and PA7 only for the demo board with the 64 sw tester.
+.line 230
+	LDX	_6sample,4050
+	AND	_6sample,#192
+;  231									//C1, C2, C4 are on the 64 key
+;  232									//R1 and R2
+;  233			
+;  234	#else
+;  235			sample = PAIN;
+;  236	#endif
+;  237			
+;  238			
+;  239			
+;  240			curSwitches =debounce(sample, _swStrobe, &toggle);
+.line 240
+	LD	R0,__swStrobe
+	LD	_0_debounce,_6sample
+	CLR	_1_debounce
+	LD	_1_debounce+1,R0
+	LD	_2_debounce,#_4toggle
+	CALL	_debounce
+	LD	_5curSwitches,R0
+;  241			
+;  242			if(toggle!=0x00){
+.line 242
+	CP	_4toggle,#0
+	JR	Z,_5_L_9
+;  243				//depending if anything changed, we need to notify the RaspPi, as well as do the diag leds
+;  244				//therefore previous prob needs to return changes so that we know we need to report.
+;  245				
+;  246				//this might not work since if the switch was just released, then it would 0
+;  247				ReportSwitchChange(_swStrobe,curSwitches, toggle);
+.line 247
+	LD	_0_ReportSwitchChange,__swStrobe
+	LD	_1_ReportSwitchChange,_5curSwitches
+	LD	_2_ReportSwitchChange,_4toggle
+	CALL	_ReportSwitchChange
+;  248				
+;  249			}
+.line 249
+;  250			while(count>0)
+.line 250
+	JR	_5_L_9
+_5_L_10:
+;  251				count--;
+.line 251
+	SUB	_3count+1,#1
+	SBC	_3count,#0
+_5_L_9:
+.line 250
+	CP	_3count+1,#0
+	CPC	_3count,#-0
+	JR	UGT,_5_L_10
+;  252			count=60;
+.line 252
+	CLR	_3count
+	LD	_3count+1,#60
+.line 223
+	JR	_5_L_14
+;  253		}
+;  254	}
+.line 254
+	RET	
+.endfunc "SwitchLoop",254,"_SwitchLoop"
+	SEGMENT ROM_DATA
+
+
+;**************************** _ReportSwitchChange ***************************
+;Name                         Addr/Register   Size   Type
+;_SPI_Send                           IMPORT  -----   function
+;__downLED                           STATIC      1   variable
+;__upLED                             STATIC      1   variable
+;G_0                            <optimized>      2   variable
+;curBit                                 RR2      2   variable
+;i                                      RR4      2   variable
+;report                                 RR0      2   variable
+;toggle                        _2_ReportSwitchChange      1   parameter
+;switches                      _1_ReportSwitchChange      1   parameter
+;strobe                        _0_ReportSwitchChange      1   parameter
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+	.FRAME _n_ReportSwitchChange,?_n_ReportSwitchChange,RDATA
+_0_ReportSwitchChange:
+	DS	1
+_1_ReportSwitchChange:
+	DS	1
+_2_ReportSwitchChange:
+	DS	1
+	.FCALL _n_SPI_Send
+	SEGMENT hmatrix_TEXT
+;  255	
+;  256	void ReportSwitchChange(unsigned char strobe, unsigned char switches, unsigned char toggle){
+_ReportSwitchChange:
+.define "_ReportSwitchChange"
+.value _ReportSwitchChange
+.class 2
+.type 65
+.endef
+.begfunc "ReportSwitchChange",256,"_ReportSwitchChange"
+.define "strobe"
+.class 23
+.value _0_ReportSwitchChange
+.alias "_0_ReportSwitchChange"
+.type 12
+.endef
+.define "switches"
+.class 23
+.value _1_ReportSwitchChange
+.alias "_1_ReportSwitchChange"
+.type 12
+.endef
+.define "toggle"
+.class 23
+.value _2_ReportSwitchChange
+.alias "_2_ReportSwitchChange"
+.type 12
+.endef
+.define "report"
+.class 4
+.reg 17
+.type 3
+.endef
+.define "i"
+.class 4
+.reg 19
+.type 3
+.endef
+.define "curBit"
+.class 4
+.reg 18
+.type 3
+.endef
+;  257		int curBit = 1;
+.line 257
+	CLR	R2
+	LD	R3,#1
+;  258		int i;
+;  259		int report=0x00;
+.line 259
+	CLR	R1
+;  260		
+;  261		for(i=0;i<8; i++){
+.line 261
+	CLR	R4
+	CLR	R5
+	JR	_6_L_23
+_6_L_21:
+;  262			if(toggle&curBit!=0){
+.line 262
+	LD	R0,R2
+	OR	R0,R3
+	JR	Z,L__14
+	LD	R0,#1
+	JR	L__15
+L__14:
+	CLR	R0
+L__15:
+	LD	R6,R0
+	TM	R6,_2_ReportSwitchChange
+	JR	Z,_6_L_20
+;  263				//Report Strobe is Bits 7-5, Switches are Bits 4-2, Bits 0 and 1 are state of switch
+;  264				report = (((strobe<<4) & i)<<2);
+.line 264
+	LD	R7,_0_ReportSwitchChange
+	CLR	R1
+	LD	R0,#4
+L__19:
+	ADD	R7,R7
+	ADC	R1,R1
+	DJNZ	R0,L__19
+	AND	R7,R5
+	AND	R1,R4
+	LD	R0,R1
+	LD	R1,R7
+	ADD	R1,R1
+	ADC	R0,R0
+	ADD	R1,R1
+	ADC	R0,R0
+;  265				
+;  266				//switches&curBit = new state of the switch that we are looping on. (if 0 = false >0 = true
+;  267				//report last 2 bits as 1 = now high, and 0 = now low
+;  268				if(switches&curBit!=0){
+.line 268
+	TM	R6,_1_ReportSwitchChange
+	JR	Z,_6_L_18
+;  269					report &= 0xFE;
+.line 269
+	BCLR	0,R1
+	CLR	R0
+;  270					_upLED = 1;
+.line 270
+	LD	__upLED,#1
+;  271				}
+;  272				else{
+.line 272
+	JR	_6_L_20
+_6_L_18:
+;  273					report &= 0xFD;
+.line 273
+	BCLR	1,R1
+	CLR	R0
+;  274					_downLED =1;
+.line 274
+	LD	__downLED,#1
+;  275				}			
+;  276			}
+_6_L_20:
+.line 276
+;  277			curBit=curBit<<1;
+.line 277
+	ADD	R3,R3
+	ADC	R2,R2
+.line 261
+	INCW	RR4
+;  278		}
+_6_L_23:
+.line 278
+.line 261
+	CP	R5,#8
+	CPC	R4,#-0
+	JR	LT,_6_L_21
+;  279		
+;  280		SPI_Send(report);   // Exchange the data
+.line 280
+	LD	_0_SPI_Send,R1
+	CALL	_SPI_Send
+;  281	}
+.line 281
+	RET	
+.endfunc "ReportSwitchChange",281,"_ReportSwitchChange"
+	SEGMENT ROM_DATA
+;	Jump Table for Switch Statement at line 310
+L__22:
+	DW	3
+	DW	0
+	DW	_7_L_32
+	DW	1
+	DW	_7_L_27
+	DW	2
+	DW	_7_L_28
+	DW	_7_L_32
+;	Jump Table for Switch Statement at line 325
+L__23:
+	DW	3
+	DW	0
+	DW	_7_L_33
+	DW	1
+	DW	_7_L_30
+	DW	2
+	DW	_7_L_31
+	DW	_7_L_33
+
+
+;**************************** _blinkISR ***************************
+;Name                         Addr/Register   Size   Type
+;__downLED                           STATIC      1   variable
+;__upLED                             STATIC      1   variable
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+	.FRAME _n_blinkISR,?_n_blinkISR,RDATA
+	SEGMENT hmatrix_TEXT
+;  282	
+;  283	/*
+;  284	const char DataOut[] = "Hello ZiLOG!"; // Output Buffer
+;  285	
+;  286	char DataIn[DATASIZE];                 // Input Buffer
+;  287	
+;  288	void main()
+;  289	{
+;  290	   SPI_Init();       // Start the slave driver
+;  291	   IdlePorts();      // Set port modes and conditions
+;  292	   EI();
+;  293	
+;  294	   SPI_SendReceiveBlock(DataOut, DataIn, strlen(DataOut));
+;  295	
+;  296	   if (!strncmp(DataOut, DataIn, strlen(DataOut)))
+;  297	   {
+;  298	      T1PWM = 0;
+;  299	   }
+;  300	
+;  301	   while (ALWAYS)
+;  302	   {
+;  303	      T1PWM = SPI_SendReceive(0xAA);   // Exchange the data
+;  304	   }
+;  305	}*/
+;  306	
+;  307	
+;  308	void blinkISR(){
+_blinkISR:
+.define "_blinkISR"
+.value _blinkISR
+.class 2
+.type 65
+.endef
+.begfunc "blinkISR",308,"_blinkISR"
+;  309		
+;  310		switch(_upLED){
+.line 310
+	LD	R1,__upLED
+	CLR	R0
+	LD	R2,#high(L__22)
+	LD	R3,#low(L__22)
+	CALL	__b_ucase
+	JP	@RR0
+;  311			case 0:
+;  312				//no blink
+;  313				break;
+;  314			case 1: //turn on
+_7_L_27:
+.line 314
+;  315				PBOUT &=~PB_UP_LED;
+.line 315
+	ANDX	4055,#-17
+;  316				_upLED = 2;
+.line 316
+	LD	__upLED,#2
+;  317				break;
+.line 317
+	JR	_7_L_32
+;  318			case 2:
+_7_L_28:
+.line 318
+;  319				//has been on, so turn off and reset
+;  320				PBOUT|=PB_UP_LED;
+.line 320
+	ORX	4055,#16
+;  321				_upLED = 0;
+.line 321
+	CLR	__upLED
+;  322				break;
+;  323			}
+_7_L_32:
+.line 323
+;  324		
+;  325		switch(_downLED){
+.line 325
+	LD	R1,__downLED
+	CLR	R0
+	LD	R2,#high(L__23)
+	LD	R3,#low(L__23)
+	CALL	__b_ucase
+	JP	@RR0
+;  326			case 0:
+;  327				//no blink
+;  328				break;
+;  329			case 1: //turn on
+_7_L_30:
+.line 329
+;  330				PBOUT &=~PB_DOWN_LED;
+.line 330
+	ANDX	4055,#-9
+;  331				_downLED = 2;
+.line 331
+	LD	__downLED,#2
+;  332				break;
+.line 332
+	JR	_7_L_33
+;  333			case 2:
+_7_L_31:
+.line 333
+;  334				//has been on, so turn off and reset
+;  335				PBOUT|=PB_DOWN_LED;
+.line 335
+	ORX	4055,#8
+;  336				_downLED = 0;
+.line 336
+	CLR	__downLED
+;  337				break;
+;  338			}
+;  339			
+;  340		}
+_7_L_33:
+.line 340
+	RET	
+.endfunc "blinkISR",340,"_blinkISR"
+	XREF _0_SPI_Send:RDATA
+	XREF _timer_init:ROM
+	XREF _sysclk_init:ROM
+	XREF _SPI_Send:ROM
+	XREF __b_ucase:ROM
+	XDEF _blinkISR
+	XDEF _2_ReportSwitchChange
+	XDEF _1_ReportSwitchChange
+	XDEF _0_ReportSwitchChange
+	XDEF _ReportSwitchChange
+	XDEF _SwitchLoop
+	XDEF _2_debounce
+	XDEF _1_debounce
+	XDEF _0_debounce
+	XDEF _debounce
+	XDEF _SwitchStrobeIncAndSet
+	XDEF _Initialize
+	XDEF _main
+	XDEF _ledIsOn
+	XDEF _PB_UP_LED
+	XDEF _PB_DOWN_LED
+	XDEF __upLED
+	XDEF __downLED
+	XDEF __swStrobe
+	XDEF __timerControl
+	XDEF __fastBlink
+	XDEF __slowBlink
+	XDEF _byte_count
+	XDEF _send_bit
+	XDEF _temp1
+	XDEF _edge
+	XDEF _data_byte
+	XDEF _address_received
+	XDEF _rising_edge_counter
+	XDEF _bus_status
+	XDEF _sda_bit
+	XDEF _data_transmit_byte
+	XDEF _data_receive_byte
+	XDEF _bit_counter
+	XDEF _i2c_flag
+	XDEF _NUMBER_OF_SWITCH_SAMPLES
+	XDEF _NOOUTPUT
+	END

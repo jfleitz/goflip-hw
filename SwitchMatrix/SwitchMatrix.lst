@@ -1,0 +1,206 @@
+eeschema (2013-jul-07)-stable  >> Creation date: Sat 05 Sep 2015 10:05:37 PM EDT
+#Cmp ( order = Reference )
+| C1         22pf        
+| C2         0.33uf      
+| C3         22pf        
+| C4         0.1uf       
+| C5         0.01        
+| C6         0.1uf       
+| D1         1n4004      
+| D2         1n4148      
+| D3         1n4004      
+| D4         1n4148      
+| D5         1n4004      
+| D6         1n4148      
+| D7         1n4004      
+| D8         1n4148      
+| D9         1n4004      
+| D10        1n4148      
+| D11        1n4004      
+| D12        1n4148      
+| D13        1n4004      
+| D14        1n4148      
+| D15        1n4004      
+| D16        1n4148      
+| D17        LED         
+| D18        LED         
+| P1         CONN_10     
+| P2         CONN_7      
+| P3         CONN_3X2    
+| P4         CONN_10     
+| P5         CONN_5      
+| R1         100ohm      
+| R2         100 0hm     
+| R3         100 0hm     
+| R4         100 0hm     
+| R5         100 0hm     
+| R6         100hm       
+| R7         100 0hm     
+| R8         100 0hm     
+| R9         220ohm      
+| R10        10k         
+| R11        1k          
+| R12        1k          
+| R13        1k          
+| R14        1k          
+| R15        1k          
+| R16        1k          
+| R17        1k          
+| R18        220         
+| R19        1k          
+| R20        220         
+| R21        10k         
+| R22        10k         
+| R23        10k         
+| R24        10k         
+| R25        10k         
+| R26        10k         
+| R27        10k         
+| R28        10k         
+| R29        220k        
+| R30        220k        
+| R31        220k        
+| R32        220k        
+| R33        220k        
+| R34        220k        
+| R35        220k        
+| R36        220k        
+| R37        3.3k        
+| R38        3.3k        
+| R39        3.3k        
+| R40        3.3k        
+| R41        3.3k        
+| R42        3.3k        
+| R43        3.3k        
+| R44        3.3k        
+| R45        100k        
+| R46        100k        
+| R47        100k        
+| R48        100k        
+| R49        100k        
+| R50        100k        
+| R51        100k        
+| R52        100k        
+| R53        6.8k        
+| R54        2.2k        
+| R55        2.2k        
+| R56        2.2k        
+| R57        2.2k        
+| R58        2.2k        
+| R59        2.2k        
+| R60        2.2k        
+| R61        2.2k        
+| R62        10k         
+| SW1        SW_PUSH     
+| SW2        SW_PUSH     
+| U1         3.3v        
+| U2         Z8F0822     
+| U3         74LS138     
+| U4         LM339       
+| U5         LM339       
+| X1         CRYSTAL     
+#End Cmp
+
+#Cmp ( order = Value )
+| 22pf         C1        
+| 22pf         C3        
+| 0.1uf        C4        
+| 0.1uf        C6        
+| 0.33uf       C2        
+| 0.01         C5        
+| 1n4004       D1        
+| 1n4004       D3        
+| 1n4004       D5        
+| 1n4004       D7        
+| 1n4004       D9        
+| 1n4004       D11       
+| 1n4004       D13       
+| 1n4004       D15       
+| 1n4148       D2        
+| 1n4148       D4        
+| 1n4148       D6        
+| 1n4148       D8        
+| 1n4148       D10       
+| 1n4148       D12       
+| 1n4148       D14       
+| 1n4148       D16       
+| LED          D17       
+| LED          D18       
+| CONN_10      P1        
+| CONN_7       P2        
+| CONN_3X2     P3        
+| CONN_10      P4        
+| CONN_5       P5        
+| 220          R18       
+| 220          R20       
+| 1k           R11       
+| 1k           R12       
+| 1k           R13       
+| 1k           R14       
+| 1k           R15       
+| 1k           R16       
+| 1k           R17       
+| 1k           R19       
+| 2.2k         R54       
+| 2.2k         R55       
+| 2.2k         R56       
+| 2.2k         R57       
+| 2.2k         R58       
+| 2.2k         R59       
+| 2.2k         R60       
+| 2.2k         R61       
+| 3.3k         R37       
+| 3.3k         R38       
+| 3.3k         R39       
+| 3.3k         R40       
+| 3.3k         R41       
+| 3.3k         R42       
+| 3.3k         R43       
+| 3.3k         R44       
+| 6.8k         R53       
+| 10k          R10       
+| 10k          R21       
+| 10k          R22       
+| 10k          R23       
+| 10k          R24       
+| 10k          R25       
+| 10k          R26       
+| 10k          R27       
+| 10k          R28       
+| 10k          R62       
+| 100k         R45       
+| 100k         R46       
+| 100k         R47       
+| 100k         R48       
+| 100k         R49       
+| 100k         R50       
+| 100k         R51       
+| 100k         R52       
+| 220k         R29       
+| 220k         R30       
+| 220k         R31       
+| 220k         R32       
+| 220k         R33       
+| 220k         R34       
+| 220k         R35       
+| 220k         R36       
+| 100ohm       R1        
+| 100 0hm      R2        
+| 100 0hm      R3        
+| 100 0hm      R4        
+| 100 0hm      R5        
+| 100hm        R6        
+| 100 0hm      R7        
+| 100 0hm      R8        
+| 220ohm       R9        
+| SW_PUSH      SW1       
+| SW_PUSH      SW2       
+| 3.3v         U1        
+| LM339        U4        
+| LM339        U5        
+| Z8F0822      U2        
+| 74LS138      U3        
+| CRYSTAL      X1        
+#End Cmp
+
+#End List

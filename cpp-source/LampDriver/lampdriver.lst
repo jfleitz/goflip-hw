@@ -1,0 +1,1972 @@
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 28-May-15     23:22:43     page:   1
+
+
+PC     Object              I  Line    Source 
+                           A     1    ; Z8 Encore! ANSI C Compiler Release 3.64
+                           A     2    ; -nofastcall -const=ROM -listinc -model=S -opt
+                           A     3    ; -noreduceopt -debug -norevaa -peephole -local
+                           A     4    ; -alias 
+                           A     5    	DEFINE pdriver_TEXT,SPACE=ROM
+                           A     6    	FILE	".\lampdriver.c"
+                           A     7    .debug "C"
+                           A     8    	SEGMENT ROM_DATA
+0000                       A     9    __ldu_map:
+0000 E0                    A    10    	DB	224
+0001 E1                    A    11    	DB	225
+0002 E2                    A    12    	DB	226
+0003 E3                    A    13    	DB	227
+0004 E4                    A    14    	DB	228
+0005 E5                    A    15    	DB	229
+0006 E6                    A    16    	DB	230
+0007 E7                    A    17    	DB	231
+0008 E8                    A    18    	DB	232
+0009 E9                    A    19    	DB	233
+000A EA                    A    20    	DB	234
+000B EB                    A    21    	DB	235
+000C EC                    A    22    	DB	236
+000D ED                    A    23    	DB	237
+000E EE                    A    24    	DB	238
+000F EF                    A    25    	DB	239
+0010 D0                    A    26    	DB	208
+0011 D1                    A    27    	DB	209
+0012 D2                    A    28    	DB	210
+0013 D3                    A    29    	DB	211
+0014 D4                    A    30    	DB	212
+0015 D5                    A    31    	DB	213
+0016 D6                    A    32    	DB	214
+0017 D7                    A    33    	DB	215
+0018 D8                    A    34    	DB	216
+0019 D9                    A    35    	DB	217
+001A DA                    A    36    	DB	218
+001B DB                    A    37    	DB	219
+001C DC                    A    38    	DB	220
+001D DD                    A    39    	DB	221
+001E DE                    A    40    	DB	222
+001F DF                    A    41    	DB	223
+0020 B0                    A    42    	DB	176
+0021 B1                    A    43    	DB	177
+0022 B2                    A    44    	DB	178
+0023 B3                    A    45    	DB	179
+0024 B4                    A    46    	DB	180
+0025 B5                    A    47    	DB	181
+0026 B6                    A    48    	DB	182
+0027 B7                    A    49    	DB	183
+0028 B8                    A    50    	DB	184
+0029 B9                    A    51    	DB	185
+002A BA                    A    52    	DB	186
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 28-May-15     23:22:43     page:   2
+
+
+PC     Object              I  Line    Source lampdriver.src
+002B BB                    A    53    	DB	187
+002C BC                    A    54    	DB	188
+002D BD                    A    55    	DB	189
+002E BE                    A    56    	DB	190
+002F BF                    A    57    	DB	191
+0030 70                    A    58    	DB	112
+0031 71                    A    59    	DB	113
+0032 72                    A    60    	DB	114
+0033 73                    A    61    	DB	115
+0034 74                    A    62    	DB	116
+0035 75                    A    63    	DB	117
+0036 76                    A    64    	DB	118
+0037 77                    A    65    	DB	119
+0038 78                    A    66    	DB	120
+0039 79                    A    67    	DB	121
+003A 7A                    A    68    	DB	122
+003B 7B                    A    69    	DB	123
+003C 7C                    A    70    	DB	124
+003D 7D                    A    71    	DB	125
+003E 7E                    A    72    	DB	126
+003F 7F                    A    73    	DB	127
+                           A    74    .define "_ldu_map"
+                           A    75    .alias "__ldu_map"
+                           A    76    .class 52
+                           A    77    .value __ldu_map
+                           A    78    .dim 64
+                           A    79    .type 108
+                           A    80    .endef
+                           A    81    	SEGMENT pdriver_TEXT
+                           A    82    ;    1	/*!\file gpio.h
+                           A    83    ;    2	 * \brief Definition file for the Z8 En
+                           A    84    ;    3	 *
+                           A    85    ;    4	 *  This file contains header informati
+                           A    86    ;    5	 *  driver implementations for Z8 Encor
+                           A    87    ;    6	 *
+                           A    88    ;    7	 *  This source file uses Doxygen-style
+                           A    89    ;    8	 *  automatically.
+                           A    90    ;    9	 *
+                           A    91    ;   10	 *  Copyright (C) 1999-2004 by  ZiLOG, 
+                           A    92    ;   11	 *  All Rights Reserved.
+                           A    93    ;   12	 */
+                           A    94    ;   13	
+                           A    95    ;   14	#pragma once // Include this file only 
+                           A    96    ;   15	#ifndef _GPIO_H_
+                           A    97    ;   16	#define _GPIO_H_
+                           A    98    ;   17	
+                           A    99    ;   18	#include <defines.h>
+                           A   100    ;   19	
+                           A   101    ;   20	
+                           A   102    ;   21	#ifdef _DEBUG
+                           A   103    ;   22	#define GPIOPARAMETER_CHECKING			                           A   104    ;   23	#endif
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 28-May-15     23:22:43     page:   3
+
+
+PC     Object              I  Line    Source lampdriver.src
+                           A   105    ;   24	
+                           A   106    ;   25	
+                           A   107    ;   26	/*! The GPIO ports available for partic
+                           A   108    ;   27	#if (defined(EZ8_PORT4) && !defined(_Z8
+                           A   109    ;   28	#define PORTD
+                           A   110    ;   29	#endif
+                           A   111    ;   30	
+                           A   112    ;   31	#if defined(EZ8_PORT8)||defined(EZ8_POR
+                           A   113    ;   32	#define PORTE
+                           A   114    ;   33	#endif
+                           A   115    ;   34	#if defined(EZ8_PORT8)
+                           A   116    ;   35	#define PORTF
+                           A   117    ;   36	#define PORTG
+                           A   118    ;   37	#define PORTH
+                           A   119    ;   38	#endif
+                           A   120    ;   39	
+                           A   121    ;   40	#define GPIOERR_SUCCESS		(CHAR)0		                           A   122    ;   41	#define GPIOERR_INVALIDPINS	(CHAR)1		                           A   123    ;   42	#define GPIOERR_FAILURE		(CHAR)(-1)	                           A   124    ;   43	
+                           A   125    ;   44	
+                           A   126    ;   45	/*! all the ports bits are set to input
+                           A   127    ;   46	#define PORTA_ADDRVAL_DEF   0x01
+                           A   128    ;   47	#define PORTA_CTLVAL_DEF    0xFF
+                           A   129    ;   48	#define PORTA_OUTVAL_DEF    0x00
+                           A   130    ;   49	
+                           A   131    ;   50	#define PORTB_ADDRVAL_DEF   0x01
+                           A   132    ;   51	#define PORTB_CTLVAL_DEF    0xFF
+                           A   133    ;   52	#define PORTB_OUTVAL_DEF    0x00
+                           A   134    ;   53	
+                           A   135    ;   54	#define PORTC_ADDRVAL_DEF   0x01
+                           A   136    ;   55	#define PORTC_CTLVAL_DEF    0xFF
+                           A   137    ;   56	#define PORTC_OUTVAL_DEF    0x00
+                           A   138    ;   57	
+                           A   139    ;   58	#ifdef PORTD
+                           A   140    ;   59	#define PORTD_ADDRVAL_DEF   0x01
+                           A   141    ;   60	#define PORTD_CTLVAL_DEF    0xFF
+                           A   142    ;   61	#define PORTD_OUTVAL_DEF    0x00
+                           A   143    ;   62	#endif
+                           A   144    ;   63	
+                           A   145    ;   64	#ifdef PORTE
+                           A   146    ;   65	#define PORTE_ADDRVAL_DEF   0x01
+                           A   147    ;   66	#define PORTE_CTLVAL_DEF    0xFF
+                           A   148    ;   67	#define PORTE_OUTVAL_DEF    0x00
+                           A   149    ;   68	#endif
+                           A   150    ;   69	
+                           A   151    ;   70	#ifdef PORTF
+                           A   152    ;   71	#define PORTF_ADDRVAL_DEF   0x01
+                           A   153    ;   72	#define PORTF_CTLVAL_DEF    0xFF
+                           A   154    ;   73	#define PORTF_OUTVAL_DEF    0x00
+                           A   155    ;   74	#endif
+                           A   156    ;   75	
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 28-May-15     23:22:43     page:   4
+
+
+PC     Object              I  Line    Source lampdriver.src
+                           A   157    ;   76	#ifdef PORTG
+                           A   158    ;   77	#define PORTG_ADDRVAL_DEF   0x01
+                           A   159    ;   78	#define PORTG_CTLVAL_DEF    0xFF
+                           A   160    ;   79	#define PORTG_OUTVAL_DEF    0x00
+                           A   161    ;   80	#endif
+                           A   162    ;   81	
+                           A   163    ;   82	#ifdef PORTH
+                           A   164    ;   83	#define PORTH_ADDRVAL_DEF   0x01
+                           A   165    ;   84	#define PORTH_CTLVAL_DEF    0xFF
+                           A   166    ;   85	#define PORTH_OUTVAL_DEF    0x00
+                           A   167    ;   86	#endif
+                           A   168    ;   87	
+                           A   169    ;   88	
+                           A   170    ;   89	/*! Control Register access codes used 
+                           A   171    ;   90	#define PORTADDR_NOFUNC			0x00
+                           A   172    ;   91	#define PORTADDR_DATADIR		0x01
+                           A   173    ;   92	#define PORTADDR_ALTFUNC		0x02
+                           A   174    ;   93	#if defined(_Z8FMC16) || defined(__ZSLB
+                           A   175    ;   94	#define PORTADDR_ALTFUNC0		0x02
+                           A   176    ;   95	#endif
+                           A   177    ;   96	#define PORTADDR_OPENDRAIN		0x03
+                           A   178    ;   97	#define PORTADDR_HIGHDRIVE		0x04
+                           A   179    ;   98	#define PORTADDR_STPMDREC		0x05
+                           A   180    ;   99	#if defined (_Z8F1680)||defined(_Z8F04)
+                           A   181    ;  100	#define PORTADDR_PULLUP		0x06
+                           A   182    ;  101	#endif
+                           A   183    ;  102	#if defined (_Z8F1680)||defined(_Z8F04)
+                           A   184    ;  103	#define PORTADDR_ALTFUNCSET1	0x07
+                           A   185    ;  104	#define PORTADDR_ALTFUNCSET2	0x08
+                           A   186    ;  105	#endif
+                           A   187    ;  106	#if defined(_Z8FMC16) || defined(__ZSLB
+                           A   188    ;  107	#define PORTADDR_ALTFUNC1		0x07
+                           A   189    ;  108	#define PORTADDR_IRQES			0x08
+                           A   190    ;  109	#define PORTADDR_IRQPS			0x09
+                           A   191    ;  110	#endif
+                           A   192    ;  111	
+                           A   193    ;  112	
+                           A   194    ;  113	/*! Definitions for Current Drive Level
+                           A   195    ;  114	#if defined(_Z8F04A) ||defined (_Z8F168
+                           A   196    ;  115	#define DRIVELEVEL_3MA			0
+                           A   197    ;  116	#define DRIVELEVEL_7MA			1
+                           A   198    ;  117	#define DRIVELEVEL_13MA			2
+                           A   199    ;  118	#define DRIVELEVEL_20MA			3
+                           A   200    ;  119	#endif
+                           A   201    ;  120	
+                           A   202    ;  121	/*! Definitions for trigger edges */
+                           A   203    ;  122	#define EDGE_FALLING			0
+                           A   204    ;  123	#define EDGE_RISING				1
+                           A   205    ;  124	
+                           A   206    ;  125	/*! GPIO pin patterns */
+                           A   207    ;  126	#define PORTPIN_ZERO		(BYTE)0x01	                           A   208    ;  127	#define PORTPIN_ONE			(BYTE)0x02	Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 28-May-15     23:22:43     page:   5
+
+
+PC     Object              I  Line    Source lampdriver.src
+                           A   209    ;  128	#define PORTPIN_TWO			(BYTE)0x04	                           A   210    ;  129	#define PORTPIN_THREE		(BYTE)0x08	                           A   211    ;  130	#define PORTPIN_FOUR		(BYTE)0x10	                           A   212    ;  131	#define PORTPIN_FIVE 		(BYTE)0x20	                           A   213    ;  132	#define PORTPIN_SIX			(BYTE)0x40	                           A   214    ;  133	#define PORTPIN_SEVEN		(BYTE)0x80	                           A   215    ;  134	#define PORTPIN_FOURPINS_L	(BYTE)0x0F	                           A   216    ;  135	#define PORTPIN_FOURPINS_U	(BYTE)0xF0	                           A   217    ;  136	#define PORTPIN_PATTERN_AA	(BYTE)0xAA	                           A   218    ;  137	#define PORTPIN_PATTERN_55	(BYTE)0x55	                           A   219    ;  138	#define PORTPIN_ALL			(BYTE)0xFF	                           A   220    ;  139	
+                           A   221    ;  140	/*! Port mask index used for validating
+                           A   222    ;  141	#define MSKINDEX_PORTB		(BYTE)0
+                           A   223    ;  142	#define MSKINDEX_PORTC		(BYTE)1
+                           A   224    ;  143	#define MSKINDEX_PORTD		(BYTE)2
+                           A   225    ;  144	#define MSKINDEX_PORTE		(BYTE)3
+                           A   226    ;  145	#define MSKINDEX_PORTF		(BYTE)4
+                           A   227    ;  146	#define MSKINDEX_PORTG		(BYTE)5
+                           A   228    ;  147	#define MSKINDEX_PORTH		(BYTE)6
+                           A   229    ;  148	
+                           A   230    ;  149	/*!
+                           A   231    ;  150	 * \brief The settings required to conf
+                           A   232    ;  151	 */
+                           A   233    ;  152	typedef struct
+                           A   234    ;  153	{
+                           A   235    ;  154		BYTE addr ;					//!< Th
+                           A   236    ;  155		BYTE ctl ;					//!< Th
+                           A   237    ;  156		BYTE out ;					//!< Th
+                           A   238    ;  157		BYTE in ;					//!< Th
+                           A   239    ;  158	
+                           A   240    ;  159	} PORT ;
+                           A   241    .begrec "NONAME0",4
+                           A   242    .define "addr"
+                           A   243    .value 0
+                           A   244    .class 8
+                           A   245    .type 12
+                           A   246    .endef
+                           A   247    .define "ctl"
+                           A   248    .value 1
+                           A   249    .class 8
+                           A   250    .type 12
+                           A   251    .endef
+                           A   252    .define "out"
+                           A   253    .value 2
+                           A   254    .class 8
+                           A   255    .type 12
+                           A   256    .endef
+                           A   257    .define "in"
+                           A   258    .value 3
+                           A   259    .class 8
+                           A   260    .type 12
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 28-May-15     23:22:43     page:   6
+
+
+PC     Object              I  Line    Source lampdriver.src
+                           A   261    .endef
+                           A   262    .endrec "NONAME0"
+                           A   263    ;    1	/**************************************
+                           A   264    ;    2	 *  Copyright (C) 1999-2012 by  ZiLOG, 
+                           A   265    ;    3	 *  All Rights Reserved
+                           A   266    ;    4	 **************************************
+                           A   267    ;    5	 *
+                           A   268    ;    6	 * This header is for internal use only
+                           A   269    ;    7	 * an ANSI standard header file.		                           A   270    ;    8	 *
+                           A   271    ;    9	 **************************************
+                           A   272    ;   10	
+                           A   273    ;   11	#pragma once // Include this file only 
+                           A   274    ;   12	#ifndef FORMAT_H
+                           A   275    ;   13	#define FORMAT_H
+                           A   276    ;   14	
+                           A   277    ;   15	#include <zconst.h>
+                           A   278    ;   16	#include <stdarg.h>
+                           A   279    ;   17	
+                           A   280    ;   18	/* Note: 24 bits times log(2) is 7.224 
+                           A   281    ;   19	   We only need 14 if and when we suppo
+                           A   282    ;   20	#define MAXDIGITS 10
+                           A   283    ;   21	#define MINEXP -4
+                           A   284    ;   22	#define DEFAULT_PRECISION 6
+                           A   285    ;   23	
+                           A   286    ;   24	
+                           A   287    ;   25	/*  Sizes allowed for various data */
+                           A   288    ;   26	/*  For small model, we must restrict t
+                           A   289    ;   27	#if (defined(__MODEL__) && (__MODEL__ =
+                           A   290    ;   28	#define FLT_CHARS 20  // Only need FLT_
+                           A   291    ;   29	#define PTR_CHARS 11
+                           A   292    ;   30	#define INT_CHARS 9
+                           A   293    ;   31	#else
+                           A   294    ;   32	#define FLT_CHARS 127
+                           A   295    ;   33	#define PTR_CHARS 127
+                           A   296    ;   34	#define INT_CHARS 127
+                           A   297    ;   35	#endif
+                           A   298    ;   36	
+                           A   299    ;   37	/*	structures and defines for format r
+                           A   300    ;   38	/*      NOTE: Some fields in this struc
+                           A   301    ;   39	/*            known to the optimizer,  
+                           A   302    ;   40	/*            code in optimizer/genprin
+                           A   303    ;   41	struct fmt_type {
+                           A   304    ;   42	  char flags;		/* flags bit mask *
+                           A   305    ;   43	  char size;		/* size character h
+                           A   306    ;   44	  char space;		/* space character 
+                           A   307    ;   45	  char type;		/* type of argument
+                           A   308    ;   46	  char field_width;	/* field width */
+                           A   309    ;   47	  char precision;	/* precision */
+                           A   310    ;   48	  char print_leading_char;  // Initial 
+                           A   311    ;   49	     /* several print helper functions 
+                           A   312    ;   50	      * The following need to be preser
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 28-May-15     23:22:43     page:   7
+
+
+PC     Object              I  Line    Source lampdriver.src
+                           A   313    ;   51	      * utilities.
+                           A   314    ;   52	      */
+                           A   315    ;   53	  far char* dest;       /* Destination 
+                           A   316    ;   54	  unsigned char print_len;
+                           A   317    ;   55	};
+                           A   318    .begrec "fmt_type",10
+                           A   319    .define "flags"
+                           A   320    .value 0
+                           A   321    .class 8
+                           A   322    .type 2
+                           A   323    .endef
+                           A   324    .define "size"
+                           A   325    .value 1
+                           A   326    .class 8
+                           A   327    .type 2
+                           A   328    .endef
+                           A   329    .define "space"
+                           A   330    .value 2
+                           A   331    .class 8
+                           A   332    .type 2
+                           A   333    .endef
+                           A   334    .define "type"
+                           A   335    .value 3
+                           A   336    .class 8
+                           A   337    .type 2
+                           A   338    .endef
+                           A   339    .define "field_width"
+                           A   340    .value 4
+                           A   341    .class 8
+                           A   342    .type 2
+                           A   343    .endef
+                           A   344    .define "precision"
+                           A   345    .value 5
+                           A   346    .class 8
+                           A   347    .type 2
+                           A   348    .endef
+                           A   349    .define "print_leading_char"
+                           A   350    .value 6
+                           A   351    .class 8
+                           A   352    .type 2
+                           A   353    .endef
+                           A   354    .define "dest"
+                           A   355    .value 7
+                           A   356    .class 8
+                           A   357    .type 162
+                           A   358    .endef
+                           A   359    .define "print_len"
+                           A   360    .value 9
+                           A   361    .class 8
+                           A   362    .type 12
+                           A   363    .endef
+                           A   364    .endrec "fmt_type"
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 28-May-15     23:22:43     page:   8
+
+
+PC     Object              I  Line    Source lampdriver.src
+                           A   365    ;   56	
+                           A   366    ;   57	/* Some additional data for formatting 
+                           A   367    ;   58	
+                           A   368    ;   59	struct flt_fmt_data
+                           A   369    ;   60	{
+                           A   370    ;   61	  unsigned char pad_whole;
+                           A   371    ;   62	  unsigned char pad_pre_fract;
+                           A   372    ;   63	  unsigned char pad_post_fract;
+                           A   373    ;   64	  char * pad_at;
+                           A   374    ;   65	};
+                           A   375    .begrec "flt_fmt_data",4
+                           A   376    .define "pad_whole"
+                           A   377    .value 0
+                           A   378    .class 8
+                           A   379    .type 12
+                           A   380    .endef
+                           A   381    .define "pad_pre_fract"
+                           A   382    .value 1
+                           A   383    .class 8
+                           A   384    .type 12
+                           A   385    .endef
+                           A   386    .define "pad_post_fract"
+                           A   387    .value 2
+                           A   388    .class 8
+                           A   389    .type 12
+                           A   390    .endef
+                           A   391    .define "pad_at"
+                           A   392    .value 3
+                           A   393    .class 8
+                           A   394    .type 130
+                           A   395    .endef
+                           A   396    .endrec "flt_fmt_data"
+                           A   397    ;   66	
+                           A   398    ;   67	/* Data passed between top level driver
+                           A   399    ;   68	 * when printf's are generated inline *
+                           A   400    ;   69	struct fmt_control_data
+                           A   401    ;   70	{
+                           A   402    ;   71	  char status;		/* status, OK, ERR,
+                           A   403    ;   72	  char chr;		/* pass thru character 
+                           A   404    ;   73	};
+                           A   405    .begrec "fmt_control_data",2
+                           A   406    .define "status"
+                           A   407    .value 0
+                           A   408    .class 8
+                           A   409    .type 2
+                           A   410    .endef
+                           A   411    .define "chr"
+                           A   412    .value 1
+                           A   413    .class 8
+                           A   414    .type 2
+                           A   415    .endef
+                           A   416    .endrec "fmt_control_data"
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 28-May-15     23:22:43     page:   9
+
+
+PC     Object              I  Line    Source lampdriver.src
+                           A   417    ;   74	
+                           A   418    ;   75	
+                           A   419    ;   76	struct _set_type{ char * begin; char *e
+                           A   420    .begrec "_set_type",2
+                           A   421    .define "begin"
+                           A   422    .value 0
+                           A   423    .class 8
+                           A   424    .type 130
+                           A   425    .endef
+                           A   426    .define "end"
+                           A   427    .value 1
+                           A   428    .class 8
+                           A   429    .type 130
+                           A   430    .endef
+                           A   431    .endrec "_set_type"
+                           A   432    ;   77	struct near_set_type{ char near * begin
+                           A   433    .begrec "near_set_type",2
+                           A   434    .define "begin"
+                           A   435    .value 0
+                           A   436    .class 8
+                           A   437    .type 130
+                           A   438    .endef
+                           A   439    .define "end"
+                           A   440    .value 1
+                           A   441    .class 8
+                           A   442    .type 130
+                           A   443    .endef
+                           A   444    .endrec "near_set_type"
+                           A   445    ;   78	struct far_set_type{ char far * begin; 
+                           A   446    .begrec "far_set_type",4
+                           A   447    .define "begin"
+                           A   448    .value 0
+                           A   449    .class 8
+                           A   450    .type 162
+                           A   451    .endef
+                           A   452    .define "end"
+                           A   453    .value 2
+                           A   454    .class 8
+                           A   455    .type 162
+                           A   456    .endef
+                           A   457    .endrec "far_set_type"
+                           A   458    ;   79	struct rom_set_type{ char rom * begin; 
+                           A   459    .begrec "rom_set_type",4
+                           A   460    .define "begin"
+                           A   461    .value 0
+                           A   462    .class 8
+                           A   463    .type 194
+                           A   464    .endef
+                           A   465    .define "end"
+                           A   466    .value 2
+                           A   467    .class 8
+                           A   468    .type 194
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 28-May-15     23:22:43     page:  10
+
+
+PC     Object              I  Line    Source lampdriver.src
+                           A   469    .endef
+                           A   470    .endrec "rom_set_type"
+                           A   471    ;   80	
+                           A   472    ;   81	/* info flags */
+                           A   473    ;   82	#define FLT_INFO_SIGN	(1<<0)
+                           A   474    ;   83	#define FLT_INFO_INF	(1<<1)
+                           A   475    ;   84	#define FLT_INFO_NAN	(1<<2)
+                           A   476    ;   85	
+                           A   477    ;   86	
+                           A   478    ;   87	struct flt_info {
+                           A   479    ;   88	  unsigned char flags;			/* 1=si
+                           A   480    ;   89	  char exp;				/* (signed) exp
+                           A   481    ;   90	  unsigned char digits[MAXDIGITS];	/* 
+                           A   482    ;   91	};
+                           A   483    .begrec "flt_info",12
+                           A   484    .define "flags"
+                           A   485    .value 0
+                           A   486    .class 8
+                           A   487    .type 12
+                           A   488    .endef
+                           A   489    .define "exp"
+                           A   490    .value 1
+                           A   491    .class 8
+                           A   492    .type 2
+                           A   493    .endef
+                           A   494    .define "digits"
+                           A   495    .value 2
+                           A   496    .class 8
+                           A   497    .dim 10
+                           A   498    .type 108
+                           A   499    .endef
+                           A   500    .endrec "flt_info"
+                           A   501    	SEGMENT NEAR_BSS
+0000                       A   502    __dataIn:
+0000                       A   503    	DS	4*1
+                           A   504    .define "_dataIn"
+                           A   505    .alias "__dataIn"
+                           A   506    .class 147
+                           A   507    .value __dataIn
+                           A   508    .type 5
+                           A   509    .endef
+0004                       A   510    __lightControl:
+0004                       A   511    	DS	64
+                           A   512    .define "_lightControl"
+                           A   513    .alias "__lightControl"
+                           A   514    .class 147
+                           A   515    .value __lightControl
+                           A   516    .dim 64
+                           A   517    .type 108
+                           A   518    .endef
+0044                       A   519    __slowBlink:
+0044                       A   520    	DS	1
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 28-May-15     23:22:43     page:  11
+
+
+PC     Object              I  Line    Source lampdriver.src
+                           A   521    .define "_slowBlink"
+                           A   522    .alias "__slowBlink"
+                           A   523    .class 147
+                           A   524    .value __slowBlink
+                           A   525    .type 12
+                           A   526    .endef
+0045                       A   527    __fastBlink:
+0045                       A   528    	DS	1
+                           A   529    .define "_fastBlink"
+                           A   530    .alias "__fastBlink"
+                           A   531    .class 147
+                           A   532    .value __fastBlink
+                           A   533    .type 12
+                           A   534    .endef
+                           A   535    	SEGMENT NEAR_DATA
+0000                       A   536    __strobe:
+0000 00                    A   537    	DB	0
+                           A   538    .define "_strobe"
+                           A   539    .alias "__strobe"
+                           A   540    .class 133
+                           A   541    .value __strobe
+                           A   542    .type 12
+                           A   543    .endef
+0001                       A   544    __lmp:
+0001 00                    A   545    	DB	0
+                           A   546    .define "_lmp"
+                           A   547    .alias "__lmp"
+                           A   548    .class 133
+                           A   549    .value __lmp
+                           A   550    .type 12
+                           A   551    .endef
+0002                       A   552    __diagMode:
+0002 00                    A   553    	DB	0
+                           A   554    .define "_diagMode"
+                           A   555    .alias "__diagMode"
+                           A   556    .class 133
+                           A   557    .value __diagMode
+                           A   558    .type 12
+                           A   559    .endef
+                           A   560    	SEGMENT NEAR_BSS
+0046                       A   561    __timerControl:
+0046                       A   562    	DS	2*1
+                           A   563    .define "_timerControl"
+                           A   564    .alias "__timerControl"
+                           A   565    .class 147
+                           A   566    .value __timerControl
+                           A   567    .type 3
+                           A   568    .endef
+                           A   569    	SEGMENT NEAR_DATA
+0003                       A   570    __lampCounter:
+0003 0000                  A   571    	DW	0
+                           A   572    .define "_lampCounter"
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 28-May-15     23:22:43     page:  12
+
+
+PC     Object              I  Line    Source lampdriver.src
+                           A   573    .alias "__lampCounter"
+                           A   574    .class 133
+                           A   575    .value __lampCounter
+                           A   576    .type 3
+                           A   577    .endef
+                           A   578    	SEGMENT ROM_DATA
+0040                       A   579    _BLINKON:
+0040 3F                    A   580    	DB	63
+                           A   581    .define "BLINKON"
+                           A   582    .alias "_BLINKON"
+                           A   583    .class 52
+                           A   584    .value _BLINKON
+                           A   585    .type 12
+                           A   586    .endef
+0041                       A   587    _BLINKOFF:
+0041 00                    A   588    	DB	0
+                           A   589    .define "BLINKOFF"
+                           A   590    .alias "_BLINKOFF"
+                           A   591    .class 52
+                           A   592    .value _BLINKOFF
+                           A   593    .type 12
+                           A   594    .endef
+                           A   595    	SEGMENT NEAR_BSS
+0048                       A   596    _ledIsOn:
+0048                       A   597    	DS	2*1
+                           A   598    .define "ledIsOn"
+                           A   599    .alias "_ledIsOn"
+                           A   600    .class 147
+                           A   601    .value _ledIsOn
+                           A   602    .type 3
+                           A   603    .endef
+004A                       A   604    _lastDataReceived:
+004A                       A   605    	DS	1
+                           A   606    .define "lastDataReceived"
+                           A   607    .alias "_lastDataReceived"
+                           A   608    .class 147
+                           A   609    .value _lastDataReceived
+                           A   610    .type 12
+                           A   611    .endef
+                           A   612    	SEGMENT ROM_DATA
+                           A   613    
+                           A   614    
+                           A   615    ;**************************** _main ***********
+                           A   616    ;Name                         Addr/Register   S
+                           A   617    ;_LampLoop                           IMPORT  --
+                           A   618    ;_Initialize                         IMPORT  --
+                           A   619    ;_lastDataReceived                   STATIC    
+                           A   620    
+                           A   621    
+                           A   622    ; Aggregate Stack Size: 0 (words)
+                           A   623    
+                           A   624    
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 28-May-15     23:22:43     page:  13
+
+
+PC     Object              I  Line    Source lampdriver.src
+                           A   625    	.FRAME _n_main,?_n_main,RDATA
+                           A   626    	.FCALL _n_Initialize
+                           A   627    	.FCALL _n_LampLoop
+                           A   628    ;    1	/*
+                           A   629    ;    2	***************************************
+                           A   630    ;    3	* File : lampDriver.c
+                           A   631    ;    4	* Based on scl_interrupt.c (from AN0139
+                           A   632    ;    5	* Description : Drives a lamp Driver bo
+                           A   633    ;    6	*  PC0 and PC1 have to be used for the 
+                           A   634    ;    7	*
+                           A   635    ;    8	*
+                           A   636    ;    9	* Drives 64 lamps
+                           A   637    ;   10	* Data Byte command: 0bAAAA AAcc
+                           A   638    ;   11	* Bits A (data bit 2-7) = Lamp Address
+                           A   639    ;   12	* Bits C:
+                           A   640    ;   13	*		00 = off
+                           A   641    ;   14	*		01 = on
+                           A   642    ;   15	*		10 = slow blink
+                           A   643    ;   16	*		11 = fast blink
+                           A   644    ;   17	*
+                           A   645    ;   18	*
+                           A   646    ;   19	*
+                           A   647    ;   20	*	Green = Lamp Adress 1 (8) = pin 9 =
+                           A   648    ;   21	*	Blue = Lamp Address 2 (9) = pin 7 =
+                           A   649    ;   22	*	Purple = Address 3 (4) = pin 5 = pa
+                           A   650    ;   23	*	Gray = Address 4 (3) = pin 3 = pa3
+                           A   651    ;   24	*
+                           A   652    ;   25	*	Brown = Lamp En 1 (1)= pin 18 = pa4
+                           A   653    ;   26	*	Red =  Lamp En 2 (2) = pin 16 = pa5
+                           A   654    ;   27	*	Orange = Lamp En 3(5) = pin 14 = pa
+                           A   655    ;   28	*	Yellow = Lamp En 4 (7) = pin 12 = p
+                           A   656    ;   29	*
+                           A   657    ;   30	*
+                           A   658    ;   31	*	Lamp En must be 0 for selecting.
+                           A   659    ;   32	*	Address is active high
+                           A   660    ;   33	*
+                           A   661    ;   34	*
+                           A   662    ;   35	***************************************
+                           A   663    ;   36	*/
+                           A   664    ;   37	
+                           A   665    ;   38	#include <ez8.h>
+                           A   666    ;   39	#include <stdio.h>
+                           A   667    ;   40	
+                           A   668    ;   41	#include "lampDriver.h"
+                           A   669    ;   42	#include "timer.h"
+                           A   670    ;   43	#include "sysclk.h"
+                           A   671    ;   44	#include "i2cbase.h"
+                           A   672    ;   45	
+                           A   673    ;   46	unsigned char const _ldu_map[64]= {0xE0
+                           A   674    ;   47	0xEA,0xEB,0xEC,0xED,0xEE,0xEF,0xD0,0xD1
+                           A   675    ;   48	0xDA,0xDB,0xDC,0xDD,0xDE,0xDF,0xB0,0xB1
+                           A   676    ;   49	0xBA,0xBB,0xBC,0xBD,0xBE,0xBF,0x70,0x71
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 28-May-15     23:22:43     page:  14
+
+
+PC     Object              I  Line    Source lampdriver.src
+                           A   677    ;   50	0x7A,0x7B,0x7C,0x7D,0x7E,0x7F};
+                           A   678    ;   51	
+                           A   679    ;   52	
+                           A   680    ;   53	long _dataIn;
+                           A   681    ;   54	
+                           A   682    ;   55	/*Lamp Specific Variables*/
+                           A   683    ;   56	unsigned char _lightControl[64];
+                           A   684    ;   57	unsigned char _slowBlink;
+                           A   685    ;   58	unsigned char _fastBlink;
+                           A   686    ;   59	unsigned char _strobe = 0;
+                           A   687    ;   60	unsigned char _lmp = 0;
+                           A   688    ;   61	unsigned char _diagMode = 0;
+                           A   689    ;   62	
+                           A   690    ;   63	int  _timerControl;
+                           A   691    ;   64	
+                           A   692    ;   65	int _lampCounter = 0;
+                           A   693    ;   66	
+                           A   694    ;   67	unsigned char const BLINKON = 0x3f;
+                           A   695    ;   68	unsigned char const BLINKOFF =0x00;
+                           A   696    ;   69	
+                           A   697    ;   70	void Initialize(void);
+                           A   698    ;   71	void LampLoop(void);
+                           A   699    ;   72	void SetLampAll(int value);
+                           A   700    ;   73	void SetLamp(int , unsigned char );
+                           A   701    ;   74	void DiagLEDControl(unsigned char);
+                           A   702    ;   75	static void pause( void );
+                           A   703    ;   76	int ledIsOn;
+                           A   704    ;   77	
+                           A   705    ;   78	
+                           A   706    ;   79	unsigned char lastDataReceived;
+                           A   707    	SEGMENT pdriver_TEXT
+                           A   708    ;   80	
+                           A   709    ;   81	
+                           A   710    ;   82	/* ************************************
+                           A   711    ;   83	The main routine ,sets the Port pins PC
+                           A   712    ;   84	with open drain.The I2C bus status is s
+                           A   713    ;   85	Sets the interrupt PC0 and PC1 to highi
+                           A   714    ;   86	/**************************************
+                           A   715    ;   87	void main()
+                           A   716    ;   88	{
+0000                       A   717    _main:
+                           A   718    .define "_main"
+                           A   719    .value _main
+                           A   720    .class 2
+                           A   721    .type 65
+                           A   722    .endef
+                           A   723    .begfunc "main",88,"_main"
+                           A   724    ;   89	  lastDataReceived = 0x00;
+                           A   725    .line 89
+0000 B0 4A                 A   726    	CLR	_lastDataReceived
+                           A   727    ;   90	  Initialize();
+                           A   728    .line 90
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 28-May-15     23:22:43     page:  15
+
+
+PC     Object              I  Line    Source lampdriver.src
+0002 D6 0009               A   729    	CALL	_Initialize
+                           A   730    ;   91	  LampLoop();
+                           A   731    .line 91
+0005 D6 006E               A   732    	CALL	_LampLoop
+                           A   733    ;   92	 }
+                           A   734    .line 92
+0008 AF                    A   735    	RET	
+                           A   736    .endfunc "main",92,"_main"
+                           A   737    	SEGMENT ROM_DATA
+                           A   738    
+                           A   739    
+                           A   740    ;**************************** _Initialize *****
+                           A   741    ;Name                         Addr/Register   S
+                           A   742    ;_EI                                 IMPORT  --
+                           A   743    ;_SetLampAll                         IMPORT  --
+                           A   744    ;__fastBlink                         STATIC    
+                           A   745    ;__slowBlink                         STATIC    
+                           A   746    ;_InitializeI2C                      IMPORT  --
+                           A   747    ;_DI                                 IMPORT  --
+                           A   748    
+                           A   749    
+                           A   750    ; Aggregate Stack Size: 0 (words)
+                           A   751    
+                           A   752    
+                           A   753    	.FRAME _n_Initialize,?_n_Initialize,RDATA
+                           A   754    	.FCALL _n_InitializeI2C
+                           A   755    	.FCALL _n_SetLampAll
+                           A   756    	SEGMENT pdriver_TEXT
+                           A   757    ;   93	
+                           A   758    ;   94	
+                           A   759    ;   95	 
+                           A   760    ;   96	 void Initialize(void){
+0009                       A   761    _Initialize:
+                           A   762    .define "_Initialize"
+                           A   763    .value _Initialize
+                           A   764    .class 2
+                           A   765    .type 65
+                           A   766    .endef
+                           A   767    .begfunc "Initialize",96,"_Initialize"
+                           A   768    ;   97		DI();				// Globally dis
+                           A   769    .line 97
+0009 8F                    A   770    	DI
+                           A   771    ;   98	
+                           A   772    ;   99		InitializeI2C();
+                           A   773    .line 99
+000A D6 0000               A   774    	CALL	_InitializeI2C
+                           A   775    ;  100	
+                           A   776    ;  101		//PB0-3 are open drain for LED cont
+                           A   777    ;  102		PBADDR = 0x01; // Direction
+                           A   778    .line 102
+000D E9010FD4              A   779    	LDX	4052,#1
+                           A   780    ;  103		PBCTL = 0xE8; //1110 - 1000 all put
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 28-May-15     23:22:43     page:  16
+
+
+PC     Object              I  Line    Source lampdriver.src
+                           A   781    .line 103
+0011 E9E80FD5              A   782    	LDX	4053,#232
+                           A   783    ;  104		PBADDR = 0x03; //output control
+                           A   784    .line 104
+0015 E9030FD4              A   785    	LDX	4052,#3
+                           A   786    ;  105		PBCTL = 0x07;     //0000-0111 (open
+                           A   787    .line 105
+0019 E9070FD5              A   788    	LDX	4053,#7
+                           A   789    ;  106		PBADDR = 0x00;
+                           A   790    .line 106
+001D E9000FD4              A   791    	LDX	4052,#-0
+                           A   792    ;  107	
+                           A   793    ;  108		//PA0-7 should be TTL output
+                           A   794    ;  109		PAADDR = 0x01; //Data Direction
+                           A   795    .line 109
+0021 E9010FD0              A   796    	LDX	4048,#1
+                           A   797    ;  110		PACTL = 0x00; //0000 - 0000 all put
+                           A   798    .line 110
+0025 E9000FD1              A   799    	LDX	4049,#-0
+                           A   800    ;  111		PAADDR = 0x03;
+                           A   801    .line 111
+0029 E9030FD0              A   802    	LDX	4048,#3
+                           A   803    ;  112		PACTL = 0x00; //TTL Output
+                           A   804    .line 112
+002D E9000FD1              A   805    	LDX	4049,#-0
+                           A   806    ;  113		PAADDR = 0x00;
+                           A   807    .line 113
+0031 E9000FD0              A   808    	LDX	4048,#-0
+                           A   809    ;  114	
+                           A   810    ;  115		PCCTL |= 0x0C;	//PC2-3 are input
+                           A   811    .line 115
+0035 490C0FD9              A   812    	ORX	4057,#12
+                           A   813    ;  116		_slowBlink = BLINKOFF;
+                           A   814    .line 116
+0039 B0 44                 A   815    	CLR	__slowBlink
+                           A   816    ;  117		_fastBlink = BLINKOFF;
+                           A   817    .line 117
+003B B0 45                 A   818    	CLR	__fastBlink
+                           A   819    ;  118	
+                           A   820    ;  119		SetLampAll(0);
+                           A   821    .line 119
+003D B0 00                 A   822    	CLR	_0_SetLampAll
+003F B0 01                 A   823    	CLR	_0_SetLampAll+1
+0041 D6 004A               A   824    	CALL	_SetLampAll
+                           A   825    ;  120		EI();				//Enable all in
+                           A   826    .line 120
+0044 9F                    A   827    	EI
+                           A   828    ;  121		PBOUT |= 0xF8; //set to zero
+                           A   829    .line 121
+0045 49F80FD7              A   830    	ORX	4055,#248
+                           A   831    ;  122	  
+                           A   832    ;  123	}
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 28-May-15     23:22:43     page:  17
+
+
+PC     Object              I  Line    Source lampdriver.src
+                           A   833    .line 123
+0049 AF                    A   834    	RET	
+                           A   835    .endfunc "Initialize",123,"_Initialize"
+                           A   836    	SEGMENT ROM_DATA
+                           A   837    
+                           A   838    
+                           A   839    ;**************************** _SetLampAll *****
+                           A   840    ;Name                         Addr/Register   S
+                           A   841    ;__lightControl                      STATIC    
+                           A   842    ;i                                      RR0    
+                           A   843    ;value                         _0_SetLampAll   
+                           A   844    
+                           A   845    
+                           A   846    ; Aggregate Stack Size: 0 (words)
+                           A   847    
+                           A   848    
+                           A   849    	.FRAME _n_SetLampAll,?_n_SetLampAll,RDATA
+0000                       A   850    _0_SetLampAll:
+0000                       A   851    	DS	2*1
+                           A   852    	SEGMENT pdriver_TEXT
+                           A   853    ;  124	 
+                           A   854    ;  125	 
+                           A   855    ;  126	
+                           A   856    ;  127		
+                           A   857    ;  128	
+                           A   858    ;  129	void SetLampAll(int value){
+004A                       A   859    _SetLampAll:
+                           A   860    .define "_SetLampAll"
+                           A   861    .value _SetLampAll
+                           A   862    .class 2
+                           A   863    .type 65
+                           A   864    .endef
+                           A   865    .begfunc "SetLampAll",129,"_SetLampAll"
+                           A   866    .define "value"
+                           A   867    .class 23
+                           A   868    .value _0_SetLampAll
+                           A   869    .alias "_0_SetLampAll"
+                           A   870    .type 3
+                           A   871    .endef
+                           A   872    .define "i"
+                           A   873    .class 4
+                           A   874    .reg 17
+                           A   875    .type 3
+                           A   876    .endef
+                           A   877    ;  130		int i;
+                           A   878    ;  131		for(i=0;i<64;i++){
+                           A   879    .line 131
+004A B0E0                  A   880    	CLR	R0
+004C B0E1                  A   881    	CLR	R1
+004E 8B 0B                 A   882    	JR	_3_L_5
+0050                       A   883    _3_L_3:
+                           A   884    ;  132			_lightControl[i]=value;
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 28-May-15     23:22:43     page:  18
+
+
+PC     Object              I  Line    Source lampdriver.src
+                           A   885    .line 132
+0050 E4 01 E3              A   886    	LD	R3,_0_SetLampAll+1
+0053 2C 04                 A   887    	LD	R2,#__lightControl
+0055 0221                  A   888    	ADD	R2,R1
+0057 F323                  A   889    	LD	@R2,R3
+                           A   890    .line 131
+0059 A0E0                  A   891    	INCW	RR0
+                           A   892    ;  133			}
+005B                       A   893    _3_L_5:
+                           A   894    .line 133
+                           A   895    .line 131
+005B A6E140                A   896    	CP	R1,#64
+005E 1FA6E000              A   897    	CPC	R0,#-0
+0062 1B EC                 A   898    	JR	LT,_3_L_3
+                           A   899    ;  134		}
+                           A   900    .line 134
+0064 AF                    A   901    	RET	
+                           A   902    .endfunc "SetLampAll",134,"_SetLampAll"
+                           A   903    	SEGMENT ROM_DATA
+                           A   904    
+                           A   905    
+                           A   906    ;**************************** _SetLamp ********
+                           A   907    ;Name                         Addr/Register   S
+                           A   908    ;__lightControl                      STATIC    
+                           A   909    ;data                            _1_SetLamp    
+                           A   910    ;lmp                             _0_SetLamp    
+                           A   911    
+                           A   912    
+                           A   913    ; Aggregate Stack Size: 0 (words)
+                           A   914    
+                           A   915    
+                           A   916    	.FRAME _n_SetLamp,?_n_SetLamp,RDATA
+0000                       A   917    _0_SetLamp:
+0000                       A   918    	DS	2*1
+0002                       A   919    _1_SetLamp:
+0002                       A   920    	DS	1
+                           A   921    	SEGMENT pdriver_TEXT
+                           A   922    ;  135		
+                           A   923    ;  136	void SetLamp(int lmp, unsigned char dat
+0065                       A   924    _SetLamp:
+                           A   925    .define "_SetLamp"
+                           A   926    .value _SetLamp
+                           A   927    .class 2
+                           A   928    .type 65
+                           A   929    .endef
+                           A   930    .begfunc "SetLamp",136,"_SetLamp"
+                           A   931    .define "lmp"
+                           A   932    .class 23
+                           A   933    .value _0_SetLamp
+                           A   934    .alias "_0_SetLamp"
+                           A   935    .type 3
+                           A   936    .endef
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 28-May-15     23:22:43     page:  19
+
+
+PC     Object              I  Line    Source lampdriver.src
+                           A   937    .define "data"
+                           A   938    .class 23
+                           A   939    .value _1_SetLamp
+                           A   940    .alias "_1_SetLamp"
+                           A   941    .type 12
+                           A   942    .endef
+                           A   943    ;  137		//00=off, 01=on, 10=slow blink, 11=
+                           A   944    ;  138		_lightControl[lmp]=data;
+                           A   945    .line 138
+0065 0C 04                 A   946    	LD	R0,#__lightControl
+0067 04 01 E0              A   947    	ADD	R0,_0_SetLamp+1
+006A F5 02 E0              A   948    	LD	@R0,_1_SetLamp
+                           A   949    ;  139	}
+                           A   950    .line 139
+006D AF                    A   951    	RET	
+                           A   952    .endfunc "SetLamp",139,"_SetLamp"
+                           A   953    	SEGMENT ROM_DATA
+                           A   954    ;	Jump Table for Switch Statement at line 170
+0042                       A   955    L__9:
+0042 0003                  A   956    	DW	3
+0044 0001                  A   957    	DW	1
+0046 008A                  A   958    	DW	_5_L_9
+0048 0002                  A   959    	DW	2
+004A 009E                  A   960    	DW	_5_L_10
+004C 0003                  A   961    	DW	3
+004E 00BD                  A   962    	DW	_5_L_14
+0050 00DA                  A   963    	DW	_5_L_19
+                           A   964    
+                           A   965    
+                           A   966    ;**************************** _LampLoop *******
+                           A   967    ;Name                         Addr/Register   S
+                           A   968    ;_DiagLEDControl                     IMPORT  --
+                           A   969    ;__fastBlink                         STATIC    
+                           A   970    ;__slowBlink                         STATIC    
+                           A   971    ;_pause                              STATIC  --
+                           A   972    ;__ldu_map                           STATIC    
+                           A   973    ;__lightControl                      STATIC    
+                           A   974    ;i                                      _0i    
+                           A   975    
+                           A   976    
+                           A   977    ; Aggregate Stack Size: 0 (words)
+                           A   978    
+                           A   979    
+                           A   980    	.FRAME _n_LampLoop,?_n_LampLoop,RDATA
+0000                       A   981    _0i:
+0000                       A   982    	DS	2*1
+                           A   983    	.FCALL _n_pause
+                           A   984    	.FCALL _n_DiagLEDControl
+                           A   985    	SEGMENT pdriver_TEXT
+                           A   986    ;  140	
+                           A   987    ;  141	
+                           A   988    ;  142	void LampLoop(void){
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 28-May-15     23:22:43     page:  20
+
+
+PC     Object              I  Line    Source lampdriver.src
+006E                       A   989    _LampLoop:
+                           A   990    .define "_LampLoop"
+                           A   991    .value _LampLoop
+                           A   992    .class 2
+                           A   993    .type 65
+                           A   994    .endef
+                           A   995    .begfunc "LampLoop",142,"_LampLoop"
+                           A   996    .define "i"
+                           A   997    .class 22
+                           A   998    .value _0i
+                           A   999    .alias "_0i"
+                           A  1000    .type 3
+                           A  1001    .endef
+                           A  1002    ;  143		int i;
+                           A  1003    ;  144		unsigned long int count;
+                           A  1004    ;  145	
+                           A  1005    ;  146		/*
+                           A  1006    ;  147	porta bit:
+                           A  1007    ;  148	0=lamp0
+                           A  1008    ;  149	1=lamp1
+                           A  1009    ;  150	2=lamp2
+                           A  1010    ;  151	3=lamp3
+                           A  1011    ;  152	4=str0
+                           A  1012    ;  153	5=str1
+                           A  1013    ;  154	6=str2
+                           A  1014    ;  155	7=str3
+                           A  1015    ;  156	
+                           A  1016    ;  157	portB:
+                           A  1017    ;  158	0=LED1
+                           A  1018    ;  159	1=LED2
+                           A  1019    ;  160	2=LED3
+                           A  1020    ;  161	3=n/a
+                           A  1021    ;  162	4=Lamp Enable
+                           A  1022    ;  163	*/	
+                           A  1023    ;  164	
+                           A  1024    ;  165	
+                           A  1025    ;  166		PBOUT &= 0xEF; //PB4 is lamp enable
+                           A  1026    .line 166
+006E 59EF0FD7              A  1027    	ANDX	4055,#239
+                           A  1028    ;  167		while(1){
+0072                       A  1029    _5_L_23:
+                           A  1030    .line 167
+                           A  1031    ;  168			//just loop through each lamp v
+                           A  1032    ;  169			for(i=0;i<64;i++){
+                           A  1033    .line 169
+0072 B0 00                 A  1034    	CLR	_0i
+0074 B0 01                 A  1035    	CLR	_0i+1
+0076 8B 68                 A  1036    	JR	_5_L_20
+0078                       A  1037    _5_L_18:
+                           A  1038    ;  170				switch(_lightControl[i]){
+                           A  1039    .line 170
+0078 0C 04                 A  1040    	LD	R0,#__lightControl
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 28-May-15     23:22:43     page:  21
+
+
+PC     Object              I  Line    Source lampdriver.src
+007A 04 01 E0              A  1041    	ADD	R0,_0i+1
+007D E310                  A  1042    	LD	R1,@R0
+007F B0E0                  A  1043    	CLR	R0
+0081 2C 00                 A  1044    	LD	R2,#high(L__9)
+0083 3C 42                 A  1045    	LD	R3,#low(L__9)
+0085 D6 0000               A  1046    	CALL	__b_ucase
+0088 C4E0                  A  1047    	JP	@RR0
+                           A  1048    ;  171					case 1: //on
+008A                       A  1049    _5_L_9:
+                           A  1050    .line 171
+                           A  1051    ;  172						PAOUT = _ldu_map[i]
+                           A  1052    .line 172
+008A 0C 00                 A  1053    	LD	R0,#high(__ldu_map)
+008C 1C 00                 A  1054    	LD	R1,#low(__ldu_map)
+008E 04 01 E1              A  1055    	ADD	R1,_0i+1
+0091 14 00 E0              A  1056    	ADC	R0,_0i
+0094 C220                  A  1057    	LDC	R2,@RR0
+0096 942FD3                A  1058    	LDX	4051,R2
+                           A  1059    ;  173						pause();
+                           A  1060    .line 173
+0099 D6 0226               A  1061    	CALL	_pause
+                           A  1062    ;  174						break;
+                           A  1063    .line 174
+009C 8B 3C                 A  1064    	JR	_5_L_19
+                           A  1065    ;  175					case 2: //slow blink
+009E                       A  1066    _5_L_10:
+                           A  1067    .line 175
+                           A  1068    ;  176						if(_slowBlink==0x01
+                           A  1069    .line 176
+009E A6 44 01              A  1070    	CP	__slowBlink,#1
+00A1 EB 14                 A  1071    	JR	NE,_5_L_12
+                           A  1072    ;  177							PAOUT = _ldu_ma
+                           A  1073    .line 177
+00A3 0C 00                 A  1074    	LD	R0,#high(__ldu_map)
+00A5 1C 00                 A  1075    	LD	R1,#low(__ldu_map)
+00A7 04 01 E1              A  1076    	ADD	R1,_0i+1
+00AA 14 00 E0              A  1077    	ADC	R0,_0i
+00AD C220                  A  1078    	LDC	R2,@RR0
+00AF 942FD3                A  1079    	LDX	4051,R2
+                           A  1080    ;  178							pause();
+                           A  1081    .line 178
+00B2 D6 0226               A  1082    	CALL	_pause
+                           A  1083    ;  179						}
+                           A  1084    ;  180						else{
+                           A  1085    .line 180
+00B5 8B 23                 A  1086    	JR	_5_L_19
+00B7                       A  1087    _5_L_12:
+                           A  1088    ;  181							PAOUT = 0x00;
+                           A  1089    .line 181
+00B7 E9000FD3              A  1090    	LDX	4051,#-0
+                           A  1091    ;  182						}
+                           A  1092    ;  183						break;
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 28-May-15     23:22:43     page:  22
+
+
+PC     Object              I  Line    Source lampdriver.src
+                           A  1093    .line 183
+00BB 8B 1D                 A  1094    	JR	_5_L_19
+                           A  1095    ;  184					case 3: //fast blink
+00BD                       A  1096    _5_L_14:
+                           A  1097    .line 184
+                           A  1098    ;  185						if(_fastBlink==0x01
+                           A  1099    .line 185
+00BD A6 45 01              A  1100    	CP	__fastBlink,#1
+00C0 EB 14                 A  1101    	JR	NE,_5_L_16
+                           A  1102    ;  186							PAOUT = _ldu_ma
+                           A  1103    .line 186
+00C2 0C 00                 A  1104    	LD	R0,#high(__ldu_map)
+00C4 1C 00                 A  1105    	LD	R1,#low(__ldu_map)
+00C6 04 01 E1              A  1106    	ADD	R1,_0i+1
+00C9 14 00 E0              A  1107    	ADC	R0,_0i
+00CC C220                  A  1108    	LDC	R2,@RR0
+00CE 942FD3                A  1109    	LDX	4051,R2
+                           A  1110    ;  187							pause();
+                           A  1111    .line 187
+00D1 D6 0226               A  1112    	CALL	_pause
+                           A  1113    ;  188						}
+                           A  1114    ;  189						else{
+                           A  1115    .line 189
+00D4 8B 04                 A  1116    	JR	_5_L_19
+00D6                       A  1117    _5_L_16:
+                           A  1118    ;  190							PAOUT = 0x00;
+                           A  1119    .line 190
+00D6 E9000FD3              A  1120    	LDX	4051,#-0
+                           A  1121    ;  191						}
+                           A  1122    ;  192						break;
+                           A  1123    ;  193				}
+                           A  1124    ;  194			}
+00DA                       A  1125    _5_L_19:
+                           A  1126    .line 194
+                           A  1127    .line 169
+00DA 06 01 01              A  1128    	ADD	_0i+1,#1
+00DD 16 00 00              A  1129    	ADC	_0i,#0
+00E0                       A  1130    _5_L_20:
+                           A  1131    .line 194
+                           A  1132    .line 169
+00E0 A6 01 40              A  1133    	CP	_0i+1,#64
+00E3 1FA6 00 00            A  1134    	CPC	_0i,#-0
+00E7 1B 8F                 A  1135    	JR	LT,_5_L_18
+                           A  1136    ;  195			DiagLEDControl(_lightControl[22
+                           A  1137    .line 195
+00E9 E4 1A 00              A  1138    	LD	_0_DiagLEDControl,__lightControl+22
+00EC D6 00F2               A  1139    	CALL	_DiagLEDControl
+                           A  1140    .line 167
+00EF 8B 81                 A  1141    	JR	_5_L_23
+                           A  1142    ;  196	
+                           A  1143    ;  197		}	
+                           A  1144    ;  198	}
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 28-May-15     23:22:43     page:  23
+
+
+PC     Object              I  Line    Source lampdriver.src
+                           A  1145    .line 198
+00F1 AF                    A  1146    	RET	
+                           A  1147    .endfunc "LampLoop",198,"_LampLoop"
+                           A  1148    	SEGMENT ROM_DATA
+                           A  1149    ;	Jump Table for Switch Statement at line 206
+0052                       A  1150    L__16:
+0052 0003                  A  1151    	DW	3
+0054 0001                  A  1152    	DW	1
+0056 0107                  A  1153    	DW	_6_L_26
+0058 0002                  A  1154    	DW	2
+005A 010D                  A  1155    	DW	_6_L_27
+005C 0003                  A  1156    	DW	3
+005E 011E                  A  1157    	DW	_6_L_31
+0060 012F                  A  1158    	DW	_6_L_35
+                           A  1159    
+                           A  1160    
+                           A  1161    ;**************************** _DiagLEDControl *
+                           A  1162    ;Name                         Addr/Register   S
+                           A  1163    ;__fastBlink                         STATIC    
+                           A  1164    ;__slowBlink                         STATIC    
+                           A  1165    ;_lastDataReceived                   STATIC    
+                           A  1166    ;command                       _0_DiagLEDContro
+                           A  1167    
+                           A  1168    
+                           A  1169    ; Aggregate Stack Size: 0 (words)
+                           A  1170    
+                           A  1171    
+                           A  1172    	.FRAME _n_DiagLEDControl,?_n_DiagLEDControl
+0000                       A  1173    _0_DiagLEDControl:
+0000                       A  1174    	DS	1
+                           A  1175    	SEGMENT pdriver_TEXT
+                           A  1176    ;  199	
+                           A  1177    ;  200	
+                           A  1178    ;  201	void DiagLEDControl(unsigned char comma
+00F2                       A  1179    _DiagLEDControl:
+                           A  1180    .define "_DiagLEDControl"
+                           A  1181    .value _DiagLEDControl
+                           A  1182    .class 2
+                           A  1183    .type 65
+                           A  1184    .endef
+                           A  1185    .begfunc "DiagLEDControl",201,"_DiagLEDControl"
+                           A  1186    .define "command"
+                           A  1187    .class 23
+                           A  1188    .value _0_DiagLEDControl
+                           A  1189    .alias "_0_DiagLEDControl"
+                           A  1190    .type 12
+                           A  1191    .endef
+                           A  1192    ;  202		if(lastDataReceived!=0x00){
+                           A  1193    .line 202
+00F2 A6 4A 00              A  1194    	CP	_lastDataReceived,#0
+00F5 6B 02                 A  1195    	JR	Z,_6_L_36
+                           A  1196    ;  203			lastDataReceived = 0x00;
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 28-May-15     23:22:43     page:  24
+
+
+PC     Object              I  Line    Source lampdriver.src
+                           A  1197    .line 203
+00F7 B0 4A                 A  1198    	CLR	_lastDataReceived
+                           A  1199    ;  204		}
+00F9                       A  1200    _6_L_36:
+                           A  1201    .line 204
+                           A  1202    ;  205		
+                           A  1203    ;  206		switch(command){
+                           A  1204    .line 206
+00F9 E4 00 E1              A  1205    	LD	R1,_0_DiagLEDControl
+00FC B0E0                  A  1206    	CLR	R0
+00FE 2C 00                 A  1207    	LD	R2,#high(L__16)
+0100 3C 52                 A  1208    	LD	R3,#low(L__16)
+0102 D6 0000               A  1209    	CALL	__b_ucase
+0105 C4E0                  A  1210    	JP	@RR0
+                           A  1211    ;  207			case 1:
+0107                       A  1212    _6_L_26:
+                           A  1213    .line 207
+                           A  1214    ;  208				PBOUT &= 0xFD; //on  
+                           A  1215    .line 208
+0107 59FD0FD7              A  1216    	ANDX	4055,#253
+                           A  1217    ;  209				break;
+                           A  1218    .line 209
+010B 8B 26                 A  1219    	JR	_6_L_37
+                           A  1220    ;  210			case 2:
+010D                       A  1221    _6_L_27:
+                           A  1222    .line 210
+                           A  1223    ;  211				if(_slowBlink==0x01){
+                           A  1224    .line 211
+010D A6 44 01              A  1225    	CP	__slowBlink,#1
+0110 EB 06                 A  1226    	JR	NE,_6_L_29
+                           A  1227    ;  212					PBOUT &= 0xFD;
+                           A  1228    .line 212
+0112 59FD0FD7              A  1229    	ANDX	4055,#253
+                           A  1230    ;  213					}
+                           A  1231    ;  214					else{
+                           A  1232    .line 214
+0116 8B 1B                 A  1233    	JR	_6_L_37
+0118                       A  1234    _6_L_29:
+                           A  1235    ;  215						PBOUT |= ~0xFD;
+                           A  1236    .line 215
+0118 49020FD7              A  1237    	ORX	4055,#2
+                           A  1238    ;  216						}
+                           A  1239    ;  217				break;
+                           A  1240    .line 217
+011C 8B 15                 A  1241    	JR	_6_L_37
+                           A  1242    ;  218			case 3:
+011E                       A  1243    _6_L_31:
+                           A  1244    .line 218
+                           A  1245    ;  219				if(_fastBlink==0x01){
+                           A  1246    .line 219
+011E A6 45 01              A  1247    	CP	__fastBlink,#1
+0121 EB 06                 A  1248    	JR	NE,_6_L_33
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 28-May-15     23:22:43     page:  25
+
+
+PC     Object              I  Line    Source lampdriver.src
+                           A  1249    ;  220					PBOUT &= 0xFD;
+                           A  1250    .line 220
+0123 59FD0FD7              A  1251    	ANDX	4055,#253
+                           A  1252    ;  221					}
+                           A  1253    ;  222					else{
+                           A  1254    .line 222
+0127 8B 0A                 A  1255    	JR	_6_L_37
+0129                       A  1256    _6_L_33:
+                           A  1257    ;  223						PBOUT |= ~0xFD;
+                           A  1258    .line 223
+0129 49020FD7              A  1259    	ORX	4055,#2
+                           A  1260    ;  224						}
+                           A  1261    ;  225				break;
+                           A  1262    .line 225
+012D 8B 04                 A  1263    	JR	_6_L_37
+                           A  1264    ;  226			default:
+012F                       A  1265    _6_L_35:
+                           A  1266    .line 226
+                           A  1267    ;  227				PBOUT |= ~0xFD; //off
+                           A  1268    .line 227
+012F 49020FD7              A  1269    	ORX	4055,#2
+                           A  1270    ;  228			}
+                           A  1271    ;  229	}
+0133                       A  1272    _6_L_37:
+                           A  1273    .line 229
+0133 AF                    A  1274    	RET	
+                           A  1275    .endfunc "DiagLEDControl",229,"_DiagLEDControl"
+                           A  1276    	SEGMENT ROM_DATA
+                           A  1277    
+                           A  1278    
+                           A  1279    ;**************************** _RawUpSwitch ****
+                           A  1280    ;Name                         Addr/Register   S
+                           A  1281    ;temp                                    R0    
+                           A  1282    
+                           A  1283    
+                           A  1284    ; Aggregate Stack Size: 0 (words)
+                           A  1285    
+                           A  1286    
+                           A  1287    	.FRAME _n_RawUpSwitch,?_n_RawUpSwitch,RDATA
+                           A  1288    	SEGMENT pdriver_TEXT
+                           A  1289    ;  230	
+                           A  1290    ;  231	
+                           A  1291    ;  232	/*
+                           A  1292    ;  233				switch(_diagMode){
+                           A  1293    ;  234					case 1:
+                           A  1294    ;  235						PBOUT &= 0xED; //on
+                           A  1295    ;  236						break;
+                           A  1296    ;  237					case 2:
+                           A  1297    ;  238						if(_slowBlink==0x01
+                           A  1298    ;  239							PBOUT &= 0xED;
+                           A  1299    ;  240							}
+                           A  1300    ;  241							else{
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 28-May-15     23:22:43     page:  26
+
+
+PC     Object              I  Line    Source lampdriver.src
+                           A  1301    ;  242								PBOUT |= ~0
+                           A  1302    ;  243								}
+                           A  1303    ;  244						break;
+                           A  1304    ;  245					case 3:
+                           A  1305    ;  246						if(_fastBlink==0x01
+                           A  1306    ;  247							PBOUT &= 0xED;
+                           A  1307    ;  248							}
+                           A  1308    ;  249							else{
+                           A  1309    ;  250								PBOUT |= ~0
+                           A  1310    ;  251								}
+                           A  1311    ;  252						break;
+                           A  1312    ;  253					default:
+                           A  1313    ;  254						PBOUT |= ~0xED; //o
+                           A  1314    ;  255					}
+                           A  1315    ;  256	*/
+                           A  1316    ;  257	
+                           A  1317    ;  258	
+                           A  1318    ;  259		/*
+                           A  1319    ;  260		bool_t DebounceSwitch2()
+                           A  1320    ;  261	{
+                           A  1321    ;  262	    static uint16_t State = 0; // Curre
+                           A  1322    ;  263	    State=(State<<1) | !RawKeyPressed()
+                           A  1323    ;  264	    if(State==0xf000)return TRUE;
+                           A  1324    ;  265	    return FALSE; 
+                           A  1325    ;  266	}
+                           A  1326    ;  267	*/
+                           A  1327    ;  268	BOOL RawUpSwitch(){
+0134                       A  1328    _RawUpSwitch:
+                           A  1329    .define "_RawUpSwitch"
+                           A  1330    .value _RawUpSwitch
+                           A  1331    .class 2
+                           A  1332    .type 76
+                           A  1333    .endef
+                           A  1334    .begfunc "RawUpSwitch",268,"_RawUpSwitch"
+                           A  1335    .define "temp"
+                           A  1336    .class 4
+                           A  1337    .reg 1
+                           A  1338    .type 2
+                           A  1339    .endef
+                           A  1340    ;  269		char temp;
+                           A  1341    ;  270		temp = PCIN;
+                           A  1342    .line 270
+                           A  1343    ;  271		return ((temp & 0x08) == 0x00);
+                           A  1344    .line 271
+0134 79080FDA              A  1345    	TMX	4058,#8
+0138 EB 04                 A  1346    	JR	NE,L__22
+013A 1C01                  A  1347    	LD	R1,#1
+013C 8B 02                 A  1348    	JR	L__23
+013E                       A  1349    L__22:
+013E B0E1                  A  1350    	CLR	R1
+0140                       A  1351    L__23:
+0140 E4E1E0                A  1352    	LD	R0,R1
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 28-May-15     23:22:43     page:  27
+
+
+PC     Object              I  Line    Source lampdriver.src
+                           A  1353    ;  272	}
+                           A  1354    .line 272
+0143 AF                    A  1355    	RET	
+                           A  1356    .endfunc "RawUpSwitch",272,"_RawUpSwitch"
+                           A  1357    	SEGMENT ROM_DATA
+                           A  1358    
+                           A  1359    
+                           A  1360    ;**************************** _DebounceUpSwitch
+                           A  1361    ;Name                         Addr/Register   S
+                           A  1362    ;_1upState                           STATIC    
+                           A  1363    ;temp42                                  R0    
+                           A  1364    
+                           A  1365    
+                           A  1366    ; Aggregate Stack Size: 0 (words)
+                           A  1367    
+                           A  1368    
+                           A  1369    	.FRAME _n_DebounceUpSwitch,?_n_DebounceUpSw
+                           A  1370    	.FCALL _n_RawUpSwitch
+                           A  1371    	SEGMENT NEAR_DATA
+0005                       A  1372    _1upState:
+0005 0000                  A  1373    	DW	0
+                           A  1374    	SEGMENT pdriver_TEXT
+                           A  1375    ;  273	
+                           A  1376    ;  274	BOOL DebounceUpSwitch(){
+0144                       A  1377    _DebounceUpSwitch:
+                           A  1378    .define "_DebounceUpSwitch"
+                           A  1379    .value _DebounceUpSwitch
+                           A  1380    .class 2
+                           A  1381    .type 76
+                           A  1382    .endef
+                           A  1383    .begfunc "DebounceUpSwitch",274,"_DebounceUpSwi
+                           A  1384    ;  275		static UINT16 upState = 0; //curren
+                           A  1385    .define "upState"
+                           A  1386    .alias "_1upState"
+                           A  1387    .class 133
+                           A  1388    .value _1upState
+                           A  1389    .type 13
+                           A  1390    .endef
+                           A  1391    ;  276		upState=(upState<<1) | !RawUpSwitch
+                           A  1392    .line 276
+0144 D6 0134               A  1393    	CALL	_RawUpSwitch
+0147 4200                  A  1394    	OR	R0,R0
+0149 EB 06                 A  1395    	JR	NE,_8_L_40
+014B B0E0                  A  1396    	CLR	R0
+014D 1C01                  A  1397    	LD	R1,#1
+014F 8B 04                 A  1398    	JR	_8_L_41
+0151                       A  1399    _8_L_40:
+0151 B0E0                  A  1400    	CLR	R0
+0153 B0E1                  A  1401    	CLR	R1
+0155                       A  1402    _8_L_41:
+0155 04 06 06              A  1403    	ADD	_1upState+1,_1upState+1
+0158 14 05 05              A  1404    	ADC	_1upState,_1upState
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 28-May-15     23:22:43     page:  28
+
+
+PC     Object              I  Line    Source lampdriver.src
+015B 44E1 06               A  1405    	OR	_1upState+1,R1
+015E 44E0 05               A  1406    	OR	_1upState,R0
+0161 46 05 E0              A  1407    	OR	_1upState,#224
+                           A  1408    ;  277		if(upState==0xf000) return TRUE;
+                           A  1409    .line 277
+0164 A6 06 00              A  1410    	CP	_1upState+1,#0
+0167 1FA6 05 F0            A  1411    	CPC	_1upState,#240
+016B EB 04                 A  1412    	JR	NE,_8_L_44
+016D 0C01                  A  1413    	LD	R0,#1
+016F 8B 02                 A  1414    	JR	_8_L_45
+0171                       A  1415    _8_L_44:
+                           A  1416    ;  278		return FALSE;
+                           A  1417    .line 278
+0171 B0E0                  A  1418    	CLR	R0
+                           A  1419    ;  279	}
+0173                       A  1420    _8_L_45:
+                           A  1421    .line 279
+0173 AF                    A  1422    	RET	
+                           A  1423    .endfunc "DebounceUpSwitch",279,"_DebounceUpSwi
+                           A  1424    	SEGMENT ROM_DATA
+                           A  1425    ;	Jump Table for Switch Statement at line 291
+0062                       A  1426    L__32:
+0062 0003                  A  1427    	DW	3
+0064 0001                  A  1428    	DW	1
+0066 0194                  A  1429    	DW	_9_L_49
+0068 0002                  A  1430    	DW	2
+006A 019E                  A  1431    	DW	_9_L_50
+006C 0003                  A  1432    	DW	3
+006E 01A8                  A  1433    	DW	_9_L_51
+0070 01B2                  A  1434    	DW	_9_L_52
+                           A  1435    
+                           A  1436    
+                           A  1437    ;**************************** _lampISR ********
+                           A  1438    ;Name                         Addr/Register   S
+                           A  1439    ;_SetLampAll                         IMPORT  --
+                           A  1440    ;__diagMode                          STATIC    
+                           A  1441    
+                           A  1442    
+                           A  1443    ; Aggregate Stack Size: 0 (words)
+                           A  1444    
+                           A  1445    
+                           A  1446    	.FRAME _n_lampISR,?_n_lampISR,RDATA
+                           A  1447    	.FCALL _n_DebounceUpSwitch
+                           A  1448    	.FCALL _n_SetLampAll
+                           A  1449    	SEGMENT pdriver_TEXT
+                           A  1450    ;  280	
+                           A  1451    ;  281	void lampISR()
+                           A  1452    ;  282	{
+0174                       A  1453    _lampISR:
+                           A  1454    .define "_lampISR"
+                           A  1455    .value _lampISR
+                           A  1456    .class 2
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 28-May-15     23:22:43     page:  29
+
+
+PC     Object              I  Line    Source lampdriver.src
+                           A  1457    .type 65
+                           A  1458    .endef
+                           A  1459    .begfunc "lampISR",282,"_lampISR"
+                           A  1460    ;  283		
+                           A  1461    ;  284		if(DebounceUpSwitch()){
+                           A  1462    .line 284
+0174 D6 0144               A  1463    	CALL	_DebounceUpSwitch
+0177 4200                  A  1464    	OR	R0,R0
+0179 6B 3E                 A  1465    	JR	Z,_9_L_55
+                           A  1466    ;  285			//pressed, so increment where w
+                           A  1467    ;  286			if(_diagMode>4)
+                           A  1468    .line 286
+017B A6 02 04              A  1469    	CP	__diagMode,#4
+017E 3B 04                 A  1470    	JR	ULE,_9_L_48
+                           A  1471    ;  287				_diagMode = 0;
+                           A  1472    .line 287
+0180 B0 02                 A  1473    	CLR	__diagMode
+                           A  1474    ;  288			else
+                           A  1475    .line 288
+0182 8B 02                 A  1476    	JR	_9_L_53
+0184                       A  1477    _9_L_48:
+                           A  1478    ;  289				_diagMode++;
+                           A  1479    .line 289
+0184 20 02                 A  1480    	INC	__diagMode
+0186                       A  1481    _9_L_53:
+                           A  1482    ;  290			
+                           A  1483    ;  291			switch(_diagMode){
+                           A  1484    .line 291
+0186 E4 02 E1              A  1485    	LD	R1,__diagMode
+0189 B0E0                  A  1486    	CLR	R0
+018B 2C 00                 A  1487    	LD	R2,#high(L__32)
+018D 3C 62                 A  1488    	LD	R3,#low(L__32)
+018F D6 0000               A  1489    	CALL	__b_ucase
+0192 C4E0                  A  1490    	JP	@RR0
+                           A  1491    ;  292				case 1:
+0194                       A  1492    _9_L_49:
+                           A  1493    .line 292
+                           A  1494    ;  293					SetLampAll(1);
+                           A  1495    .line 293
+0194 B0 00                 A  1496    	CLR	_0_SetLampAll
+0196 E6 01 01              A  1497    	LD	_0_SetLampAll+1,#1
+0199 D6 004A               A  1498    	CALL	_SetLampAll
+                           A  1499    ;  294					break;
+                           A  1500    .line 294
+019C 8B 1B                 A  1501    	JR	_9_L_55
+                           A  1502    ;  295				case 2:
+019E                       A  1503    _9_L_50:
+                           A  1504    .line 295
+                           A  1505    ;  296					SetLampAll(2);
+                           A  1506    .line 296
+019E B0 00                 A  1507    	CLR	_0_SetLampAll
+01A0 E6 01 02              A  1508    	LD	_0_SetLampAll+1,#2
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 28-May-15     23:22:43     page:  30
+
+
+PC     Object              I  Line    Source lampdriver.src
+01A3 D6 004A               A  1509    	CALL	_SetLampAll
+                           A  1510    ;  297					break;
+                           A  1511    .line 297
+01A6 8B 11                 A  1512    	JR	_9_L_55
+                           A  1513    ;  298				case 3:
+01A8                       A  1514    _9_L_51:
+                           A  1515    .line 298
+                           A  1516    ;  299					SetLampAll(3);
+                           A  1517    .line 299
+01A8 B0 00                 A  1518    	CLR	_0_SetLampAll
+01AA E6 01 03              A  1519    	LD	_0_SetLampAll+1,#3
+01AD D6 004A               A  1520    	CALL	_SetLampAll
+                           A  1521    ;  300					break;
+                           A  1522    .line 300
+01B0 8B 07                 A  1523    	JR	_9_L_55
+                           A  1524    ;  301				default:
+01B2                       A  1525    _9_L_52:
+                           A  1526    .line 301
+                           A  1527    ;  302					SetLampAll(0);
+                           A  1528    .line 302
+01B2 B0 00                 A  1529    	CLR	_0_SetLampAll
+01B4 B0 01                 A  1530    	CLR	_0_SetLampAll+1
+01B6 D6 004A               A  1531    	CALL	_SetLampAll
+                           A  1532    ;  303				}
+                           A  1533    ;  304		}
+                           A  1534    ;  305	}
+01B9                       A  1535    _9_L_55:
+                           A  1536    .line 305
+01B9 AF                    A  1537    	RET	
+                           A  1538    .endfunc "lampISR",305,"_lampISR"
+                           A  1539    	SEGMENT ROM_DATA
+                           A  1540    ;	Jump Table for Switch Statement at line 315
+0072                       A  1541    L__36:
+0072 0004                  A  1542    	DW	4
+0074 0000                  A  1543    	DW	0
+0076 01D6                  A  1544    	DW	_10_L_57
+0078 0001                  A  1545    	DW	1
+007A 01DC                  A  1546    	DW	_10_L_58
+007C 0002                  A  1547    	DW	2
+007E 01E3                  A  1548    	DW	_10_L_59
+0080 0003                  A  1549    	DW	3
+0082 01EA                  A  1550    	DW	_10_L_60
+0084 01F0                  A  1551    	DW	_10_L_63
+                           A  1552    
+                           A  1553    
+                           A  1554    ;**************************** _blinkISR *******
+                           A  1555    ;Name                         Addr/Register   S
+                           A  1556    ;__fastBlink                         STATIC    
+                           A  1557    ;__slowBlink                         STATIC    
+                           A  1558    ;__timerControl                      STATIC    
+                           A  1559    
+                           A  1560    
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 28-May-15     23:22:43     page:  31
+
+
+PC     Object              I  Line    Source lampdriver.src
+                           A  1561    ; Aggregate Stack Size: 0 (words)
+                           A  1562    
+                           A  1563    
+                           A  1564    	.FRAME _n_blinkISR,?_n_blinkISR,RDATA
+                           A  1565    	SEGMENT pdriver_TEXT
+                           A  1566    ;  306		
+                           A  1567    ;  307		
+                           A  1568    ;  308	
+                           A  1569    ;  309	
+                           A  1570    ;  310	void blinkISR(){
+01BA                       A  1571    _blinkISR:
+                           A  1572    .define "_blinkISR"
+                           A  1573    .value _blinkISR
+                           A  1574    .class 2
+                           A  1575    .type 65
+                           A  1576    .endef
+                           A  1577    .begfunc "blinkISR",310,"_blinkISR"
+                           A  1578    ;  311		if(_timerControl>3){
+                           A  1579    .line 311
+01BA A6 47 03              A  1580    	CP	__timerControl+1,#3
+01BD 1FA6 46 00            A  1581    	CPC	__timerControl,#-0
+01C1 2B 04                 A  1582    	JR	LE,_10_L_61
+                           A  1583    ;  312			_timerControl = 0;
+                           A  1584    .line 312
+01C3 B0 46                 A  1585    	CLR	__timerControl
+01C5 B0 47                 A  1586    	CLR	__timerControl+1
+                           A  1587    ;  313		}
+01C7                       A  1588    _10_L_61:
+                           A  1589    .line 313
+                           A  1590    ;  314		
+                           A  1591    ;  315		switch(_timerControl){
+                           A  1592    .line 315
+01C7 E4 46 E0              A  1593    	LD	R0,__timerControl
+01CA E4 47 E1              A  1594    	LD	R1,__timerControl+1
+01CD 2C 00                 A  1595    	LD	R2,#high(L__36)
+01CF 3C 72                 A  1596    	LD	R3,#low(L__36)
+01D1 D6 0000               A  1597    	CALL	__b_ucase
+01D4 C4E0                  A  1598    	JP	@RR0
+                           A  1599    ;  316			case 0:
+01D6                       A  1600    _10_L_57:
+                           A  1601    .line 316
+                           A  1602    ;  317				_slowBlink=0x00;
+                           A  1603    .line 317
+01D6 B0 44                 A  1604    	CLR	__slowBlink
+                           A  1605    ;  318				_fastBlink =0x00;
+                           A  1606    .line 318
+01D8 B0 45                 A  1607    	CLR	__fastBlink
+                           A  1608    ;  319				break;
+                           A  1609    .line 319
+01DA 8B 14                 A  1610    	JR	_10_L_63
+                           A  1611    ;  320			case 1:
+01DC                       A  1612    _10_L_58:
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 28-May-15     23:22:43     page:  32
+
+
+PC     Object              I  Line    Source lampdriver.src
+                           A  1613    .line 320
+                           A  1614    ;  321				_slowBlink = 0x00;
+                           A  1615    .line 321
+01DC B0 44                 A  1616    	CLR	__slowBlink
+                           A  1617    ;  322				_fastBlink=0x01;
+                           A  1618    .line 322
+01DE E6 45 01              A  1619    	LD	__fastBlink,#1
+                           A  1620    ;  323				break;
+                           A  1621    .line 323
+01E1 8B 0D                 A  1622    	JR	_10_L_63
+                           A  1623    ;  324			case 2:
+01E3                       A  1624    _10_L_59:
+                           A  1625    .line 324
+                           A  1626    ;  325				_slowBlink = 0x01;
+                           A  1627    .line 325
+01E3 E6 44 01              A  1628    	LD	__slowBlink,#1
+                           A  1629    ;  326				_fastBlink = 0x00;
+                           A  1630    .line 326
+01E6 B0 45                 A  1631    	CLR	__fastBlink
+                           A  1632    ;  327				break;
+                           A  1633    .line 327
+01E8 8B 06                 A  1634    	JR	_10_L_63
+                           A  1635    ;  328			case 3:
+01EA                       A  1636    _10_L_60:
+                           A  1637    .line 328
+                           A  1638    ;  329				_slowBlink = 0x01;
+                           A  1639    .line 329
+01EA E6 44 01              A  1640    	LD	__slowBlink,#1
+                           A  1641    ;  330				_fastBlink = 0x01;
+                           A  1642    .line 330
+01ED E6 45 01              A  1643    	LD	__fastBlink,#1
+                           A  1644    ;  331				break;
+                           A  1645    ;  332			}
+01F0                       A  1646    _10_L_63:
+                           A  1647    .line 332
+                           A  1648    ;  333			
+                           A  1649    ;  334			_timerControl++;
+                           A  1650    .line 334
+01F0 06 47 01              A  1651    	ADD	__timerControl+1,#1
+01F3 16 46 00              A  1652    	ADC	__timerControl,#0
+                           A  1653    ;  335		}
+                           A  1654    .line 335
+01F6 AF                    A  1655    	RET	
+                           A  1656    .endfunc "blinkISR",335,"_blinkISR"
+                           A  1657    	SEGMENT ROM_DATA
+                           A  1658    
+                           A  1659    
+                           A  1660    ;**************************** _processMessage *
+                           A  1661    ;Name                         Addr/Register   S
+                           A  1662    ;_lastDataReceived                   STATIC    
+                           A  1663    ;__lightControl                      STATIC    
+                           A  1664    ;__dataIn                            STATIC    
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 28-May-15     23:22:43     page:  33
+
+
+PC     Object              I  Line    Source lampdriver.src
+                           A  1665    ;lampValue                              RR2    
+                           A  1666    ;lampAddress                            RR0    
+                           A  1667    ;dataIn                        _1_processMessag
+                           A  1668    ;data                                    R4    
+                           A  1669    
+                           A  1670    
+                           A  1671    ; Aggregate Stack Size: 0 (words)
+                           A  1672    
+                           A  1673    
+                           A  1674    	.FRAME _n_processMessage,?_n_processMessage
+0000                       A  1675    _0_processMessage:
+0000                       A  1676    	DS	1
+0001                       A  1677    _1_processMessage:
+0001                       A  1678    	DS	4*1
+                           A  1679    	SEGMENT pdriver_TEXT
+                           A  1680    ;  336		
+                           A  1681    ;  337		
+                           A  1682    ;  338	//Processes the I2C message
+                           A  1683    ;  339	void processMessage(unsigned char data,
+01F7                       A  1684    _processMessage:
+                           A  1685    .define "_processMessage"
+                           A  1686    .value _processMessage
+                           A  1687    .class 2
+                           A  1688    .type 65
+                           A  1689    .endef
+                           A  1690    .begfunc "processMessage",339,"_processMessage"
+                           A  1691    .line 339
+01F7 E4 00 E4              A  1692    	LD	R4,_0_processMessage
+                           A  1693    .define "data"
+                           A  1694    .class 17
+                           A  1695    .reg 5
+                           A  1696    .type 12
+                           A  1697    .endef
+                           A  1698    .define "dataIn"
+                           A  1699    .class 23
+                           A  1700    .value _1_processMessage
+                           A  1701    .alias "_1_processMessage"
+                           A  1702    .type 5
+                           A  1703    .endef
+                           A  1704    .define "lampAddress"
+                           A  1705    .class 4
+                           A  1706    .reg 17
+                           A  1707    .type 3
+                           A  1708    .endef
+                           A  1709    .define "lampValue"
+                           A  1710    .class 4
+                           A  1711    .reg 18
+                           A  1712    .type 3
+                           A  1713    .endef
+                           A  1714    ;  340		//two 6 bits are the lamp
+                           A  1715    ;  341		int lampAddress = 0x3f & (data>>2);
+                           A  1716    .line 341
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 28-May-15     23:22:43     page:  34
+
+
+PC     Object              I  Line    Source lampdriver.src
+01FA E4E4E1                A  1717    	LD	R1,R4
+01FD 1FC0E1                A  1718    	SRL	R1
+0200 1FC0E1                A  1719    	SRL	R1
+0203 56E13F                A  1720    	AND	R1,#63
+0206 B0E0                  A  1721    	CLR	R0
+                           A  1722    ;  342		int lampValue = 0x03 & data;
+                           A  1723    .line 342
+0208 E4E4E3                A  1724    	LD	R3,R4
+020B 56E303                A  1725    	AND	R3,#3
+020E B0E2                  A  1726    	CLR	R2
+                           A  1727    ;  343			
+                           A  1728    ;  344		_dataIn = dataIn;
+                           A  1729    .line 344
+0210 E4 01 00              A  1730    	LD	__dataIn,_1_processMessage
+0213 E4 02 01              A  1731    	LD	__dataIn+1,_1_processMessage+1
+0216 E4 03 02              A  1732    	LD	__dataIn+2,_1_processMessage+2
+0219 E4 04 03              A  1733    	LD	__dataIn+3,_1_processMessage+3
+                           A  1734    ;  345		_lightControl[lampAddress]=lampValu
+                           A  1735    .line 345
+021C 5C 04                 A  1736    	LD	R5,#__lightControl
+021E 0251                  A  1737    	ADD	R5,R1
+0220 F353                  A  1738    	LD	@R5,R3
+                           A  1739    ;  346		lastDataReceived = data;
+                           A  1740    .line 346
+0222 E4E4 4A               A  1741    	LD	_lastDataReceived,R4
+                           A  1742    ;  347		return;
+                           A  1743    ;  348	}
+                           A  1744    .line 348
+0225 AF                    A  1745    	RET	
+                           A  1746    .endfunc "processMessage",348,"_processMessage"
+                           A  1747    	SEGMENT ROM_DATA
+                           A  1748    
+                           A  1749    
+                           A  1750    ;**************************** _pause **********
+                           A  1751    ;Name                         Addr/Register   S
+                           A  1752    ;count                              _2count    
+                           A  1753    
+                           A  1754    
+                           A  1755    ; Aggregate Stack Size: 0 (words)
+                           A  1756    
+                           A  1757    
+                           A  1758    	.FRAME _n_pause,?_n_pause,RDATA
+0000                       A  1759    _2count:
+0000                       A  1760    	DS	4*1
+                           A  1761    	SEGMENT pdriver_TEXT
+                           A  1762    ;  349	
+                           A  1763    ;  350	static void pause( void )
+                           A  1764    ;  351	{
+0226                       A  1765    _pause:
+                           A  1766    .define "_pause"
+                           A  1767    .value _pause
+                           A  1768    .class 3
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 28-May-15     23:22:43     page:  35
+
+
+PC     Object              I  Line    Source lampdriver.src
+                           A  1769    .type 65
+                           A  1770    .endef
+                           A  1771    .begfunc "pause",351,"_pause"
+                           A  1772    .define "count"
+                           A  1773    .class 22
+                           A  1774    .value _2count
+                           A  1775    .alias "_2count"
+                           A  1776    .type 15
+                           A  1777    .endef
+                           A  1778    ;  352	   unsigned long int count = 20;//60;//
+                           A  1779    .line 352
+0226 B0 00                 A  1780    	CLR	_2count
+0228 B0 01                 A  1781    	CLR	_2count+1
+022A B0 02                 A  1782    	CLR	_2count+2
+022C E6 03 14              A  1783    	LD	_2count+3,#20
+                           A  1784    ;  353	   
+                           A  1785    ;  354	   while ( count > 0 )
+                           A  1786    .line 354
+022F 8B 0C                 A  1787    	JR	_12_L_66
+0231                       A  1788    _12_L_67:
+                           A  1789    ;  355	      count -= 1;
+                           A  1790    .line 355
+0231 26 03 01              A  1791    	SUB	_2count+3,#1
+0234 36 02 00              A  1792    	SBC	_2count+2,#0
+0237 36 01 00              A  1793    	SBC	_2count+1,#0
+023A 36 00 00              A  1794    	SBC	_2count,#0
+023D                       A  1795    _12_L_66:
+                           A  1796    .line 354
+023D A6 03 00              A  1797    	CP	_2count+3,#0
+0240 1FA6 02 00            A  1798    	CPC	_2count+2,#-0
+0244 1FA6 01 00            A  1799    	CPC	_2count+1,#-0
+0248 1FA6 00 00            A  1800    	CPC	_2count,#-0
+024C BB E3                 A  1801    	JR	UGT,_12_L_67
+                           A  1802    ;  356	      
+                           A  1803    ;  357	   return;
+                           A  1804    ;  358	}
+                           A  1805    .line 358
+024E AF                    A  1806    	RET	
+                           A  1807    .endfunc "pause",358,"_pause"
+                           A  1808    	XREF _InitializeI2C:ROM
+                           A  1809    	XREF __b_ucase:ROM
+                           A  1810    	XDEF _1_processMessage
+                           A  1811    	XDEF _0_processMessage
+                           A  1812    	XDEF _processMessage
+                           A  1813    	XDEF _blinkISR
+                           A  1814    	XDEF _lampISR
+                           A  1815    	XDEF _DebounceUpSwitch
+                           A  1816    	XDEF _RawUpSwitch
+                           A  1817    	XDEF _0_DiagLEDControl
+                           A  1818    	XDEF _DiagLEDControl
+                           A  1819    	XDEF _LampLoop
+                           A  1820    	XDEF _1_SetLamp
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 28-May-15     23:22:43     page:  36
+
+
+PC     Object              I  Line    Source lampdriver.src
+                           A  1821    	XDEF _0_SetLamp
+                           A  1822    	XDEF _SetLamp
+                           A  1823    	XDEF _0_SetLampAll
+                           A  1824    	XDEF _SetLampAll
+                           A  1825    	XDEF _Initialize
+                           A  1826    	XDEF _main
+                           A  1827    	XDEF _lastDataReceived
+                           A  1828    	XDEF _ledIsOn
+                           A  1829    	XDEF _BLINKOFF
+                           A  1830    	XDEF _BLINKON
+                           A  1831    	XDEF __lampCounter
+                           A  1832    	XDEF __timerControl
+                           A  1833    	XDEF __diagMode
+                           A  1834    	XDEF __lmp
+                           A  1835    	XDEF __strobe
+                           A  1836    	XDEF __fastBlink
+                           A  1837    	XDEF __slowBlink
+                           A  1838    	XDEF __lightControl
+                           A  1839    	XDEF __dataIn
+                           A  1840    	XDEF __ldu_map
+                           A  1841    	END
+
+
+Errors: 0
+Warnings: 0
+Lines Assembled: 1842

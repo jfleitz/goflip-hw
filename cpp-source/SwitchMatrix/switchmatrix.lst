@@ -1,0 +1,1700 @@
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 30-Aug-15     22:09:47     page:   1
+
+
+PC     Object              I  Line    Source 
+                           A     1    ; Z8 Encore! ANSI C Compiler Release 3.64
+                           A     2    ; -nofastcall -const=ROM -listinc -model=S -opt
+                           A     3    ; -noreduceopt -debug -norevaa -peephole -local
+                           A     4    ; -alias 
+                           A     5    	DEFINE hmatrix_TEXT,SPACE=ROM
+                           A     6    	FILE	".\switchmatrix.c"
+                           A     7    .debug "C"
+                           A     8    	SEGMENT ROM_DATA
+0000                       A     9    _NOOUTPUT:
+0000 00                    A    10    	DB	0
+                           A    11    .define "NOOUTPUT"
+                           A    12    .alias "_NOOUTPUT"
+                           A    13    .class 52
+                           A    14    .value _NOOUTPUT
+                           A    15    .type 12
+                           A    16    .endef
+                           A    17    	SEGMENT hmatrix_TEXT
+                           A    18    ;    1	/*!\file gpio.h
+                           A    19    ;    2	 * \brief Definition file for the Z8 En
+                           A    20    ;    3	 *
+                           A    21    ;    4	 *  This file contains header informati
+                           A    22    ;    5	 *  driver implementations for Z8 Encor
+                           A    23    ;    6	 *
+                           A    24    ;    7	 *  This source file uses Doxygen-style
+                           A    25    ;    8	 *  automatically.
+                           A    26    ;    9	 *
+                           A    27    ;   10	 *  Copyright (C) 1999-2004 by  ZiLOG, 
+                           A    28    ;   11	 *  All Rights Reserved.
+                           A    29    ;   12	 */
+                           A    30    ;   13	
+                           A    31    ;   14	#pragma once // Include this file only 
+                           A    32    ;   15	#ifndef _GPIO_H_
+                           A    33    ;   16	#define _GPIO_H_
+                           A    34    ;   17	
+                           A    35    ;   18	#include <defines.h>
+                           A    36    ;   19	
+                           A    37    ;   20	
+                           A    38    ;   21	#ifdef _DEBUG
+                           A    39    ;   22	#define GPIOPARAMETER_CHECKING			                           A    40    ;   23	#endif
+                           A    41    ;   24	
+                           A    42    ;   25	
+                           A    43    ;   26	/*! The GPIO ports available for partic
+                           A    44    ;   27	#if (defined(EZ8_PORT4) && !defined(_Z8
+                           A    45    ;   28	#define PORTD
+                           A    46    ;   29	#endif
+                           A    47    ;   30	
+                           A    48    ;   31	#if defined(EZ8_PORT8)||defined(EZ8_POR
+                           A    49    ;   32	#define PORTE
+                           A    50    ;   33	#endif
+                           A    51    ;   34	#if defined(EZ8_PORT8)
+                           A    52    ;   35	#define PORTF
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 30-Aug-15     22:09:47     page:   2
+
+
+PC     Object              I  Line    Source switchmatrix.src
+                           A    53    ;   36	#define PORTG
+                           A    54    ;   37	#define PORTH
+                           A    55    ;   38	#endif
+                           A    56    ;   39	
+                           A    57    ;   40	#define GPIOERR_SUCCESS		(CHAR)0		                           A    58    ;   41	#define GPIOERR_INVALIDPINS	(CHAR)1		                           A    59    ;   42	#define GPIOERR_FAILURE		(CHAR)(-1)	                           A    60    ;   43	
+                           A    61    ;   44	
+                           A    62    ;   45	/*! all the ports bits are set to input
+                           A    63    ;   46	#define PORTA_ADDRVAL_DEF   0x01
+                           A    64    ;   47	#define PORTA_CTLVAL_DEF    0xFF
+                           A    65    ;   48	#define PORTA_OUTVAL_DEF    0x00
+                           A    66    ;   49	
+                           A    67    ;   50	#define PORTB_ADDRVAL_DEF   0x01
+                           A    68    ;   51	#define PORTB_CTLVAL_DEF    0xFF
+                           A    69    ;   52	#define PORTB_OUTVAL_DEF    0x00
+                           A    70    ;   53	
+                           A    71    ;   54	#define PORTC_ADDRVAL_DEF   0x01
+                           A    72    ;   55	#define PORTC_CTLVAL_DEF    0xFF
+                           A    73    ;   56	#define PORTC_OUTVAL_DEF    0x00
+                           A    74    ;   57	
+                           A    75    ;   58	#ifdef PORTD
+                           A    76    ;   59	#define PORTD_ADDRVAL_DEF   0x01
+                           A    77    ;   60	#define PORTD_CTLVAL_DEF    0xFF
+                           A    78    ;   61	#define PORTD_OUTVAL_DEF    0x00
+                           A    79    ;   62	#endif
+                           A    80    ;   63	
+                           A    81    ;   64	#ifdef PORTE
+                           A    82    ;   65	#define PORTE_ADDRVAL_DEF   0x01
+                           A    83    ;   66	#define PORTE_CTLVAL_DEF    0xFF
+                           A    84    ;   67	#define PORTE_OUTVAL_DEF    0x00
+                           A    85    ;   68	#endif
+                           A    86    ;   69	
+                           A    87    ;   70	#ifdef PORTF
+                           A    88    ;   71	#define PORTF_ADDRVAL_DEF   0x01
+                           A    89    ;   72	#define PORTF_CTLVAL_DEF    0xFF
+                           A    90    ;   73	#define PORTF_OUTVAL_DEF    0x00
+                           A    91    ;   74	#endif
+                           A    92    ;   75	
+                           A    93    ;   76	#ifdef PORTG
+                           A    94    ;   77	#define PORTG_ADDRVAL_DEF   0x01
+                           A    95    ;   78	#define PORTG_CTLVAL_DEF    0xFF
+                           A    96    ;   79	#define PORTG_OUTVAL_DEF    0x00
+                           A    97    ;   80	#endif
+                           A    98    ;   81	
+                           A    99    ;   82	#ifdef PORTH
+                           A   100    ;   83	#define PORTH_ADDRVAL_DEF   0x01
+                           A   101    ;   84	#define PORTH_CTLVAL_DEF    0xFF
+                           A   102    ;   85	#define PORTH_OUTVAL_DEF    0x00
+                           A   103    ;   86	#endif
+                           A   104    ;   87	
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 30-Aug-15     22:09:47     page:   3
+
+
+PC     Object              I  Line    Source switchmatrix.src
+                           A   105    ;   88	
+                           A   106    ;   89	/*! Control Register access codes used 
+                           A   107    ;   90	#define PORTADDR_NOFUNC			0x00
+                           A   108    ;   91	#define PORTADDR_DATADIR		0x01
+                           A   109    ;   92	#define PORTADDR_ALTFUNC		0x02
+                           A   110    ;   93	#if defined(_Z8FMC16) || defined(__ZSLB
+                           A   111    ;   94	#define PORTADDR_ALTFUNC0		0x02
+                           A   112    ;   95	#endif
+                           A   113    ;   96	#define PORTADDR_OPENDRAIN		0x03
+                           A   114    ;   97	#define PORTADDR_HIGHDRIVE		0x04
+                           A   115    ;   98	#define PORTADDR_STPMDREC		0x05
+                           A   116    ;   99	#if defined (_Z8F1680)||defined(_Z8F04)
+                           A   117    ;  100	#define PORTADDR_PULLUP		0x06
+                           A   118    ;  101	#endif
+                           A   119    ;  102	#if defined (_Z8F1680)||defined(_Z8F04)
+                           A   120    ;  103	#define PORTADDR_ALTFUNCSET1	0x07
+                           A   121    ;  104	#define PORTADDR_ALTFUNCSET2	0x08
+                           A   122    ;  105	#endif
+                           A   123    ;  106	#if defined(_Z8FMC16) || defined(__ZSLB
+                           A   124    ;  107	#define PORTADDR_ALTFUNC1		0x07
+                           A   125    ;  108	#define PORTADDR_IRQES			0x08
+                           A   126    ;  109	#define PORTADDR_IRQPS			0x09
+                           A   127    ;  110	#endif
+                           A   128    ;  111	
+                           A   129    ;  112	
+                           A   130    ;  113	/*! Definitions for Current Drive Level
+                           A   131    ;  114	#if defined(_Z8F04A) ||defined (_Z8F168
+                           A   132    ;  115	#define DRIVELEVEL_3MA			0
+                           A   133    ;  116	#define DRIVELEVEL_7MA			1
+                           A   134    ;  117	#define DRIVELEVEL_13MA			2
+                           A   135    ;  118	#define DRIVELEVEL_20MA			3
+                           A   136    ;  119	#endif
+                           A   137    ;  120	
+                           A   138    ;  121	/*! Definitions for trigger edges */
+                           A   139    ;  122	#define EDGE_FALLING			0
+                           A   140    ;  123	#define EDGE_RISING				1
+                           A   141    ;  124	
+                           A   142    ;  125	/*! GPIO pin patterns */
+                           A   143    ;  126	#define PORTPIN_ZERO		(BYTE)0x01	                           A   144    ;  127	#define PORTPIN_ONE			(BYTE)0x02	                           A   145    ;  128	#define PORTPIN_TWO			(BYTE)0x04	                           A   146    ;  129	#define PORTPIN_THREE		(BYTE)0x08	                           A   147    ;  130	#define PORTPIN_FOUR		(BYTE)0x10	                           A   148    ;  131	#define PORTPIN_FIVE 		(BYTE)0x20	                           A   149    ;  132	#define PORTPIN_SIX			(BYTE)0x40	                           A   150    ;  133	#define PORTPIN_SEVEN		(BYTE)0x80	                           A   151    ;  134	#define PORTPIN_FOURPINS_L	(BYTE)0x0F	                           A   152    ;  135	#define PORTPIN_FOURPINS_U	(BYTE)0xF0	                           A   153    ;  136	#define PORTPIN_PATTERN_AA	(BYTE)0xAA	                           A   154    ;  137	#define PORTPIN_PATTERN_55	(BYTE)0x55	                           A   155    ;  138	#define PORTPIN_ALL			(BYTE)0xFF	                           A   156    ;  139	
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 30-Aug-15     22:09:47     page:   4
+
+
+PC     Object              I  Line    Source switchmatrix.src
+                           A   157    ;  140	/*! Port mask index used for validating
+                           A   158    ;  141	#define MSKINDEX_PORTB		(BYTE)0
+                           A   159    ;  142	#define MSKINDEX_PORTC		(BYTE)1
+                           A   160    ;  143	#define MSKINDEX_PORTD		(BYTE)2
+                           A   161    ;  144	#define MSKINDEX_PORTE		(BYTE)3
+                           A   162    ;  145	#define MSKINDEX_PORTF		(BYTE)4
+                           A   163    ;  146	#define MSKINDEX_PORTG		(BYTE)5
+                           A   164    ;  147	#define MSKINDEX_PORTH		(BYTE)6
+                           A   165    ;  148	
+                           A   166    ;  149	/*!
+                           A   167    ;  150	 * \brief The settings required to conf
+                           A   168    ;  151	 */
+                           A   169    ;  152	typedef struct
+                           A   170    ;  153	{
+                           A   171    ;  154		BYTE addr ;					//!< Th
+                           A   172    ;  155		BYTE ctl ;					//!< Th
+                           A   173    ;  156		BYTE out ;					//!< Th
+                           A   174    ;  157		BYTE in ;					//!< Th
+                           A   175    ;  158	
+                           A   176    ;  159	} PORT ;
+                           A   177    .begrec "NONAME0",4
+                           A   178    .define "addr"
+                           A   179    .value 0
+                           A   180    .class 8
+                           A   181    .type 12
+                           A   182    .endef
+                           A   183    .define "ctl"
+                           A   184    .value 1
+                           A   185    .class 8
+                           A   186    .type 12
+                           A   187    .endef
+                           A   188    .define "out"
+                           A   189    .value 2
+                           A   190    .class 8
+                           A   191    .type 12
+                           A   192    .endef
+                           A   193    .define "in"
+                           A   194    .value 3
+                           A   195    .class 8
+                           A   196    .type 12
+                           A   197    .endef
+                           A   198    .endrec "NONAME0"
+                           A   199    ;    1	/**************************************
+                           A   200    ;    2	 *  Copyright (C) 1999-2012 by  ZiLOG, 
+                           A   201    ;    3	 *  All Rights Reserved
+                           A   202    ;    4	 **************************************
+                           A   203    ;    5	 *
+                           A   204    ;    6	 * This header is for internal use only
+                           A   205    ;    7	 * an ANSI standard header file.		                           A   206    ;    8	 *
+                           A   207    ;    9	 **************************************
+                           A   208    ;   10	
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 30-Aug-15     22:09:47     page:   5
+
+
+PC     Object              I  Line    Source switchmatrix.src
+                           A   209    ;   11	#pragma once // Include this file only 
+                           A   210    ;   12	#ifndef FORMAT_H
+                           A   211    ;   13	#define FORMAT_H
+                           A   212    ;   14	
+                           A   213    ;   15	#include <zconst.h>
+                           A   214    ;   16	#include <stdarg.h>
+                           A   215    ;   17	
+                           A   216    ;   18	/* Note: 24 bits times log(2) is 7.224 
+                           A   217    ;   19	   We only need 14 if and when we suppo
+                           A   218    ;   20	#define MAXDIGITS 10
+                           A   219    ;   21	#define MINEXP -4
+                           A   220    ;   22	#define DEFAULT_PRECISION 6
+                           A   221    ;   23	
+                           A   222    ;   24	
+                           A   223    ;   25	/*  Sizes allowed for various data */
+                           A   224    ;   26	/*  For small model, we must restrict t
+                           A   225    ;   27	#if (defined(__MODEL__) && (__MODEL__ =
+                           A   226    ;   28	#define FLT_CHARS 20  // Only need FLT_
+                           A   227    ;   29	#define PTR_CHARS 11
+                           A   228    ;   30	#define INT_CHARS 9
+                           A   229    ;   31	#else
+                           A   230    ;   32	#define FLT_CHARS 127
+                           A   231    ;   33	#define PTR_CHARS 127
+                           A   232    ;   34	#define INT_CHARS 127
+                           A   233    ;   35	#endif
+                           A   234    ;   36	
+                           A   235    ;   37	/*	structures and defines for format r
+                           A   236    ;   38	/*      NOTE: Some fields in this struc
+                           A   237    ;   39	/*            known to the optimizer,  
+                           A   238    ;   40	/*            code in optimizer/genprin
+                           A   239    ;   41	struct fmt_type {
+                           A   240    ;   42	  char flags;		/* flags bit mask *
+                           A   241    ;   43	  char size;		/* size character h
+                           A   242    ;   44	  char space;		/* space character 
+                           A   243    ;   45	  char type;		/* type of argument
+                           A   244    ;   46	  char field_width;	/* field width */
+                           A   245    ;   47	  char precision;	/* precision */
+                           A   246    ;   48	  char print_leading_char;  // Initial 
+                           A   247    ;   49	     /* several print helper functions 
+                           A   248    ;   50	      * The following need to be preser
+                           A   249    ;   51	      * utilities.
+                           A   250    ;   52	      */
+                           A   251    ;   53	  far char* dest;       /* Destination 
+                           A   252    ;   54	  unsigned char print_len;
+                           A   253    ;   55	};
+                           A   254    .begrec "fmt_type",10
+                           A   255    .define "flags"
+                           A   256    .value 0
+                           A   257    .class 8
+                           A   258    .type 2
+                           A   259    .endef
+                           A   260    .define "size"
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 30-Aug-15     22:09:47     page:   6
+
+
+PC     Object              I  Line    Source switchmatrix.src
+                           A   261    .value 1
+                           A   262    .class 8
+                           A   263    .type 2
+                           A   264    .endef
+                           A   265    .define "space"
+                           A   266    .value 2
+                           A   267    .class 8
+                           A   268    .type 2
+                           A   269    .endef
+                           A   270    .define "type"
+                           A   271    .value 3
+                           A   272    .class 8
+                           A   273    .type 2
+                           A   274    .endef
+                           A   275    .define "field_width"
+                           A   276    .value 4
+                           A   277    .class 8
+                           A   278    .type 2
+                           A   279    .endef
+                           A   280    .define "precision"
+                           A   281    .value 5
+                           A   282    .class 8
+                           A   283    .type 2
+                           A   284    .endef
+                           A   285    .define "print_leading_char"
+                           A   286    .value 6
+                           A   287    .class 8
+                           A   288    .type 2
+                           A   289    .endef
+                           A   290    .define "dest"
+                           A   291    .value 7
+                           A   292    .class 8
+                           A   293    .type 162
+                           A   294    .endef
+                           A   295    .define "print_len"
+                           A   296    .value 9
+                           A   297    .class 8
+                           A   298    .type 12
+                           A   299    .endef
+                           A   300    .endrec "fmt_type"
+                           A   301    ;   56	
+                           A   302    ;   57	/* Some additional data for formatting 
+                           A   303    ;   58	
+                           A   304    ;   59	struct flt_fmt_data
+                           A   305    ;   60	{
+                           A   306    ;   61	  unsigned char pad_whole;
+                           A   307    ;   62	  unsigned char pad_pre_fract;
+                           A   308    ;   63	  unsigned char pad_post_fract;
+                           A   309    ;   64	  char * pad_at;
+                           A   310    ;   65	};
+                           A   311    .begrec "flt_fmt_data",4
+                           A   312    .define "pad_whole"
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 30-Aug-15     22:09:47     page:   7
+
+
+PC     Object              I  Line    Source switchmatrix.src
+                           A   313    .value 0
+                           A   314    .class 8
+                           A   315    .type 12
+                           A   316    .endef
+                           A   317    .define "pad_pre_fract"
+                           A   318    .value 1
+                           A   319    .class 8
+                           A   320    .type 12
+                           A   321    .endef
+                           A   322    .define "pad_post_fract"
+                           A   323    .value 2
+                           A   324    .class 8
+                           A   325    .type 12
+                           A   326    .endef
+                           A   327    .define "pad_at"
+                           A   328    .value 3
+                           A   329    .class 8
+                           A   330    .type 130
+                           A   331    .endef
+                           A   332    .endrec "flt_fmt_data"
+                           A   333    ;   66	
+                           A   334    ;   67	/* Data passed between top level driver
+                           A   335    ;   68	 * when printf's are generated inline *
+                           A   336    ;   69	struct fmt_control_data
+                           A   337    ;   70	{
+                           A   338    ;   71	  char status;		/* status, OK, ERR,
+                           A   339    ;   72	  char chr;		/* pass thru character 
+                           A   340    ;   73	};
+                           A   341    .begrec "fmt_control_data",2
+                           A   342    .define "status"
+                           A   343    .value 0
+                           A   344    .class 8
+                           A   345    .type 2
+                           A   346    .endef
+                           A   347    .define "chr"
+                           A   348    .value 1
+                           A   349    .class 8
+                           A   350    .type 2
+                           A   351    .endef
+                           A   352    .endrec "fmt_control_data"
+                           A   353    ;   74	
+                           A   354    ;   75	
+                           A   355    ;   76	struct _set_type{ char * begin; char *e
+                           A   356    .begrec "_set_type",2
+                           A   357    .define "begin"
+                           A   358    .value 0
+                           A   359    .class 8
+                           A   360    .type 130
+                           A   361    .endef
+                           A   362    .define "end"
+                           A   363    .value 1
+                           A   364    .class 8
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 30-Aug-15     22:09:47     page:   8
+
+
+PC     Object              I  Line    Source switchmatrix.src
+                           A   365    .type 130
+                           A   366    .endef
+                           A   367    .endrec "_set_type"
+                           A   368    ;   77	struct near_set_type{ char near * begin
+                           A   369    .begrec "near_set_type",2
+                           A   370    .define "begin"
+                           A   371    .value 0
+                           A   372    .class 8
+                           A   373    .type 130
+                           A   374    .endef
+                           A   375    .define "end"
+                           A   376    .value 1
+                           A   377    .class 8
+                           A   378    .type 130
+                           A   379    .endef
+                           A   380    .endrec "near_set_type"
+                           A   381    ;   78	struct far_set_type{ char far * begin; 
+                           A   382    .begrec "far_set_type",4
+                           A   383    .define "begin"
+                           A   384    .value 0
+                           A   385    .class 8
+                           A   386    .type 162
+                           A   387    .endef
+                           A   388    .define "end"
+                           A   389    .value 2
+                           A   390    .class 8
+                           A   391    .type 162
+                           A   392    .endef
+                           A   393    .endrec "far_set_type"
+                           A   394    ;   79	struct rom_set_type{ char rom * begin; 
+                           A   395    .begrec "rom_set_type",4
+                           A   396    .define "begin"
+                           A   397    .value 0
+                           A   398    .class 8
+                           A   399    .type 194
+                           A   400    .endef
+                           A   401    .define "end"
+                           A   402    .value 2
+                           A   403    .class 8
+                           A   404    .type 194
+                           A   405    .endef
+                           A   406    .endrec "rom_set_type"
+                           A   407    ;   80	
+                           A   408    ;   81	/* info flags */
+                           A   409    ;   82	#define FLT_INFO_SIGN	(1<<0)
+                           A   410    ;   83	#define FLT_INFO_INF	(1<<1)
+                           A   411    ;   84	#define FLT_INFO_NAN	(1<<2)
+                           A   412    ;   85	
+                           A   413    ;   86	
+                           A   414    ;   87	struct flt_info {
+                           A   415    ;   88	  unsigned char flags;			/* 1=si
+                           A   416    ;   89	  char exp;				/* (signed) exp
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 30-Aug-15     22:09:47     page:   9
+
+
+PC     Object              I  Line    Source switchmatrix.src
+                           A   417    ;   90	  unsigned char digits[MAXDIGITS];	/* 
+                           A   418    ;   91	};
+                           A   419    .begrec "flt_info",12
+                           A   420    .define "flags"
+                           A   421    .value 0
+                           A   422    .class 8
+                           A   423    .type 12
+                           A   424    .endef
+                           A   425    .define "exp"
+                           A   426    .value 1
+                           A   427    .class 8
+                           A   428    .type 2
+                           A   429    .endef
+                           A   430    .define "digits"
+                           A   431    .value 2
+                           A   432    .class 8
+                           A   433    .dim 10
+                           A   434    .type 108
+                           A   435    .endef
+                           A   436    .endrec "flt_info"
+                           A   437    	SEGMENT ROM_DATA
+0001                       A   438    _NUMBER_OF_SWITCH_SAMPLES:
+0001 0001                  A   439    	DW	1
+                           A   440    .define "NUMBER_OF_SWITCH_SAMPLES"
+                           A   441    .alias "_NUMBER_OF_SWITCH_SAMPLES"
+                           A   442    .class 52
+                           A   443    .value _NUMBER_OF_SWITCH_SAMPLES
+                           A   444    .type 3
+                           A   445    .endef
+                           A   446    	SEGMENT NEAR_BSS
+0000                       A   447    _i2c_flag:
+0000                       A   448    	DS	1
+                           A   449    .define "i2c_flag"
+                           A   450    .alias "_i2c_flag"
+                           A   451    .class 147
+                           A   452    .value _i2c_flag
+                           A   453    .type 12
+                           A   454    .endef
+0001                       A   455    _bit_counter:
+0001                       A   456    	DS	1
+                           A   457    .define "bit_counter"
+                           A   458    .alias "_bit_counter"
+                           A   459    .class 147
+                           A   460    .value _bit_counter
+                           A   461    .type 12
+                           A   462    .endef
+0002                       A   463    _data_receive_byte:
+0002                       A   464    	DS	1
+                           A   465    .define "data_receive_byte"
+                           A   466    .alias "_data_receive_byte"
+                           A   467    .class 147
+                           A   468    .value _data_receive_byte
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 30-Aug-15     22:09:47     page:  10
+
+
+PC     Object              I  Line    Source switchmatrix.src
+                           A   469    .type 12
+                           A   470    .endef
+0003                       A   471    _data_transmit_byte:
+0003                       A   472    	DS	1
+                           A   473    .define "data_transmit_byte"
+                           A   474    .alias "_data_transmit_byte"
+                           A   475    .class 147
+                           A   476    .value _data_transmit_byte
+                           A   477    .type 12
+                           A   478    .endef
+0004                       A   479    _sda_bit:
+0004                       A   480    	DS	1
+                           A   481    .define "sda_bit"
+                           A   482    .alias "_sda_bit"
+                           A   483    .class 147
+                           A   484    .value _sda_bit
+                           A   485    .type 12
+                           A   486    .endef
+0005                       A   487    _bus_status:
+0005                       A   488    	DS	1
+                           A   489    .define "bus_status"
+                           A   490    .alias "_bus_status"
+                           A   491    .class 147
+                           A   492    .value _bus_status
+                           A   493    .type 12
+                           A   494    .endef
+0006                       A   495    _rising_edge_counter:
+0006                       A   496    	DS	1
+                           A   497    .define "rising_edge_counter"
+                           A   498    .alias "_rising_edge_counter"
+                           A   499    .class 147
+                           A   500    .value _rising_edge_counter
+                           A   501    .type 12
+                           A   502    .endef
+0007                       A   503    _address_received:
+0007                       A   504    	DS	1
+                           A   505    .define "address_received"
+                           A   506    .alias "_address_received"
+                           A   507    .class 147
+                           A   508    .value _address_received
+                           A   509    .type 12
+                           A   510    .endef
+0008                       A   511    _data_byte:
+0008                       A   512    	DS	1
+                           A   513    .define "data_byte"
+                           A   514    .alias "_data_byte"
+                           A   515    .class 147
+                           A   516    .value _data_byte
+                           A   517    .type 12
+                           A   518    .endef
+0009                       A   519    _edge:
+0009                       A   520    	DS	1
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 30-Aug-15     22:09:47     page:  11
+
+
+PC     Object              I  Line    Source switchmatrix.src
+                           A   521    .define "edge"
+                           A   522    .alias "_edge"
+                           A   523    .class 147
+                           A   524    .value _edge
+                           A   525    .type 12
+                           A   526    .endef
+000A                       A   527    _temp1:
+000A                       A   528    	DS	1
+                           A   529    .define "temp1"
+                           A   530    .alias "_temp1"
+                           A   531    .class 147
+                           A   532    .value _temp1
+                           A   533    .type 12
+                           A   534    .endef
+000B                       A   535    _send_bit:
+000B                       A   536    	DS	1
+                           A   537    .define "send_bit"
+                           A   538    .alias "_send_bit"
+                           A   539    .class 147
+                           A   540    .value _send_bit
+                           A   541    .type 12
+                           A   542    .endef
+000C                       A   543    _byte_count:
+000C                       A   544    	DS	1
+                           A   545    .define "byte_count"
+                           A   546    .alias "_byte_count"
+                           A   547    .class 147
+                           A   548    .value _byte_count
+                           A   549    .type 12
+                           A   550    .endef
+000D                       A   551    __slowBlink:
+000D                       A   552    	DS	1
+                           A   553    .define "_slowBlink"
+                           A   554    .alias "__slowBlink"
+                           A   555    .class 147
+                           A   556    .value __slowBlink
+                           A   557    .type 12
+                           A   558    .endef
+000E                       A   559    __fastBlink:
+000E                       A   560    	DS	1
+                           A   561    .define "_fastBlink"
+                           A   562    .alias "__fastBlink"
+                           A   563    .class 147
+                           A   564    .value __fastBlink
+                           A   565    .type 12
+                           A   566    .endef
+000F                       A   567    __timerControl:
+000F                       A   568    	DS	2*1
+                           A   569    .define "_timerControl"
+                           A   570    .alias "__timerControl"
+                           A   571    .class 147
+                           A   572    .value __timerControl
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 30-Aug-15     22:09:47     page:  12
+
+
+PC     Object              I  Line    Source switchmatrix.src
+                           A   573    .type 3
+                           A   574    .endef
+                           A   575    	SEGMENT NEAR_DATA
+0000                       A   576    __swStrobe:
+0000 00                    A   577    	DB	0
+                           A   578    .define "_swStrobe"
+                           A   579    .alias "__swStrobe"
+                           A   580    .class 133
+                           A   581    .value __swStrobe
+                           A   582    .type 12
+                           A   583    .endef
+0001                       A   584    __downLED:
+0001 00                    A   585    	DB	0
+                           A   586    .define "_downLED"
+                           A   587    .alias "__downLED"
+                           A   588    .class 133
+                           A   589    .value __downLED
+                           A   590    .type 12
+                           A   591    .endef
+0002                       A   592    __upLED:
+0002 00                    A   593    	DB	0
+                           A   594    .define "_upLED"
+                           A   595    .alias "__upLED"
+                           A   596    .class 133
+                           A   597    .value __upLED
+                           A   598    .type 12
+                           A   599    .endef
+                           A   600    	SEGMENT ROM_DATA
+0003                       A   601    _PB_DOWN_LED:
+0003 08                    A   602    	DB	8
+                           A   603    .define "PB_DOWN_LED"
+                           A   604    .alias "_PB_DOWN_LED"
+                           A   605    .class 52
+                           A   606    .value _PB_DOWN_LED
+                           A   607    .type 12
+                           A   608    .endef
+0004                       A   609    _PB_UP_LED:
+0004 10                    A   610    	DB	16
+                           A   611    .define "PB_UP_LED"
+                           A   612    .alias "_PB_UP_LED"
+                           A   613    .class 52
+                           A   614    .value _PB_UP_LED
+                           A   615    .type 12
+                           A   616    .endef
+                           A   617    	SEGMENT NEAR_BSS
+0011                       A   618    _ledIsOn:
+0011                       A   619    	DS	2*1
+                           A   620    .define "ledIsOn"
+                           A   621    .alias "_ledIsOn"
+                           A   622    .class 147
+                           A   623    .value _ledIsOn
+                           A   624    .type 3
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 30-Aug-15     22:09:47     page:  13
+
+
+PC     Object              I  Line    Source switchmatrix.src
+                           A   625    .endef
+                           A   626    	SEGMENT ROM_DATA
+                           A   627    
+                           A   628    
+                           A   629    ;**************************** _main ***********
+                           A   630    ;Name                         Addr/Register   S
+                           A   631    ;_SwitchLoop                         IMPORT  --
+                           A   632    ;_Initialize                         IMPORT  --
+                           A   633    
+                           A   634    
+                           A   635    ; Aggregate Stack Size: 0 (words)
+                           A   636    
+                           A   637    
+                           A   638    	.FRAME _n_main,?_n_main,RDATA
+                           A   639    	.FCALL _n_Initialize
+                           A   640    	.FCALL _n_SwitchLoop
+                           A   641    ;    1	/*
+                           A   642    ;    2	***************************************
+                           A   643    ;    3	* File : switchMatrix.c
+                           A   644    ;    4	* Based on scl_interrupt.c (from AN0139
+                           A   645    ;    5	* Description : Drives a switch Matrix 
+                           A   646    ;    6	*  PC0 and PC1 have to be used for the 
+                           A   647    ;    7	***************************************
+                           A   648    ;    8	*/
+                           A   649    ;    9	
+                           A   650    ;   10	
+                           A   651    ;   11	/*From ~/DropBox/Bossy/Workspace/pinsup
+                           A   652    ;   12	Description: Interrupt Timer handler th
+                           A   653    ;   13	
+                           A   654    ;   14	explanation is at: http://www.compuphas
+                           A   655    ;   15	*/
+                           A   656    ;   16	
+                           A   657    ;   17	
+                           A   658    ;   18	#define PROTOTYPE_BOARD 1 //Define this
+                           A   659    ;   19	
+                           A   660    ;   20	
+                           A   661    ;   21	#include <ez8.h>
+                           A   662    ;   22	#include <stdio.h>
+                           A   663    ;   23	#include "spibase.h"
+                           A   664    ;   24	#include "sysclk.h"
+                           A   665    ;   25	#include "timer.h"
+                           A   666    ;   26	#include "switchmatrix.h"
+                           A   667    ;   27	/*
+                           A   668    ;   28	PB0-PB2 = Strobe Select (outputs)
+                           A   669    ;   29	PA0-PA7 = Switch Inputs (inputs)
+                           A   670    ;   30	PB3, PB4 = LED indicators (outputs)
+                           A   671    ;   31	
+                           A   672    ;   32	PC0, PC1 = Switch Inputs
+                           A   673    ;   33	PC2 = SS
+                           A   674    ;   34	PC3 = SCLK
+                           A   675    ;   35	PC4 = MOSI
+                           A   676    ;   36	PC5 = MISO
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 30-Aug-15     22:09:47     page:  14
+
+
+PC     Object              I  Line    Source switchmatrix.src
+                           A   677    ;   37	*/
+                           A   678    ;   38	
+                           A   679    ;   39	unsigned char const NOOUTPUT = 0x00;
+                           A   680    ;   40	const int NUMBER_OF_SWITCH_SAMPLES = 1;
+                           A   681    ;   41	
+                           A   682    ;   42	
+                           A   683    ;   43	/*i2c variables*/ 
+                           A   684    ;   44	
+                           A   685    ;   45	unsigned char  i2c_flag;		// To h
+                           A   686    ;   46	
+                           A   687    ;   47	unsigned char bit_counter;	// To keep 
+                           A   688    ;   48								// This cou
+                           A   689    ;   49	unsigned char data_receive_byte; // To 
+                           A   690    ;   50	
+                           A   691    ;   51	unsigned char data_transmit_byte; // To
+                           A   692    ;   52	
+                           A   693    ;   53	unsigned char volatile sda_bit;	 //Read
+                           A   694    ;   54	unsigned char bus_status; // To set bus
+                           A   695    ;   55	unsigned char rising_edge_counter;  // 
+                           A   696    ;   56										// 
+                           A   697    ;   57	unsigned char volatile address_received
+                           A   698    ;   58	unsigned char volatile data_byte;      
+                           A   699    ;   59	unsigned char volatile edge;
+                           A   700    ;   60	unsigned char volatile temp1;
+                           A   701    ;   61	unsigned char volatile send_bit;  // St
+                           A   702    ;   62	unsigned char byte_count; // Count no o
+                           A   703    ;   63	
+                           A   704    ;   64	
+                           A   705    ;   65	/*Switch Specific Variables*/
+                           A   706    ;   66	unsigned char _slowBlink;
+                           A   707    ;   67	unsigned char _fastBlink;
+                           A   708    ;   68	int  _timerControl;
+                           A   709    ;   69	
+                           A   710    ;   70	unsigned char _swStrobe = 0;
+                           A   711    ;   71	
+                           A   712    ;   72	unsigned char _downLED = 0; //0 = off, 
+                           A   713    ;   73	unsigned char _upLED = 0; //0 = off, 1=
+                           A   714    ;   74	
+                           A   715    ;   75	unsigned char const PB_DOWN_LED = 0x08;
+                           A   716    ;   76	unsigned char const PB_UP_LED =0x10; //
+                           A   717    ;   77	
+                           A   718    ;   78	void Initialize(void);
+                           A   719    ;   79	void SwitchLoop(void);
+                           A   720    ;   80	void ReportSwitchChange(unsigned char, 
+                           A   721    ;   81	int ledIsOn;
+                           A   722    	SEGMENT hmatrix_TEXT
+                           A   723    ;   82	
+                           A   724    ;   83	
+                           A   725    ;   84	/* ************************************
+                           A   726    ;   85	The main routine ,sets the Port pins PC
+                           A   727    ;   86	with open drain.The I2C bus status is s
+                           A   728    ;   87	Sets the interrupt PC0 and PC1 to highi
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 30-Aug-15     22:09:47     page:  15
+
+
+PC     Object              I  Line    Source switchmatrix.src
+                           A   729    ;   88	/**************************************
+                           A   730    ;   89	
+                           A   731    ;   90	
+                           A   732    ;   91	void main()
+                           A   733    ;   92	{
+0000                       A   734    _main:
+                           A   735    .define "_main"
+                           A   736    .value _main
+                           A   737    .class 2
+                           A   738    .type 65
+                           A   739    .endef
+                           A   740    .begfunc "main",92,"_main"
+                           A   741    ;   93	  Initialize();	
+                           A   742    .line 93
+0000 D6 0007               A   743    	CALL	_Initialize
+                           A   744    ;   94	  SwitchLoop();
+                           A   745    .line 94
+0003 D6 0083               A   746    	CALL	_SwitchLoop
+                           A   747    ;   95	 }
+                           A   748    .line 95
+0006 AF                    A   749    	RET	
+                           A   750    .endfunc "main",95,"_main"
+                           A   751    	SEGMENT ROM_DATA
+                           A   752    
+                           A   753    
+                           A   754    ;**************************** _Initialize *****
+                           A   755    ;Name                         Addr/Register   S
+                           A   756    ;_EI                                 IMPORT  --
+                           A   757    ;_timer_init                         IMPORT  --
+                           A   758    ;_sysclk_init                        IMPORT  --
+                           A   759    ;_DI                                 IMPORT  --
+                           A   760    
+                           A   761    
+                           A   762    ; Aggregate Stack Size: 0 (words)
+                           A   763    
+                           A   764    
+                           A   765    	.FRAME _n_Initialize,?_n_Initialize,RDATA
+                           A   766    	.FCALL _n_sysclk_init
+                           A   767    	.FCALL _n_timer_init
+                           A   768    	SEGMENT hmatrix_TEXT
+                           A   769    ;   96	
+                           A   770    ;   97	void Initialize(void){
+0007                       A   771    _Initialize:
+                           A   772    .define "_Initialize"
+                           A   773    .value _Initialize
+                           A   774    .class 2
+                           A   775    .type 65
+                           A   776    .endef
+                           A   777    .begfunc "Initialize",97,"_Initialize"
+                           A   778    ;   98	    DI();				// Globally dis
+                           A   779    .line 98
+0007 8F                    A   780    	DI
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 30-Aug-15     22:09:47     page:  16
+
+
+PC     Object              I  Line    Source switchmatrix.src
+                           A   781    ;   99	    sysclk_init();		// Initialize s
+                           A   782    .line 99
+0008 D6 0000               A   783    	CALL	_sysclk_init
+                           A   784    ;  100		                    // setting and 
+                           A   785    ;  101	    timer_init();		// Intialize ti
+                           A   786    .line 101
+000B D6 0000               A   787    	CALL	_timer_init
+                           A   788    ;  102		
+                           A   789    ;  103		
+                           A   790    ;  104		//JAF TEMPORARY InitializeSPI();	                           A   791    ;  105		
+                           A   792    ;  106		/*
+                           A   793    ;  107		PB0-PB2 = Strobe Select (outputs)
+                           A   794    ;  108		PA0-PA7 = Switch Inputs (inputs)
+                           A   795    ;  109		PB3, PB4 = LED indicators (outputs)
+                           A   796    ;  110	
+                           A   797    ;  111		PC0, PC1 = Switch Inputs (need to d
+                           A   798    ;  112		PC2 = SS
+                           A   799    ;  113		PC3 = SCLK
+                           A   800    ;  114		PC4 = MOSI
+                           A   801    ;  115		PC5 = MISO
+                           A   802    ;  116		*/
+                           A   803    ;  117		
+                           A   804    ;  118		
+                           A   805    ;  119	  //PB0-2 are TTL Output for Strobe con
+                           A   806    ;  120	  //PB3-4 are open drain outputs for LE
+                           A   807    ;  121	  PBADDR = 0x01; // Direction
+                           A   808    .line 121
+000E E9010FD4              A   809    	LDX	4052,#1
+                           A   810    ;  122	  PBCTL = 0xE0; //1110 - 0000 all putpu
+                           A   811    .line 122
+0012 E9E00FD5              A   812    	LDX	4053,#224
+                           A   813    ;  123	  PBADDR = 0x03; //output control
+                           A   814    .line 123
+0016 E9030FD4              A   815    	LDX	4052,#3
+                           A   816    ;  124	  PBCTL = 0x18;     //0001-1000 (open d
+                           A   817    .line 124
+001A E9180FD5              A   818    	LDX	4053,#24
+                           A   819    ;  125	  PBADDR = 0x00;
+                           A   820    .line 125
+001E E9000FD4              A   821    	LDX	4052,#-0
+                           A   822    ;  126	
+                           A   823    ;  127	  //PA0-7 are TTL input (from the 339 c
+                           A   824    ;  128	  PAADDR = 0x01; //Data Direction
+                           A   825    .line 128
+0022 E9010FD0              A   826    	LDX	4048,#1
+                           A   827    ;  129	  PACTL = 0xFF; //1111 - 1111 all input
+                           A   828    .line 129
+0026 E9FF0FD1              A   829    	LDX	4049,#255
+                           A   830    ;  130	  PAADDR = 0x00;
+                           A   831    .line 130
+002A E9000FD0              A   832    	LDX	4048,#-0
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 30-Aug-15     22:09:47     page:  17
+
+
+PC     Object              I  Line    Source switchmatrix.src
+                           A   833    ;  131	
+                           A   834    ;  132	  //SPI Setup
+                           A   835    ;  133	  PCADDR = 0x01;	//Set the  Value to
+                           A   836    .line 133
+002E E9010FD8              A   837    	LDX	4056,#1
+                           A   838    ;  134	  PCCTL  = 0x1f;   // Change SDA to INP
+                           A   839    .line 134
+0032 E91F0FD9              A   840    	LDX	4057,#31
+                           A   841    ;  135	  PCADDR = 0x00;
+                           A   842    .line 135
+0036 E9000FD8              A   843    	LDX	4056,#-0
+                           A   844    ;  136	
+                           A   845    ;  137		
+                           A   846    ;  138	
+                           A   847    ;  139	EI();				//Enable all interr
+                           A   848    .line 139
+003A 9F                    A   849    	EI
+                           A   850    ;  140	  
+                           A   851    ;  141	}
+                           A   852    .line 141
+003B AF                    A   853    	RET	
+                           A   854    .endfunc "Initialize",141,"_Initialize"
+                           A   855    	SEGMENT ROM_DATA
+                           A   856    
+                           A   857    
+                           A   858    ;**************************** _SwitchStrobeIncA
+                           A   859    ;Name                         Addr/Register   S
+                           A   860    ;__swStrobe                          STATIC    
+                           A   861    
+                           A   862    
+                           A   863    ; Aggregate Stack Size: 0 (words)
+                           A   864    
+                           A   865    
+                           A   866    	.FRAME _n_SwitchStrobeIncAndSet,?_n_SwitchS
+                           A   867    	SEGMENT hmatrix_TEXT
+                           A   868    ;  142	 
+                           A   869    ;  143	
+                           A   870    ;  144	
+                           A   871    ;  145	void SwitchStrobeIncAndSet()
+                           A   872    ;  146	{
+003C                       A   873    _SwitchStrobeIncAndSet:
+                           A   874    .define "_SwitchStrobeIncAndSet"
+                           A   875    .value _SwitchStrobeIncAndSet
+                           A   876    .class 2
+                           A   877    .type 65
+                           A   878    .endef
+                           A   879    .begfunc "SwitchStrobeIncAndSet",146,"_SwitchSt
+                           A   880    ;  147	    int outputValue = 0x00;
+                           A   881    ;  148	
+                           A   882    ;  149	    if(_swStrobe>=8)
+                           A   883    .line 149
+003C A6 00 08              A   884    	CP	__swStrobe,#8
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 30-Aug-15     22:09:47     page:  18
+
+
+PC     Object              I  Line    Source switchmatrix.src
+003F 7B 02                 A   885    	JR	C,_3_L_3
+                           A   886    ;  150	    {
+                           A   887    ;  151	        _swStrobe = 0;
+                           A   888    .line 151
+0041 B0 00                 A   889    	CLR	__swStrobe
+                           A   890    ;  152	    }
+0043                       A   891    _3_L_3:
+                           A   892    .line 152
+                           A   893    ;  153	
+                           A   894    ;  154		//PBOUT |= _swStrobe & 0x07;
+                           A   895    ;  155		//PBOUT |= 0x01; //setting bit 0
+                           A   896    ;  156		PBOUT &= 0xF8; //clearing Bit 0, 1 
+                           A   897    .line 156
+0043 59F80FD7              A   898    	ANDX	4055,#248
+                           A   899    ;  157	    _swStrobe++;
+                           A   900    .line 157
+0047 20 00                 A   901    	INC	__swStrobe
+                           A   902    ;  158	}
+                           A   903    .line 158
+0049 AF                    A   904    	RET	
+                           A   905    .endfunc "SwitchStrobeIncAndSet",158,"_SwitchSt
+                           A   906    	SEGMENT ROM_DATA
+                           A   907    
+                           A   908    
+                           A   909    ;**************************** _debounce *******
+                           A   910    ;Name                         Addr/Register   S
+                           A   911    ;_2clock_A                           STATIC    
+                           A   912    ;_1clock_B                           STATIC    
+                           A   913    ;_0debounced_state                   STATIC    
+                           A   914    ;delta                                   R0    
+                           A   915    ;toggle                         _2_debounce    
+                           A   916    ;strobe                         <optimized>    
+                           A   917    ;strobeSample                   _0_debounce    
+                           A   918    
+                           A   919    
+                           A   920    ; Aggregate Stack Size: 0 (words)
+                           A   921    
+                           A   922    
+                           A   923    	.FRAME _n_debounce,?_n_debounce,RDATA
+0000                       A   924    _0_debounce:
+0000                       A   925    	DS	1
+0001                       A   926    _1_debounce:
+0001                       A   927    	DS	2*1
+0003                       A   928    _2_debounce:
+0003                       A   929    	DS	1
+                           A   930    	SEGMENT NEAR_BSS
+0013                       A   931    _0debounced_state:
+0013                       A   932    	DS	8
+001B                       A   933    _1clock_B:
+001B                       A   934    	DS	8
+0023                       A   935    _2clock_A:
+0023                       A   936    	DS	8
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 30-Aug-15     22:09:47     page:  19
+
+
+PC     Object              I  Line    Source switchmatrix.src
+                           A   937    	SEGMENT hmatrix_TEXT
+                           A   938    ;  159	
+                           A   939    ;  160	
+                           A   940    ;  161	
+                           A   941    ;  162	/*Switch Matrix Handling routines*/
+                           A   942    ;  163	
+                           A   943    ;  164	/*
+                           A   944    ;  165	Description: Interrupt Timer handler th
+                           A   945    ;  166	
+                           A   946    ;  167	explanation is at: http://www.compuphas
+                           A   947    ;  168	
+                           A   948    ;  169	*/
+                           A   949    ;  170	
+                           A   950    ;  171	//This will debounce the strobe sample 
+                           A   951    ;  172	//Needs to be called every 5 ms per str
+                           A   952    ;  173	//Returns changes after they have been 
+                           A   953    ;  174	unsigned char debounce(unsigned char st
+                           A   954    ;  175	{
+004A                       A   955    _debounce:
+                           A   956    .define "_debounce"
+                           A   957    .value _debounce
+                           A   958    .class 2
+                           A   959    .type 76
+                           A   960    .endef
+                           A   961    .begfunc "debounce",175,"_debounce"
+                           A   962    .define "strobeSample"
+                           A   963    .class 23
+                           A   964    .value _0_debounce
+                           A   965    .alias "_0_debounce"
+                           A   966    .type 12
+                           A   967    .endef
+                           A   968    .line 175
+                           A   969    .define "strobe"
+                           A   970    .class 17
+                           A   971    .reg -1
+                           A   972    .type 3
+                           A   973    .endef
+                           A   974    .define "toggle"
+                           A   975    .class 23
+                           A   976    .value _2_debounce
+                           A   977    .alias "_2_debounce"
+                           A   978    .type 140
+                           A   979    .endef
+                           A   980    .define "delta"
+                           A   981    .class 4
+                           A   982    .reg 1
+                           A   983    .type 12
+                           A   984    .endef
+                           A   985    ;  176	    static unsigned char debounced_stat
+                           A   986    .define "debounced_state"
+                           A   987    .alias "_0debounced_state"
+                           A   988    .class 147
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 30-Aug-15     22:09:47     page:  20
+
+
+PC     Object              I  Line    Source switchmatrix.src
+                           A   989    .value _0debounced_state
+                           A   990    .dim 8
+                           A   991    .type 108
+                           A   992    .endef
+                           A   993    .define "clock_B"
+                           A   994    .alias "_1clock_B"
+                           A   995    .class 147
+                           A   996    .value _1clock_B
+                           A   997    .dim 8
+                           A   998    .type 108
+                           A   999    .endef
+                           A  1000    .define "clock_A"
+                           A  1001    .alias "_2clock_A"
+                           A  1002    .class 147
+                           A  1003    .value _2clock_A
+                           A  1004    .dim 8
+                           A  1005    .type 108
+                           A  1006    .endef
+                           A  1007    ;  177	    unsigned char delta;
+                           A  1008    ;  178	    \
+                           A  1009    ;  179	
+                           A  1010    ;  180	    delta = strobeSample ^ debounced_st
+                           A  1011    .line 180
+004A 2C 13                 A  1012    	LD	R2,#_0debounced_state
+004C 04 02 E2              A  1013    	ADD	R2,_1_debounce+1
+004F E302                  A  1014    	LD	R0,@R2
+0051 B4 00 E0              A  1015    	XOR	R0,_0_debounce
+                           A  1016    ;  181	    clock_B[strobe] = (clock_B[strobe] 
+                           A  1017    .line 181
+0054 4C 1B                 A  1018    	LD	R4,#_1clock_B
+0056 04 02 E4              A  1019    	ADD	R4,_1_debounce+1
+0059 E314                  A  1020    	LD	R1,@R4
+005B 3C 23                 A  1021    	LD	R3,#_2clock_A
+005D 04 02 E3              A  1022    	ADD	R3,_1_debounce+1
+0060 B313                  A  1023    	XOR	R1,@R3
+0062 5210                  A  1024    	AND	R1,R0
+0064 F341                  A  1025    	LD	@R4,R1
+                           A  1026    ;  182	    clock_A[strobe] = ~clock_A[strobe] 
+                           A  1027    .line 182
+0066 E313                  A  1028    	LD	R1,@R3
+0068 60E1                  A  1029    	COM	R1
+006A 5210                  A  1030    	AND	R1,R0
+006C F331                  A  1031    	LD	@R3,R1
+                           A  1032    ;  183	
+                           A  1033    ;  184	    *toggle = delta & ~(clock_A[strobe]
+                           A  1034    .line 184
+006E 4314                  A  1035    	OR	R1,@R4
+0070 60E1                  A  1036    	COM	R1
+0072 E4 03 E3              A  1037    	LD	R3,_2_debounce
+0075 5210                  A  1038    	AND	R1,R0
+0077 F331                  A  1039    	LD	@R3,R1
+                           A  1040    ;  185	    debounced_state[strobe] ^= *toggle;
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 30-Aug-15     22:09:47     page:  21
+
+
+PC     Object              I  Line    Source switchmatrix.src
+                           A  1041    .line 185
+0079 E4 03 E1              A  1042    	LD	R1,_2_debounce
+007C E302                  A  1043    	LD	R0,@R2
+007E B301                  A  1044    	XOR	R0,@R1
+0080 F320                  A  1045    	LD	@R2,R0
+                           A  1046    ;  186	
+                           A  1047    ;  187	    return debounced_state[strobe]; //d
+                           A  1048    .line 187
+                           A  1049    ;  188	}
+                           A  1050    .line 188
+0082 AF                    A  1051    	RET	
+                           A  1052    .endfunc "debounce",188,"_debounce"
+                           A  1053    	SEGMENT ROM_DATA
+                           A  1054    
+                           A  1055    
+                           A  1056    ;**************************** _SwitchLoop *****
+                           A  1057    ;Name                         Addr/Register   S
+                           A  1058    ;_ReportSwitchChange                 IMPORT  --
+                           A  1059    ;__swStrobe                          STATIC    
+                           A  1060    ;__downLED                           STATIC    
+                           A  1061    ;__upLED                             STATIC    
+                           A  1062    ;sample                            _6sample    
+                           A  1063    ;curSwitches                   _5curSwitches   
+                           A  1064    ;toggle                            _4toggle    
+                           A  1065    ;count                              _3count    
+                           A  1066    
+                           A  1067    
+                           A  1068    ; Aggregate Stack Size: 0 (words)
+                           A  1069    
+                           A  1070    
+                           A  1071    	.FRAME _n_SwitchLoop,?_n_SwitchLoop,RDATA
+0000                       A  1072    _3count:
+0000                       A  1073    	DS	2*1
+0002                       A  1074    _4toggle:
+0002                       A  1075    	DS	1
+0003                       A  1076    _5curSwitches:
+0003                       A  1077    	DS	1
+0004                       A  1078    _6sample:
+0004                       A  1079    	DS	1
+                           A  1080    	.FCALL _n_SwitchStrobeIncAndSet
+                           A  1081    	.FCALL _n_debounce
+                           A  1082    	.FCALL _n_ReportSwitchChange
+                           A  1083    	SEGMENT hmatrix_TEXT
+                           A  1084    ;  189	
+                           A  1085    ;  190	
+                           A  1086    ;  191	
+                           A  1087    ;  192	void SwitchLoop(void){
+0083                       A  1088    _SwitchLoop:
+                           A  1089    .define "_SwitchLoop"
+                           A  1090    .value _SwitchLoop
+                           A  1091    .class 2
+                           A  1092    .type 65
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 30-Aug-15     22:09:47     page:  22
+
+
+PC     Object              I  Line    Source switchmatrix.src
+                           A  1093    .endef
+                           A  1094    .begfunc "SwitchLoop",192,"_SwitchLoop"
+                           A  1095    .define "count"
+                           A  1096    .class 22
+                           A  1097    .value _3count
+                           A  1098    .alias "_3count"
+                           A  1099    .type 13
+                           A  1100    .endef
+                           A  1101    .define "toggle"
+                           A  1102    .class 22
+                           A  1103    .value _4toggle
+                           A  1104    .alias "_4toggle"
+                           A  1105    .type 12
+                           A  1106    .endef
+                           A  1107    .define "curSwitches"
+                           A  1108    .class 22
+                           A  1109    .value _5curSwitches
+                           A  1110    .alias "_5curSwitches"
+                           A  1111    .type 2
+                           A  1112    .endef
+                           A  1113    .define "sample"
+                           A  1114    .class 22
+                           A  1115    .value _6sample
+                           A  1116    .alias "_6sample"
+                           A  1117    .type 12
+                           A  1118    .endef
+                           A  1119    ;  193		int i;
+                           A  1120    ;  194		unsigned int count =60;
+                           A  1121    .line 194
+0083 B0 00                 A  1122    	CLR	_3count
+0085 E6 01 3C              A  1123    	LD	_3count+1,#60
+                           A  1124    ;  195		//unsigned long int count = 60;  //
+                           A  1125    ;  196	
+                           A  1126    ;  197		/*
+                           A  1127    ;  198		PB0-PB2 = Strobe Select (outputs)
+                           A  1128    ;  199		PA0-PA7 = Switch Inputs (inputs)
+                           A  1129    ;  200		PB3, PB4 = LED indicators (outputs)
+                           A  1130    ;  201	
+                           A  1131    ;  202		PC0, PC1 = Switch Inputs (need to d
+                           A  1132    ;  203		PC2 = SS	
+                           A  1133    ;  204		PC3 = SCLK
+                           A  1134    ;  205		PC4 = MOSI
+                           A  1135    ;  206		PC5 = MISO
+                           A  1136    ;  207		
+                           A  1137    ;  208		What we will send:
+                           A  1138    ;  209		Bits 2-7 = Switch ID (64 switch com
+                           A  1139    ;  210		Bits 0-1 = 
+                           A  1140    ;  211			00 = now open
+                           A  1141    ;  212			01 = now closed
+                           A  1142    ;  213			10 = 
+                           A  1143    ;  214			11 = 
+                           A  1144    ;  215		*/
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 30-Aug-15     22:09:47     page:  23
+
+
+PC     Object              I  Line    Source switchmatrix.src
+                           A  1145    ;  216		unsigned char sample;
+                           A  1146    ;  217		char curSwitches;
+                           A  1147    ;  218		unsigned char toggle;
+                           A  1148    ;  219		
+                           A  1149    ;  220		_upLED = 1;
+                           A  1150    .line 220
+0088 E6 02 01              A  1151    	LD	__upLED,#1
+                           A  1152    ;  221		_downLED = 1;
+                           A  1153    .line 221
+008B E6 01 01              A  1154    	LD	__downLED,#1
+                           A  1155    ;  222	
+                           A  1156    ;  223		while(1){
+008E                       A  1157    _5_L_14:
+                           A  1158    .line 223
+                           A  1159    ;  224			SwitchStrobeIncAndSet();
+                           A  1160    .line 224
+008E D6 003C               A  1161    	CALL	_SwitchStrobeIncAndSet
+                           A  1162    ;  225			
+                           A  1163    ;  226	
+                           A  1164    ;  227	#if defined(PROTOTYPE_BOARD)		
+                           A  1165    ;  228			//need to set _reg3		
+                           A  1166    ;  229			//sample = PCIN&0x01; --This is
+                           A  1167    ;  230			sample = PAIN & 0xC0; //PA6 and
+                           A  1168    .line 230
+0091 E8FD2004              A  1169    	LDX	_6sample,4050
+0095 56 04 C0              A  1170    	AND	_6sample,#192
+                           A  1171    ;  231									//C1, C
+                           A  1172    ;  232									//R1 an
+                           A  1173    ;  233			
+                           A  1174    ;  234	#else
+                           A  1175    ;  235			sample = PAIN;
+                           A  1176    ;  236	#endif
+                           A  1177    ;  237			
+                           A  1178    ;  238			
+                           A  1179    ;  239			
+                           A  1180    ;  240			curSwitches =debounce(sample, _
+                           A  1181    .line 240
+0098 E4 00 E0              A  1182    	LD	R0,__swStrobe
+009B E4 04 00              A  1183    	LD	_0_debounce,_6sample
+009E B0 01                 A  1184    	CLR	_1_debounce
+00A0 E4E0 02               A  1185    	LD	_1_debounce+1,R0
+00A3 E6 03 02              A  1186    	LD	_2_debounce,#_4toggle
+00A6 D6 004A               A  1187    	CALL	_debounce
+00A9 E4E0 03               A  1188    	LD	_5curSwitches,R0
+                           A  1189    ;  241			
+                           A  1190    ;  242			if(toggle!=0x00){
+                           A  1191    .line 242
+00AC A6 02 00              A  1192    	CP	_4toggle,#0
+00AF 6B 14                 A  1193    	JR	Z,_5_L_9
+                           A  1194    ;  243				//depending if anything cha
+                           A  1195    ;  244				//therefore previous prob n
+                           A  1196    ;  245				
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 30-Aug-15     22:09:47     page:  24
+
+
+PC     Object              I  Line    Source switchmatrix.src
+                           A  1197    ;  246				//this might not work since
+                           A  1198    ;  247				ReportSwitchChange(_swStrob
+                           A  1199    .line 247
+00B1 E4 00 00              A  1200    	LD	_0_ReportSwitchChange,__swStrobe
+00B4 E4 03 01              A  1201    	LD	_1_ReportSwitchChange,_5curSwitches
+00B7 E4 02 02              A  1202    	LD	_2_ReportSwitchChange,_4toggle
+00BA D6 00D6               A  1203    	CALL	_ReportSwitchChange
+                           A  1204    ;  248				
+                           A  1205    ;  249			}
+                           A  1206    .line 249
+                           A  1207    ;  250			while(count>0)
+                           A  1208    .line 250
+00BD 8B 06                 A  1209    	JR	_5_L_9
+00BF                       A  1210    _5_L_10:
+                           A  1211    ;  251				count--;
+                           A  1212    .line 251
+00BF 26 01 01              A  1213    	SUB	_3count+1,#1
+00C2 36 00 00              A  1214    	SBC	_3count,#0
+00C5                       A  1215    _5_L_9:
+                           A  1216    .line 250
+00C5 A6 01 00              A  1217    	CP	_3count+1,#0
+00C8 1FA6 00 00            A  1218    	CPC	_3count,#-0
+00CC BB F1                 A  1219    	JR	UGT,_5_L_10
+                           A  1220    ;  252			count=60;
+                           A  1221    .line 252
+00CE B0 00                 A  1222    	CLR	_3count
+00D0 E6 01 3C              A  1223    	LD	_3count+1,#60
+                           A  1224    .line 223
+00D3 8B B9                 A  1225    	JR	_5_L_14
+                           A  1226    ;  253		}
+                           A  1227    ;  254	}
+                           A  1228    .line 254
+00D5 AF                    A  1229    	RET	
+                           A  1230    .endfunc "SwitchLoop",254,"_SwitchLoop"
+                           A  1231    	SEGMENT ROM_DATA
+                           A  1232    
+                           A  1233    
+                           A  1234    ;**************************** _ReportSwitchChan
+                           A  1235    ;Name                         Addr/Register   S
+                           A  1236    ;_SPI_Send                           IMPORT  --
+                           A  1237    ;__downLED                           STATIC    
+                           A  1238    ;__upLED                             STATIC    
+                           A  1239    ;G_0                            <optimized>    
+                           A  1240    ;curBit                                 RR2    
+                           A  1241    ;i                                      RR4    
+                           A  1242    ;report                                 RR0    
+                           A  1243    ;toggle                        _2_ReportSwitchC
+                           A  1244    ;switches                      _1_ReportSwitchC
+                           A  1245    ;strobe                        _0_ReportSwitchC
+                           A  1246    
+                           A  1247    
+                           A  1248    ; Aggregate Stack Size: 0 (words)
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 30-Aug-15     22:09:47     page:  25
+
+
+PC     Object              I  Line    Source switchmatrix.src
+                           A  1249    
+                           A  1250    
+                           A  1251    	.FRAME _n_ReportSwitchChange,?_n_ReportSwit
+0000                       A  1252    _0_ReportSwitchChange:
+0000                       A  1253    	DS	1
+0001                       A  1254    _1_ReportSwitchChange:
+0001                       A  1255    	DS	1
+0002                       A  1256    _2_ReportSwitchChange:
+0002                       A  1257    	DS	1
+                           A  1258    	.FCALL _n_SPI_Send
+                           A  1259    	SEGMENT hmatrix_TEXT
+                           A  1260    ;  255	
+                           A  1261    ;  256	void ReportSwitchChange(unsigned char s
+00D6                       A  1262    _ReportSwitchChange:
+                           A  1263    .define "_ReportSwitchChange"
+                           A  1264    .value _ReportSwitchChange
+                           A  1265    .class 2
+                           A  1266    .type 65
+                           A  1267    .endef
+                           A  1268    .begfunc "ReportSwitchChange",256,"_ReportSwitc
+                           A  1269    .define "strobe"
+                           A  1270    .class 23
+                           A  1271    .value _0_ReportSwitchChange
+                           A  1272    .alias "_0_ReportSwitchChange"
+                           A  1273    .type 12
+                           A  1274    .endef
+                           A  1275    .define "switches"
+                           A  1276    .class 23
+                           A  1277    .value _1_ReportSwitchChange
+                           A  1278    .alias "_1_ReportSwitchChange"
+                           A  1279    .type 12
+                           A  1280    .endef
+                           A  1281    .define "toggle"
+                           A  1282    .class 23
+                           A  1283    .value _2_ReportSwitchChange
+                           A  1284    .alias "_2_ReportSwitchChange"
+                           A  1285    .type 12
+                           A  1286    .endef
+                           A  1287    .define "report"
+                           A  1288    .class 4
+                           A  1289    .reg 17
+                           A  1290    .type 3
+                           A  1291    .endef
+                           A  1292    .define "i"
+                           A  1293    .class 4
+                           A  1294    .reg 19
+                           A  1295    .type 3
+                           A  1296    .endef
+                           A  1297    .define "curBit"
+                           A  1298    .class 4
+                           A  1299    .reg 18
+                           A  1300    .type 3
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 30-Aug-15     22:09:47     page:  26
+
+
+PC     Object              I  Line    Source switchmatrix.src
+                           A  1301    .endef
+                           A  1302    ;  257		int curBit = 1;
+                           A  1303    .line 257
+00D6 B0E2                  A  1304    	CLR	R2
+00D8 3C01                  A  1305    	LD	R3,#1
+                           A  1306    ;  258		int i;
+                           A  1307    ;  259		int report=0x00;
+                           A  1308    .line 259
+00DA B0E1                  A  1309    	CLR	R1
+                           A  1310    ;  260		
+                           A  1311    ;  261		for(i=0;i<8; i++){
+                           A  1312    .line 261
+00DC B0E4                  A  1313    	CLR	R4
+00DE B0E5                  A  1314    	CLR	R5
+00E0 8B 4F                 A  1315    	JR	_6_L_23
+00E2                       A  1316    _6_L_21:
+                           A  1317    ;  262			if(toggle&curBit!=0){
+                           A  1318    .line 262
+00E2 E4E2E0                A  1319    	LD	R0,R2
+00E5 4203                  A  1320    	OR	R0,R3
+00E7 6B 04                 A  1321    	JR	Z,L__14
+00E9 0C01                  A  1322    	LD	R0,#1
+00EB 8B 02                 A  1323    	JR	L__15
+00ED                       A  1324    L__14:
+00ED B0E0                  A  1325    	CLR	R0
+00EF                       A  1326    L__15:
+00EF E4E0E6                A  1327    	LD	R6,R0
+00F2 74 02 E6              A  1328    	TM	R6,_2_ReportSwitchChange
+00F5 6B 34                 A  1329    	JR	Z,_6_L_20
+                           A  1330    ;  263				//Report Strobe is Bits 7-5
+                           A  1331    ;  264				report = (((strobe<<4) & i)
+                           A  1332    .line 264
+00F7 E4 00 E7              A  1333    	LD	R7,_0_ReportSwitchChange
+00FA B0E1                  A  1334    	CLR	R1
+00FC 0C04                  A  1335    	LD	R0,#4
+00FE                       A  1336    L__19:
+00FE 0277                  A  1337    	ADD	R7,R7
+0100 1211                  A  1338    	ADC	R1,R1
+0102 0A FA                 A  1339    	DJNZ	R0,L__19
+0104 5275                  A  1340    	AND	R7,R5
+0106 5214                  A  1341    	AND	R1,R4
+0108 E4E1E0                A  1342    	LD	R0,R1
+010B E4E7E1                A  1343    	LD	R1,R7
+010E 0211                  A  1344    	ADD	R1,R1
+0110 1200                  A  1345    	ADC	R0,R0
+0112 0211                  A  1346    	ADD	R1,R1
+0114 1200                  A  1347    	ADC	R0,R0
+                           A  1348    ;  265				
+                           A  1349    ;  266				//switches&curBit = new sta
+                           A  1350    ;  267				//report last 2 bits as 1 =
+                           A  1351    ;  268				if(switches&curBit!=0){
+                           A  1352    .line 268
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 30-Aug-15     22:09:47     page:  27
+
+
+PC     Object              I  Line    Source switchmatrix.src
+0116 74 01 E6              A  1353    	TM	R6,_1_ReportSwitchChange
+0119 6B 09                 A  1354    	JR	Z,_6_L_18
+                           A  1355    ;  269					report &= 0xFE;
+                           A  1356    .line 269
+011B E201                  A  1357    	BCLR	0,R1
+011D B0E0                  A  1358    	CLR	R0
+                           A  1359    ;  270					_upLED = 1;
+                           A  1360    .line 270
+011F E6 02 01              A  1361    	LD	__upLED,#1
+                           A  1362    ;  271				}
+                           A  1363    ;  272				else{
+                           A  1364    .line 272
+0122 8B 07                 A  1365    	JR	_6_L_20
+0124                       A  1366    _6_L_18:
+                           A  1367    ;  273					report &= 0xFD;
+                           A  1368    .line 273
+0124 E211                  A  1369    	BCLR	1,R1
+0126 B0E0                  A  1370    	CLR	R0
+                           A  1371    ;  274					_downLED =1;
+                           A  1372    .line 274
+0128 E6 01 01              A  1373    	LD	__downLED,#1
+                           A  1374    ;  275				}			
+                           A  1375    ;  276			}
+012B                       A  1376    _6_L_20:
+                           A  1377    .line 276
+                           A  1378    ;  277			curBit=curBit<<1;
+                           A  1379    .line 277
+012B 0233                  A  1380    	ADD	R3,R3
+012D 1222                  A  1381    	ADC	R2,R2
+                           A  1382    .line 261
+012F A0E4                  A  1383    	INCW	RR4
+                           A  1384    ;  278		}
+0131                       A  1385    _6_L_23:
+                           A  1386    .line 278
+                           A  1387    .line 261
+0131 A6E508                A  1388    	CP	R5,#8
+0134 1FA6E400              A  1389    	CPC	R4,#-0
+0138 1B A8                 A  1390    	JR	LT,_6_L_21
+                           A  1391    ;  279		
+                           A  1392    ;  280		SPI_Send(report);   // Exchange the
+                           A  1393    .line 280
+013A E4E1 00               A  1394    	LD	_0_SPI_Send,R1
+013D D6 0000               A  1395    	CALL	_SPI_Send
+                           A  1396    ;  281	}
+                           A  1397    .line 281
+0140 AF                    A  1398    	RET	
+                           A  1399    .endfunc "ReportSwitchChange",281,"_ReportSwitc
+                           A  1400    	SEGMENT ROM_DATA
+                           A  1401    ;	Jump Table for Switch Statement at line 310
+0005                       A  1402    L__22:
+0005 0003                  A  1403    	DW	3
+0007 0000                  A  1404    	DW	0
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 30-Aug-15     22:09:47     page:  28
+
+
+PC     Object              I  Line    Source switchmatrix.src
+0009 015E                  A  1405    	DW	_7_L_32
+000B 0001                  A  1406    	DW	1
+000D 014F                  A  1407    	DW	_7_L_27
+000F 0002                  A  1408    	DW	2
+0011 0158                  A  1409    	DW	_7_L_28
+0013 015E                  A  1410    	DW	_7_L_32
+                           A  1411    ;	Jump Table for Switch Statement at line 325
+0015                       A  1412    L__23:
+0015 0003                  A  1413    	DW	3
+0017 0000                  A  1414    	DW	0
+0019 017B                  A  1415    	DW	_7_L_33
+001B 0001                  A  1416    	DW	1
+001D 016C                  A  1417    	DW	_7_L_30
+001F 0002                  A  1418    	DW	2
+0021 0175                  A  1419    	DW	_7_L_31
+0023 017B                  A  1420    	DW	_7_L_33
+                           A  1421    
+                           A  1422    
+                           A  1423    ;**************************** _blinkISR *******
+                           A  1424    ;Name                         Addr/Register   S
+                           A  1425    ;__downLED                           STATIC    
+                           A  1426    ;__upLED                             STATIC    
+                           A  1427    
+                           A  1428    
+                           A  1429    ; Aggregate Stack Size: 0 (words)
+                           A  1430    
+                           A  1431    
+                           A  1432    	.FRAME _n_blinkISR,?_n_blinkISR,RDATA
+                           A  1433    	SEGMENT hmatrix_TEXT
+                           A  1434    ;  282	
+                           A  1435    ;  283	/*
+                           A  1436    ;  284	const char DataOut[] = "Hello ZiLOG!"; 
+                           A  1437    ;  285	
+                           A  1438    ;  286	char DataIn[DATASIZE];                 
+                           A  1439    ;  287	
+                           A  1440    ;  288	void main()
+                           A  1441    ;  289	{
+                           A  1442    ;  290	   SPI_Init();       // Start the slave
+                           A  1443    ;  291	   IdlePorts();      // Set port modes 
+                           A  1444    ;  292	   EI();
+                           A  1445    ;  293	
+                           A  1446    ;  294	   SPI_SendReceiveBlock(DataOut, DataIn
+                           A  1447    ;  295	
+                           A  1448    ;  296	   if (!strncmp(DataOut, DataIn, strlen
+                           A  1449    ;  297	   {
+                           A  1450    ;  298	      T1PWM = 0;
+                           A  1451    ;  299	   }
+                           A  1452    ;  300	
+                           A  1453    ;  301	   while (ALWAYS)
+                           A  1454    ;  302	   {
+                           A  1455    ;  303	      T1PWM = SPI_SendReceive(0xAA);   
+                           A  1456    ;  304	   }
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 30-Aug-15     22:09:47     page:  29
+
+
+PC     Object              I  Line    Source switchmatrix.src
+                           A  1457    ;  305	}*/
+                           A  1458    ;  306	
+                           A  1459    ;  307	
+                           A  1460    ;  308	void blinkISR(){
+0141                       A  1461    _blinkISR:
+                           A  1462    .define "_blinkISR"
+                           A  1463    .value _blinkISR
+                           A  1464    .class 2
+                           A  1465    .type 65
+                           A  1466    .endef
+                           A  1467    .begfunc "blinkISR",308,"_blinkISR"
+                           A  1468    ;  309		
+                           A  1469    ;  310		switch(_upLED){
+                           A  1470    .line 310
+0141 E4 02 E1              A  1471    	LD	R1,__upLED
+0144 B0E0                  A  1472    	CLR	R0
+0146 2C 00                 A  1473    	LD	R2,#high(L__22)
+0148 3C 05                 A  1474    	LD	R3,#low(L__22)
+014A D6 0000               A  1475    	CALL	__b_ucase
+014D C4E0                  A  1476    	JP	@RR0
+                           A  1477    ;  311			case 0:
+                           A  1478    ;  312				//no blink
+                           A  1479    ;  313				break;
+                           A  1480    ;  314			case 1: //turn on
+014F                       A  1481    _7_L_27:
+                           A  1482    .line 314
+                           A  1483    ;  315				PBOUT &=~PB_UP_LED;
+                           A  1484    .line 315
+014F 59EF0FD7              A  1485    	ANDX	4055,#-17
+                           A  1486    ;  316				_upLED = 2;
+                           A  1487    .line 316
+0153 E6 02 02              A  1488    	LD	__upLED,#2
+                           A  1489    ;  317				break;
+                           A  1490    .line 317
+0156 8B 06                 A  1491    	JR	_7_L_32
+                           A  1492    ;  318			case 2:
+0158                       A  1493    _7_L_28:
+                           A  1494    .line 318
+                           A  1495    ;  319				//has been on, so turn off 
+                           A  1496    ;  320				PBOUT|=PB_UP_LED;
+                           A  1497    .line 320
+0158 49100FD7              A  1498    	ORX	4055,#16
+                           A  1499    ;  321				_upLED = 0;
+                           A  1500    .line 321
+015C B0 02                 A  1501    	CLR	__upLED
+                           A  1502    ;  322				break;
+                           A  1503    ;  323			}
+015E                       A  1504    _7_L_32:
+                           A  1505    .line 323
+                           A  1506    ;  324		
+                           A  1507    ;  325		switch(_downLED){
+                           A  1508    .line 325
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 30-Aug-15     22:09:47     page:  30
+
+
+PC     Object              I  Line    Source switchmatrix.src
+015E E4 01 E1              A  1509    	LD	R1,__downLED
+0161 B0E0                  A  1510    	CLR	R0
+0163 2C 00                 A  1511    	LD	R2,#high(L__23)
+0165 3C 15                 A  1512    	LD	R3,#low(L__23)
+0167 D6 0000               A  1513    	CALL	__b_ucase
+016A C4E0                  A  1514    	JP	@RR0
+                           A  1515    ;  326			case 0:
+                           A  1516    ;  327				//no blink
+                           A  1517    ;  328				break;
+                           A  1518    ;  329			case 1: //turn on
+016C                       A  1519    _7_L_30:
+                           A  1520    .line 329
+                           A  1521    ;  330				PBOUT &=~PB_DOWN_LED;
+                           A  1522    .line 330
+016C 59F70FD7              A  1523    	ANDX	4055,#-9
+                           A  1524    ;  331				_downLED = 2;
+                           A  1525    .line 331
+0170 E6 01 02              A  1526    	LD	__downLED,#2
+                           A  1527    ;  332				break;
+                           A  1528    .line 332
+0173 8B 06                 A  1529    	JR	_7_L_33
+                           A  1530    ;  333			case 2:
+0175                       A  1531    _7_L_31:
+                           A  1532    .line 333
+                           A  1533    ;  334				//has been on, so turn off 
+                           A  1534    ;  335				PBOUT|=PB_DOWN_LED;
+                           A  1535    .line 335
+0175 49080FD7              A  1536    	ORX	4055,#8
+                           A  1537    ;  336				_downLED = 0;
+                           A  1538    .line 336
+0179 B0 01                 A  1539    	CLR	__downLED
+                           A  1540    ;  337				break;
+                           A  1541    ;  338			}
+                           A  1542    ;  339			
+                           A  1543    ;  340		}
+017B                       A  1544    _7_L_33:
+                           A  1545    .line 340
+017B AF                    A  1546    	RET	
+                           A  1547    .endfunc "blinkISR",340,"_blinkISR"
+                           A  1548    	XREF _0_SPI_Send:RDATA
+                           A  1549    	XREF _timer_init:ROM
+                           A  1550    	XREF _sysclk_init:ROM
+                           A  1551    	XREF _SPI_Send:ROM
+                           A  1552    	XREF __b_ucase:ROM
+                           A  1553    	XDEF _blinkISR
+                           A  1554    	XDEF _2_ReportSwitchChange
+                           A  1555    	XDEF _1_ReportSwitchChange
+                           A  1556    	XDEF _0_ReportSwitchChange
+                           A  1557    	XDEF _ReportSwitchChange
+                           A  1558    	XDEF _SwitchLoop
+                           A  1559    	XDEF _2_debounce
+                           A  1560    	XDEF _1_debounce
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 30-Aug-15     22:09:47     page:  31
+
+
+PC     Object              I  Line    Source switchmatrix.src
+                           A  1561    	XDEF _0_debounce
+                           A  1562    	XDEF _debounce
+                           A  1563    	XDEF _SwitchStrobeIncAndSet
+                           A  1564    	XDEF _Initialize
+                           A  1565    	XDEF _main
+                           A  1566    	XDEF _ledIsOn
+                           A  1567    	XDEF _PB_UP_LED
+                           A  1568    	XDEF _PB_DOWN_LED
+                           A  1569    	XDEF __upLED
+                           A  1570    	XDEF __downLED
+                           A  1571    	XDEF __swStrobe
+                           A  1572    	XDEF __timerControl
+                           A  1573    	XDEF __fastBlink
+                           A  1574    	XDEF __slowBlink
+                           A  1575    	XDEF _byte_count
+                           A  1576    	XDEF _send_bit
+                           A  1577    	XDEF _temp1
+                           A  1578    	XDEF _edge
+                           A  1579    	XDEF _data_byte
+                           A  1580    	XDEF _address_received
+                           A  1581    	XDEF _rising_edge_counter
+                           A  1582    	XDEF _bus_status
+                           A  1583    	XDEF _sda_bit
+                           A  1584    	XDEF _data_transmit_byte
+                           A  1585    	XDEF _data_receive_byte
+                           A  1586    	XDEF _bit_counter
+                           A  1587    	XDEF _i2c_flag
+                           A  1588    	XDEF _NUMBER_OF_SWITCH_SAMPLES
+                           A  1589    	XDEF _NOOUTPUT
+                           A  1590    	END
+
+
+Errors: 0
+Warnings: 0
+Lines Assembled: 1591

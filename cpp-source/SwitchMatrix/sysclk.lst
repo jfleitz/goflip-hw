@@ -1,0 +1,364 @@
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 24-Aug-15     21:23:41     page:   1
+
+
+PC     Object              I  Line    Source 
+                           A     1    ; Z8 Encore! ANSI C Compiler Release 3.64
+                           A     2    ; -nofastcall -const=ROM -listinc -model=S -opt
+                           A     3    ; -noreduceopt -debug -norevaa -peephole -local
+                           A     4    ; -alias 
+                           A     5    	DEFINE sysclk_TEXT,SPACE=ROM
+                           A     6    	FILE	".\sysclk.c"
+                           A     7    .debug "C"
+                           A     8    	SEGMENT ROM_DATA
+                           A     9    
+                           A    10    
+                           A    11    ;**************************** _sysclk_init ****
+                           A    12    ;Name                         Addr/Register   S
+                           A    13    
+                           A    14    
+                           A    15    ; Aggregate Stack Size: 0 (words)
+                           A    16    
+                           A    17    
+                           A    18    	.FRAME _n_sysclk_init,?_n_sysclk_init,RDATA
+                           A    19    	SEGMENT sysclk_TEXT
+                           A    20    ;    1	/*!\file gpio.h
+                           A    21    ;    2	 * \brief Definition file for the Z8 En
+                           A    22    ;    3	 *
+                           A    23    ;    4	 *  This file contains header informati
+                           A    24    ;    5	 *  driver implementations for Z8 Encor
+                           A    25    ;    6	 *
+                           A    26    ;    7	 *  This source file uses Doxygen-style
+                           A    27    ;    8	 *  automatically.
+                           A    28    ;    9	 *
+                           A    29    ;   10	 *  Copyright (C) 1999-2004 by  ZiLOG, 
+                           A    30    ;   11	 *  All Rights Reserved.
+                           A    31    ;   12	 */
+                           A    32    ;   13	
+                           A    33    ;   14	#pragma once // Include this file only 
+                           A    34    ;   15	#ifndef _GPIO_H_
+                           A    35    ;   16	#define _GPIO_H_
+                           A    36    ;   17	
+                           A    37    ;   18	#include <defines.h>
+                           A    38    ;   19	
+                           A    39    ;   20	
+                           A    40    ;   21	#ifdef _DEBUG
+                           A    41    ;   22	#define GPIOPARAMETER_CHECKING			                           A    42    ;   23	#endif
+                           A    43    ;   24	
+                           A    44    ;   25	
+                           A    45    ;   26	/*! The GPIO ports available for partic
+                           A    46    ;   27	#if (defined(EZ8_PORT4) && !defined(_Z8
+                           A    47    ;   28	#define PORTD
+                           A    48    ;   29	#endif
+                           A    49    ;   30	
+                           A    50    ;   31	#if defined(EZ8_PORT8)||defined(EZ8_POR
+                           A    51    ;   32	#define PORTE
+                           A    52    ;   33	#endif
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 24-Aug-15     21:23:41     page:   2
+
+
+PC     Object              I  Line    Source sysclk.src
+                           A    53    ;   34	#if defined(EZ8_PORT8)
+                           A    54    ;   35	#define PORTF
+                           A    55    ;   36	#define PORTG
+                           A    56    ;   37	#define PORTH
+                           A    57    ;   38	#endif
+                           A    58    ;   39	
+                           A    59    ;   40	#define GPIOERR_SUCCESS		(CHAR)0		                           A    60    ;   41	#define GPIOERR_INVALIDPINS	(CHAR)1		                           A    61    ;   42	#define GPIOERR_FAILURE		(CHAR)(-1)	                           A    62    ;   43	
+                           A    63    ;   44	
+                           A    64    ;   45	/*! all the ports bits are set to input
+                           A    65    ;   46	#define PORTA_ADDRVAL_DEF   0x01
+                           A    66    ;   47	#define PORTA_CTLVAL_DEF    0xFF
+                           A    67    ;   48	#define PORTA_OUTVAL_DEF    0x00
+                           A    68    ;   49	
+                           A    69    ;   50	#define PORTB_ADDRVAL_DEF   0x01
+                           A    70    ;   51	#define PORTB_CTLVAL_DEF    0xFF
+                           A    71    ;   52	#define PORTB_OUTVAL_DEF    0x00
+                           A    72    ;   53	
+                           A    73    ;   54	#define PORTC_ADDRVAL_DEF   0x01
+                           A    74    ;   55	#define PORTC_CTLVAL_DEF    0xFF
+                           A    75    ;   56	#define PORTC_OUTVAL_DEF    0x00
+                           A    76    ;   57	
+                           A    77    ;   58	#ifdef PORTD
+                           A    78    ;   59	#define PORTD_ADDRVAL_DEF   0x01
+                           A    79    ;   60	#define PORTD_CTLVAL_DEF    0xFF
+                           A    80    ;   61	#define PORTD_OUTVAL_DEF    0x00
+                           A    81    ;   62	#endif
+                           A    82    ;   63	
+                           A    83    ;   64	#ifdef PORTE
+                           A    84    ;   65	#define PORTE_ADDRVAL_DEF   0x01
+                           A    85    ;   66	#define PORTE_CTLVAL_DEF    0xFF
+                           A    86    ;   67	#define PORTE_OUTVAL_DEF    0x00
+                           A    87    ;   68	#endif
+                           A    88    ;   69	
+                           A    89    ;   70	#ifdef PORTF
+                           A    90    ;   71	#define PORTF_ADDRVAL_DEF   0x01
+                           A    91    ;   72	#define PORTF_CTLVAL_DEF    0xFF
+                           A    92    ;   73	#define PORTF_OUTVAL_DEF    0x00
+                           A    93    ;   74	#endif
+                           A    94    ;   75	
+                           A    95    ;   76	#ifdef PORTG
+                           A    96    ;   77	#define PORTG_ADDRVAL_DEF   0x01
+                           A    97    ;   78	#define PORTG_CTLVAL_DEF    0xFF
+                           A    98    ;   79	#define PORTG_OUTVAL_DEF    0x00
+                           A    99    ;   80	#endif
+                           A   100    ;   81	
+                           A   101    ;   82	#ifdef PORTH
+                           A   102    ;   83	#define PORTH_ADDRVAL_DEF   0x01
+                           A   103    ;   84	#define PORTH_CTLVAL_DEF    0xFF
+                           A   104    ;   85	#define PORTH_OUTVAL_DEF    0x00
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 24-Aug-15     21:23:41     page:   3
+
+
+PC     Object              I  Line    Source sysclk.src
+                           A   105    ;   86	#endif
+                           A   106    ;   87	
+                           A   107    ;   88	
+                           A   108    ;   89	/*! Control Register access codes used 
+                           A   109    ;   90	#define PORTADDR_NOFUNC			0x00
+                           A   110    ;   91	#define PORTADDR_DATADIR		0x01
+                           A   111    ;   92	#define PORTADDR_ALTFUNC		0x02
+                           A   112    ;   93	#if defined(_Z8FMC16) || defined(__ZSLB
+                           A   113    ;   94	#define PORTADDR_ALTFUNC0		0x02
+                           A   114    ;   95	#endif
+                           A   115    ;   96	#define PORTADDR_OPENDRAIN		0x03
+                           A   116    ;   97	#define PORTADDR_HIGHDRIVE		0x04
+                           A   117    ;   98	#define PORTADDR_STPMDREC		0x05
+                           A   118    ;   99	#if defined (_Z8F1680)||defined(_Z8F04)
+                           A   119    ;  100	#define PORTADDR_PULLUP		0x06
+                           A   120    ;  101	#endif
+                           A   121    ;  102	#if defined (_Z8F1680)||defined(_Z8F04)
+                           A   122    ;  103	#define PORTADDR_ALTFUNCSET1	0x07
+                           A   123    ;  104	#define PORTADDR_ALTFUNCSET2	0x08
+                           A   124    ;  105	#endif
+                           A   125    ;  106	#if defined(_Z8FMC16) || defined(__ZSLB
+                           A   126    ;  107	#define PORTADDR_ALTFUNC1		0x07
+                           A   127    ;  108	#define PORTADDR_IRQES			0x08
+                           A   128    ;  109	#define PORTADDR_IRQPS			0x09
+                           A   129    ;  110	#endif
+                           A   130    ;  111	
+                           A   131    ;  112	
+                           A   132    ;  113	/*! Definitions for Current Drive Level
+                           A   133    ;  114	#if defined(_Z8F04A) ||defined (_Z8F168
+                           A   134    ;  115	#define DRIVELEVEL_3MA			0
+                           A   135    ;  116	#define DRIVELEVEL_7MA			1
+                           A   136    ;  117	#define DRIVELEVEL_13MA			2
+                           A   137    ;  118	#define DRIVELEVEL_20MA			3
+                           A   138    ;  119	#endif
+                           A   139    ;  120	
+                           A   140    ;  121	/*! Definitions for trigger edges */
+                           A   141    ;  122	#define EDGE_FALLING			0
+                           A   142    ;  123	#define EDGE_RISING				1
+                           A   143    ;  124	
+                           A   144    ;  125	/*! GPIO pin patterns */
+                           A   145    ;  126	#define PORTPIN_ZERO		(BYTE)0x01	                           A   146    ;  127	#define PORTPIN_ONE			(BYTE)0x02	                           A   147    ;  128	#define PORTPIN_TWO			(BYTE)0x04	                           A   148    ;  129	#define PORTPIN_THREE		(BYTE)0x08	                           A   149    ;  130	#define PORTPIN_FOUR		(BYTE)0x10	                           A   150    ;  131	#define PORTPIN_FIVE 		(BYTE)0x20	                           A   151    ;  132	#define PORTPIN_SIX			(BYTE)0x40	                           A   152    ;  133	#define PORTPIN_SEVEN		(BYTE)0x80	                           A   153    ;  134	#define PORTPIN_FOURPINS_L	(BYTE)0x0F	                           A   154    ;  135	#define PORTPIN_FOURPINS_U	(BYTE)0xF0	                           A   155    ;  136	#define PORTPIN_PATTERN_AA	(BYTE)0xAA	                           A   156    ;  137	#define PORTPIN_PATTERN_55	(BYTE)0x55	Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 24-Aug-15     21:23:41     page:   4
+
+
+PC     Object              I  Line    Source sysclk.src
+                           A   157    ;  138	#define PORTPIN_ALL			(BYTE)0xFF	                           A   158    ;  139	
+                           A   159    ;  140	/*! Port mask index used for validating
+                           A   160    ;  141	#define MSKINDEX_PORTB		(BYTE)0
+                           A   161    ;  142	#define MSKINDEX_PORTC		(BYTE)1
+                           A   162    ;  143	#define MSKINDEX_PORTD		(BYTE)2
+                           A   163    ;  144	#define MSKINDEX_PORTE		(BYTE)3
+                           A   164    ;  145	#define MSKINDEX_PORTF		(BYTE)4
+                           A   165    ;  146	#define MSKINDEX_PORTG		(BYTE)5
+                           A   166    ;  147	#define MSKINDEX_PORTH		(BYTE)6
+                           A   167    ;  148	
+                           A   168    ;  149	/*!
+                           A   169    ;  150	 * \brief The settings required to conf
+                           A   170    ;  151	 */
+                           A   171    ;  152	typedef struct
+                           A   172    ;  153	{
+                           A   173    ;  154		BYTE addr ;					//!< Th
+                           A   174    ;  155		BYTE ctl ;					//!< Th
+                           A   175    ;  156		BYTE out ;					//!< Th
+                           A   176    ;  157		BYTE in ;					//!< Th
+                           A   177    ;  158	
+                           A   178    ;  159	} PORT ;
+                           A   179    .begrec "NONAME0",4
+                           A   180    .define "addr"
+                           A   181    .value 0
+                           A   182    .class 8
+                           A   183    .type 12
+                           A   184    .endef
+                           A   185    .define "ctl"
+                           A   186    .value 1
+                           A   187    .class 8
+                           A   188    .type 12
+                           A   189    .endef
+                           A   190    .define "out"
+                           A   191    .value 2
+                           A   192    .class 8
+                           A   193    .type 12
+                           A   194    .endef
+                           A   195    .define "in"
+                           A   196    .value 3
+                           A   197    .class 8
+                           A   198    .type 12
+                           A   199    .endef
+                           A   200    .endrec "NONAME0"
+                           A   201    ;    1	/**************************************
+                           A   202    ;    2	 * File: sysclk.c
+                           A   203    ;    3	 * Description:
+                           A   204    ;    4	 * 		This file implements the oscill
+                           A   205    ;    5	 * 		switches the oscialltor source 
+                           A   206    ;    6	 * 		clock source.
+                           A   207    ;    7	 *
+                           A   208    ;    8	 * Last modified: 21 Apr 2006
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 24-Aug-15     21:23:41     page:   5
+
+
+PC     Object              I  Line    Source sysclk.src
+                           A   209    ;    9	 **************************************
+                           A   210    ;   10	 * Copyright (C) 2008 by Zilog, Inc.  A
+                           A   211    ;   11	 **************************************
+                           A   212    ;   12	
+                           A   213    ;   13	/**************************************
+                           A   214    ;   14	 *  header file includes
+                           A   215    ;   15	 **************************************
+                           A   216    ;   16	#include <eZ8.h>
+                           A   217    ;   17	#include "sysclk.h"
+                           A   218    ;   18	
+                           A   219    ;   19	
+                           A   220    ;   20	/**************************************
+                           A   221    ;   21	 * local constant defintions
+                           A   222    ;   22	 **************************************
+                           A   223    ;   23	/*-------------------------------------
+                           A   224    ;   24	 *  System clock selection
+                           A   225    ;   25	 *
+                           A   226    ;   26	 *  Instructions for enabling the exter
+                           A   227    ;   27	 *      1. Select External clock and Fr
+                           A   228    ;   28	 *      2. Uncomment the following line
+                           A   229    ;   29	 *-------------------------------------
+                           A   230    ;   30	//#define CLOCK_SOURCE    CLOCK_EXTERNA
+                           A   231    ;   31	#ifndef CLOCK_SOURCE
+                           A   232    ;   32	#define CLOCK_SOURCE    CLOCK_INTERNAL 
+                           A   233    ;   33	#endif
+                           A   234    ;   34	
+                           A   235    ;   35	#ifndef CLOCK_SOURCE
+                           A   236    ;   36	#define CLOCK_SOURCE    CLOCK_SOURCE_DE
+                           A   237    ;   37	#endif
+                           A   238    ;   38	
+                           A   239    ;   39	/*-------------------------------------
+                           A   240    ;   40	 * The Osciallator control registers(OS
+                           A   241    ;   41	 * Precision Frequency.
+                           A   242    ;   42	 *
+                           A   243    ;   43	 * +--------+-------+-------+-------+--
+                           A   244    ;   44	 * |        | BITS  |   7   |   6   |  
+                           A   245    ;   45	 * | OSCTL  | ------+-------+-------+--
+                           A   246    ;   46	 * |        | FIELD | INTEN | XTLEN | W
+                           A   247    ;   47	 * +--------+-------+-------+-------+--
+                           A   248    ;   48	 *                      |       |      
+                           A   249    ;   49	 *                      |	    |		                           A   250    ;   50	 * 					    |	    |		                           A   251    ;   51	 *                      |       |      
+                           A   252    ;   52	 *					    |	    |		                           A   253    ;   53	 *                      |       |      
+                           A   254    ;   54	 *					    |	    |		                           A   255    ;   55	 *                      |       |      
+                           A   256    ;   56	 *    				    |	    |		                           A   257    ;   57	 *                      |       |      
+                           A   258    ;   58	 * 					    |	    |		                           A   259    ;   59	 *                      |       |      
+                           A   260    ;   60	 *                      |       |      
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 24-Aug-15     21:23:41     page:   6
+
+
+PC     Object              I  Line    Source sysclk.src
+                           A   261    ;   61	 *                      |       |      
+                           A   262    ;   62	 *                      |       |      
+                           A   263    ;   63	 *                      |       |      
+                           A   264    ;   64	 *                      |       |      
+                           A   265    ;   65	 *                      |       |      
+                           A   266    ;   66	 *                      |       |      
+                           A   267    ;   67	 *                      |       |      
+                           A   268    ;   68	 *                      |       |      
+                           A   269    ;   69	 *                      |       |      
+                           A   270    ;   70	 *                      |       |      
+                           A   271    ;   71	 *                      |       |      
+                           A   272    ;   72	 *                      |       |      
+                           A   273    ;   73	 *                      |       |      
+                           A   274    ;   74	 *                      |       |      
+                           A   275    ;   75	 *                      |       |      
+                           A   276    ;   76	 *                      |       |      
+                           A   277    ;   77	 *                      |       |
+                           A   278    ;   78	 *                      |       |_ Crys
+                           A   279    ;   79	 *                      |          cont
+                           A   280    ;   80	 *                      |
+                           A   281    ;   81	 *                      |_ Internal pre
+                           A   282    ;   82	 *                         1 = Internal
+                           A   283    ;   83	 *                         0 = Internal
+                           A   284    ;   84	 *
+                           A   285    ;   85	 --------------------------------------
+                           A   286    ;   86	#if (CLOCK_SOURCE == CLOCK_EXTERNAL)
+                           A   287    ;   87	#define SCKSEL          SCK_XTAL
+                           A   288    ;   88	#define OSCEN           OSC_INTEN | OSC
+                           A   289    ;   89	#elif (CLOCK_SOURCE == CLOCK_INTERNAL)
+                           A   290    ;   90	/*-------------------------------------
+                           A   291    ;   91	 *  Instructions to use 32 KHz IPO supp
+                           A   292    ;   92	 *      1. Enter 0.032 to Project setti
+                           A   293    ;   93	 *      2. Ensure to comment out the ab
+                           A   294    ;   94	 *      3. Uncomment the following line
+                           A   295    ;   95	 *-------------------------------------
+                           A   296    ;   96	//#define SCKSEL          SCK_IPO_32K	                           A   297    ;   97	#ifndef SCKSEL
+                           A   298    ;   98	#define SCKSEL          SCK_IPO			                           A   299    ;   99	#endif
+                           A   300    ;  100	#define OSCEN           OSC_INTEN		                           A   301    ;  101	#endif
+                           A   302    ;  102	
+                           A   303    ;  103	/**************************************
+                           A   304    ;  104	 * Function: sysclk_init
+                           A   305    ;  105	 * Description: 
+                           A   306    ;  106	 *     Initialize system clock source 
+                           A   307    ;  107	 *
+                           A   308    ;  108	 **************************************
+                           A   309    ;  109	void sysclk_init(void)
+                           A   310    ;  110	{
+0000                       A   311    _sysclk_init:
+                           A   312    .define "_sysclk_init"
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 24-Aug-15     21:23:41     page:   7
+
+
+PC     Object              I  Line    Source sysclk.src
+                           A   313    .value _sysclk_init
+                           A   314    .class 2
+                           A   315    .type 65
+                           A   316    .endef
+                           A   317    .begfunc "sysclk_init",110,"_sysclk_init"
+                           A   318    ;  111	    /*******
+                           A   319    ;  112		 * If clock source is selected as e
+                           A   320    ;  113		 */
+                           A   321    ;  114	#if (SCKSEL & ~SCK_IPO_MASK) 
+                           A   322    ;  115		unsigned long delay = 1000; 	// 
+                           A   323    ;  116	
+                           A   324    ;  117	    /******
+                           A   325    ;  118		 *  Enable external source if not y
+                           A   326    ;  119		 */
+                           A   327    ;  120	    if ((OSCCTL & 0x06) != SCKSEL)
+                           A   328    ;  121	    {
+                           A   329    ;  122	
+                           A   330    ;  123			/******
+                           A   331    ;  124			 *  Enable external oscillator 
+                           A   332    ;  125			 */
+                           A   333    ;  126	        OSCCTL = 0xE7;              // 
+                           A   334    ;  127	        OSCCTL = 0x18;              //
+                           A   335    ;  128	        OSCCTL |= OSC_XTLEN;        // 
+                           A   336    ;  129	
+                           A   337    ;  130	        while(delay--);				// 
+                           A   338    ;  131		}
+                           A   339    ;  132	#endif
+                           A   340    ;  133	 	/******
+                           A   341    ;  134		 *  Switch to selected oscillator s
+                           A   342    ;  135		 */	
+                           A   343    ;  136		OSCCTL = 0xE7;              // Unlo
+                           A   344    .line 136
+0000 E9E70F86              A   345    	LDX	3974,#231
+                           A   346    ;  137	    OSCCTL = 0x18;              //
+                           A   347    .line 137
+0004 E9180F86              A   348    	LDX	3974,#24
+                           A   349    ;  138	    OSCCTL = OSCEN | SCKSEL;    // swit
+                           A   350    .line 138
+0008 E9800F86              A   351    	LDX	3974,#128
+                           A   352    ;  139	}
+                           A   353    .line 139
+000C AF                    A   354    	RET	
+                           A   355    .endfunc "sysclk_init",139,"_sysclk_init"
+                           A   356    	XDEF _sysclk_init
+                           A   357    	END
+
+
+Errors: 0
+Warnings: 0
+Lines Assembled: 358
